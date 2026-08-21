@@ -1,5 +1,8 @@
 {
   "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
   "devDependencies": {
     "ava": "^6.2.0",
     "fs-extra": "^11.2.0"
