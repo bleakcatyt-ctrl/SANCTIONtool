@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Информация - LAFF PROJECT</title>
+  <link rel="stylesheet" href="assets/trace-exact.css">
+  <link rel="stylesheet" href="assets/reply-exact.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .account-page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+    .account-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .account-breadcrumb {
+      background: #1c1c1c;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #8a8f98;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .account-breadcrumb a { color:#8a8f98; }
+    .account-breadcrumb a:hover { color:#fff; }
+
+    .account-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 16px;
+    }
+    @media(max-width: 900px){ .account-layout{grid-template-columns:1fr} }
+
+    .account-sidebar {
+      background: #1c1c1c;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      align-self: start;
+      position: sticky;
+      top: 16px;
+    }
+    .account-sidebar-header {
+      background: #252525;
+      padding: 10px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #e5e7eb;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .account-sidebar a {
+      display: block;
+      padding: 9px 12px;
+      font-size: 12px;
+      color: #9ca3af;
+      border-bottom: 1px solid #242424;
+      transition: .12s;
+    }
+    .account-sidebar a:hover { background:#212121; color:#e5e7eb; }
+    .account-sidebar a.active {
+      background:#dc2626;
+      color:white;
+      font-weight:600;
+    }
+    .account-sidebar a.active:hover { background:#b91c1c; }
+
+    .account-content {
+      background: #1c1c1c;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .account-form {
+      padding: 0;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 16px;
+      padding: 14px 18px;
+      border-bottom: 1px solid #242424;
+      align-items: start;
+    }
+    @media(max-width: 700px){ .form-row{grid-template-columns:1fr} }
+    .form-row label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: right;
+      padding-top: 8px;
+      font-weight: 500;
+    }
+    @media(max-width:700px){ .form-row label{text-align:left} }
+    .form-row .hint {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .form-input {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #e5e7eb;
+      font-size: 12px;
+      width: 100%;
+      outline: none;
+    }
+    .form-input:focus { border-color:#3b82f6; }
+    .form-input.white {
+      background:#f5f5f5; color:#111; border-color:#4a4a4a;
+    }
+    .avatar-box {
+      display: flex;
+      gap: 16px;
+      align-items: start;
+    }
+    .avatar-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #ff6b35;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2a2a2a;
+      transition: .15s;
+      flex-shrink: 0;
+    }
+    .avatar-circle:hover { transform:scale(1.05); box-shadow:0 4px 20px rgba(255,107,53,0.3); }
+    .avatar-hint { font-size:11px; color:#8a8f98; margin-top:8px; }
+
+    .form-select {
+      background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:6px 10px; color:#e5e7eb; font-size:12px;
+    }
+    .checkbox-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .checkbox-row input { width:14px; height:14px; accent-color:#3b82f6; }
+    .checkbox-row label { font-size:11px; color:#9ca3af; text-align:left; padding:0; cursor:pointer; }
+
+    .form-actions {
+      padding:16px 18px;
+      background:#1a1a1a;
+      display:flex; justify-content:flex-start; gap:12px;
+      border-top:1px solid #2a2a2a;
+    }
+    .btn-save {
+      background:#3b82f6; color:white; border:none; padding:8px 20px; border-radius:6px; font-weight:600; font-size:12px; cursor:pointer;
+    }
+    .btn-save:hover { background:#2563eb; }
+    .btn-secondary {
+      background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:8px 16px; border-radius:6px; font-size:12px; cursor:pointer;
+    }
+    .btn-secondary:hover { background:#2a2a2a; color:#fff; }
+
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+
+    .notification-item {
+      padding:12px 16px; border-bottom:1px solid #242424; display:flex; gap:12px; align-items:start;
+    }
+    .notification-item:hover { background:#212121; }
+    .notification-item img { width:32px; height:32px; border-radius:6px; }
+    .notification-item .content { flex:1; font-size:12px; color:#cbd5e1; }
+    .notification-item .time { font-size:11px; color:#6b7280; }
+
+    .empty-state {
+      padding:40px; text-align:center; color:#6b7280; font-size:13px;
+    }
+    .empty-state i { font-size:32px; margin-bottom:12px; display:block; opacity:0.5; }
+  </style>
+</head>
+<body>
+  <header class="xf-header">
+    <div class="xf-header-inner">
+      <a href="index.html" class="xf-logo">LAFF <span>PROJECT</span> ☂️</a>
+      <nav class="xf-nav">
+        <a href="index.html">Главная</a>
+        <a href="index.html">Форум</a>
+        <a href="whats-new.html">Что нового</a>
+        <a href="users.html">Пользователи</a>
+      </nav>
+      <div class="xf-nav-right" id="auth-right">
+        <a href="index.html">На главную</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="account-page">
+    <h1 class="account-title">Информация</h1>
+    
+    <div class="account-breadcrumb">
+      <a href="index.html"><i class="fa-solid fa-house"></i></a>
+      <span style="color:#4a4a4a">›</span>
+      <span>Ваша учетная запись</span>
+    </div>
+
+    <div class="account-layout">
+      <div class="account-sidebar">
+        <div class="account-sidebar-header"><i class="fa-regular fa-file-lines"></i> ВАША УЧЕТНАЯ ЗАПИСЬ</div>
+        <a href="#" data-tab="profile"><i class="fa-regular fa-user" style="width:16px"></i> Ваш профиль</a>
+        <a href="#" data-tab="alerts"><i class="fa-regular fa-bell" style="width:16px"></i> Оповещения <span id="alert-count" style="background:#dc2626; color:white; font-size:10px; padding:1px 6px; border-radius:999px; margin-left:6px; display:none;">0</span></a>
+        <a href="#" data-tab="reactions"><i class="fa-regular fa-heart" style="width:16px"></i> Полученные реакции</a>
+        <a href="#" data-tab="bookmarks"><i class="fa-regular fa-bookmark" style="width:16px"></i> Закладки</a>
+        
+        <div class="account-sidebar-header" style="margin-top:8px;"><i class="fa-solid fa-gear"></i> НАСТРОЙКИ</div>
+        <a href="#" data-tab="info" class="active"><i class="fa-regular fa-circle-info" style="width:16px"></i> Информация</a>
+        <a href="#" data-tab="password"><i class="fa-solid fa-lock" style="width:16px"></i> Пароль и безопасность</a>
+        <a href="#" data-tab="privacy"><i class="fa-solid fa-shield-halved" style="width:16px"></i> Конфиденциальность</a>
+        <a href="#" data-tab="preferences"><i class="fa-solid fa-sliders" style="width:16px"></i> Настройки</a>
+        <a href="#" data-tab="signature"><i class="fa-solid fa-signature" style="width:16px"></i> Подпись</a>
+        <a href="#" data-tab="following"><i class="fa-solid fa-user-plus" style="width:16px"></i> Подписка</a>
+        <a href="#" data-tab="ignoring"><i class="fa-solid fa-user-slash" style="width:16px"></i> Игнорирование</a>
+        <a href="#" onclick="LaffAPI.logout(); return false;" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket" style="width:16px"></i> Выйти</a>
+      </div>
+
+      <div class="account-content">
+        <!-- INFO TAB - EXACT LIKE SCREENSHOT -->
+        <div id="tab-info" class="tab-content active">
+          <div class="account-form">
+            <div class="form-row">
+              <label>Имя пользователя:</label>
+              <div>
+                <div id="username-display" style="font-size:13px; font-weight:600; color:#e5e7eb;">tiran</div>
+                <div class="hint">You may next change your username on or after <span id="next-change">25.09.2026</span>.</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Электронная почта:</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <span id="email-display" style="font-size:12px; color:#e5e7eb;">tiran@laff-project.com</span>
+                <button class="btn-secondary" style="padding:4px 10px; font-size:11px;" onclick="changeEmail()">Изменить</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Параметры электронной почты:</label>
+              <div>
+                <div class="checkbox-row">
+                  <input type="checkbox" id="email-news">
+                  <label for="email-news">Получать электронные письма о новостях и обновлениях</label>
+                </div>
+                <div class="hint">Дополнительные параметры электронной почты вы можете найти в <a href="#" style="color:#3b82f6; text-decoration:underline;">настройках</a>.</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Аватар:</label>
+              <div class="avatar-box">
+                <div>
+                  <div id="avatar-circle" class="avatar-circle" onclick="changeAvatar()">T</div>
+                  <div class="avatar-hint">Нажмите на изображение для изменения аватара.</div>
+                  <input type="file" id="avatar-input" accept="image/*" style="display:none;" onchange="uploadAvatar(this)">
+                  <div style="margin-top:8px; display:flex; gap:6px;">
+                    <button class="btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="document.getElementById('avatar-input').click()">Загрузить</button>
+                    <button class="btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="removeAvatar()">Удалить</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Дата рождения:</label>
+              <div style="display:flex; gap:8px;">
+                <select class="form-select" id="birth-month">
+                  <option value="">Месяц</option>
+                  <option>Январь</option><option>Февраль</option><option>Март</option><option>Апрель</option><option>Май</option><option>Июнь</option><option>Июль</option><option>Август</option><option>Сентябрь</option><option>Октябрь</option><option>Ноябрь</option><option>Декабрь</option>
+                </select>
+                <select class="form-select" id="birth-day" style="width:80px;">
+                  <option>День</option>
+                  <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option>
+                </select>
+                <select class="form-select" id="birth-year" style="width:80px;">
+                  <option>Год</option>
+                  <option>2005</option><option>2004</option><option>2003</option><option>2002</option><option>2001</option><option>2000</option><option>1999</option><option>1998</option><option>1997</option><option>1996</option><option>1995</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row" style="border-bottom:none; padding-bottom:4px;">
+              <label></label>
+              <div>
+                <div class="checkbox-row">
+                  <input type="checkbox" id="show-birth">
+                  <label for="show-birth">Показывать день и месяц рождения</label>
+                </div>
+                <div class="checkbox-row" style="margin-left:22px;">
+                  <input type="checkbox" id="show-year">
+                  <label for="show-year">Показывать год рождения</label>
+                </div>
+                <div class="hint" style="margin-left:22px;">Это позволит пользователям видеть ваш возраст.</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Местоположение:</label>
+              <input type="text" id="location" class="form-input" placeholder="">
+            </div>
+
+            <div class="form-row">
+              <label>Сайт:</label>
+              <input type="text" id="website" class="form-input" placeholder="">
+            </div>
+
+            <div class="form-row">
+              <label>Обо мне:</label>
+              <div style="width:100%;">
+                <div class="reply-container" style="margin:0;">
+                  <div class="reply-toolbar">
+                    <button title="Жирный" data-cmd="bold"><i class="fa-solid fa-bold"></i></button>
+                    <button title="Курсив" data-cmd="italic"><i class="fa-solid fa-italic"></i></button>
+                    <button title="Подчеркнутый" data-cmd="underline"><i class="fa-solid fa-underline"></i></button>
+                    <div class="sep"></div>
+                    <button title="Список" data-cmd="insertUnorderedList"><i class="fa-solid fa-list-ul"></i></button>
+                    <button title="Нумерованный" data-cmd="insertOrderedList"><i class="fa-solid fa-list-ol"></i></button>
+                    <button title="Цитата" data-cmd="quote"><i class="fa-solid fa-quote-left"></i></button>
+                    <div class="sep"></div>
+                    <button title="Ссылка" data-cmd="link"><i class="fa-solid fa-link"></i></button>
+                    <button title="Изображение" data-cmd="image"><i class="fa-regular fa-image"></i></button>
+                    <button title="Еще"><i class="fa-solid fa-ellipsis"></i></button>
+                    <button title="Отменить" data-cmd="undo" style="margin-left:auto;"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button title="Опции"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                  </div>
+                  <div id="about-editor" contenteditable="true" style="min-height:140px; background:#111; padding:12px; color:#e5e7eb; font-size:13px; outline:none;" data-placeholder="Расскажите о себе..."></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn-save" onclick="saveInfo()"><i class="fa-solid fa-floppy-disk"></i> Сохранить</button>
+              <button class="btn-secondary" onclick="location.reload()">Отмена</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFILE TAB -->
+        <div id="tab-profile" class="tab-content">
+          <div style="padding:20px;">
+            <h3 style="color:#fff; font-size:16px; margin-bottom:16px;">Ваш профиль</h3>
+            <div id="profile-view"></div>
+          </div>
+        </div>
+
+        <!-- ALERTS TAB -->
+        <div id="tab-alerts" class="tab-content">
+          <div style="padding:0;">
+            <div style="padding:14px 18px; border-bottom:1px solid #2a2a2a; display:flex; justify-content:space-between; align-items:center;">
+              <h3 style="color:#fff; font-size:14px;">Оповещения</h3>
+              <button class="btn-secondary" style="font-size:11px;" onclick="markAllRead()">Отметить все как прочитанные</button>
+            </div>
+            <div id="alerts-list"></div>
+          </div>
+        </div>
+
+        <!-- REACTIONS TAB -->
+        <div id="tab-reactions" class="tab-content">
+          <div class="empty-state">
+            <i class="fa-regular fa-heart"></i>
+            <div>Нет полученных реакций</div>
+            <div style="font-size:11px; margin-top:4px;">Когда кто-то поставит реакцию на ваше сообщение, она появится здесь</div>
+          </div>
+        </div>
+
+        <!-- BOOKMARKS TAB -->
+        <div id="tab-bookmarks" class="tab-content">
+          <div class="empty-state">
+            <i class="fa-regular fa-bookmark"></i>
+            <div>Нет закладок</div>
+            <div style="font-size:11px; margin-top:4px;">Добавляйте темы в закладки чтобы быстро находить их</div>
+          </div>
+        </div>
+
+        <!-- PASSWORD TAB -->
+        <div id="tab-password" class="tab-content">
+          <div style="padding:20px; max-width:500px;">
+            <h3 style="color:#fff; font-size:14px; margin-bottom:16px;">Пароль и безопасность</h3>
+            <div class="form-row" style="grid-template-columns:1fr;">
+              <div>
+                <label style="text-align:left; display:block; margin-bottom:6px;">Текущий пароль</label>
+                <input type="password" id="current-pass" class="form-input">
+              </div>
+            </div>
+            <div class="form-row" style="grid-template-columns:1fr;">
+              <div>
+                <label style="text-align:left; display:block; margin-bottom:6px;">Новый пароль</label>
+                <input type="password" id="new-pass" class="form-input">
+              </div>
+            </div>
+            <div class="form-row" style="grid-template-columns:1fr;">
+              <div>
+                <label style="text-align:left; display:block; margin-bottom:6px;">Подтвердите новый пароль</label>
+                <input type="password" id="confirm-pass" class="form-input">
+              </div>
+            </div>
+            <div class="form-actions" style="background:transparent; border:none; padding-left:0;">
+              <button class="btn-save" onclick="changePassword()">Изменить пароль</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRIVACY TAB -->
+        <div id="tab-privacy" class="tab-content">
+          <div style="padding:20px;">
+            <h3 style="color:#fff; font-size:14px; margin-bottom:16px;">Конфиденциальность</h3>
+            <div class="checkbox-row"><input type="checkbox" id="privacy-online" checked><label for="privacy-online">Показывать ваш онлайн статус</label></div>
+            <div class="checkbox-row"><input type="checkbox" id="privacy-profile"><label for="privacy-profile">Разрешить просмотр вашего профиля всем</label></div>
+            <div class="checkbox-row"><input type="checkbox" id="privacy-email"><label for="privacy-email">Показывать email</label></div>
+            <div style="margin-top:16px;"><button class="btn-save" onclick="savePrivacy()">Сохранить</button></div>
+          </div>
+        </div>
+
+        <!-- PREFERENCES TAB -->
+        <div id="tab-preferences" class="tab-content">
+          <div style="padding:20px;">
+            <h3 style="color:#fff; font-size:14px; margin-bottom:16px;">Настройки</h3>
+            <div class="checkbox-row"><input type="checkbox" id="pref-email-news"><label for="pref-email-news">Получать новости по email</label></div>
+            <div class="checkbox-row"><input type="checkbox" id="pref-watch" checked><label for="pref-watch">Автоматически отслеживать созданные темы</label></div>
+            <div class="checkbox-row"><input type="checkbox" id="pref-sound"><label for="pref-sound">Звуковые уведомления</label></div>
+            <div style="margin-top:16px;"><button class="btn-save" onclick="savePrefs()">Сохранить</button></div>
+          </div>
+        </div>
+
+        <!-- SIGNATURE TAB -->
+        <div id="tab-signature" class="tab-content">
+          <div style="padding:20px;">
+            <h3 style="color:#fff; font-size:14px; margin-bottom:12px;">Подпись</h3>
+            <p style="font-size:11px; color:#8a8f98; margin-bottom:12px;">Подпись показывается под каждым вашим сообщением</p>
+            <div class="reply-container" style="margin:0;">
+              <div class="reply-toolbar">
+                <button data-cmd="bold"><i class="fa-solid fa-bold"></i></button>
+                <button data-cmd="italic"><i class="fa-solid fa-italic"></i></button>
+                <button data-cmd="link"><i class="fa-solid fa-link"></i></button>
+              </div>
+              <div id="sig-editor" contenteditable="true" style="min-height:100px; background:#111; padding:12px; color:#e5e7eb; font-size:12px; outline:none;"></div>
+            </div>
+            <div style="margin-top:12px;"><button class="btn-save" onclick="saveSignature()">Сохранить подпись</button></div>
+          </div>
+        </div>
+
+        <!-- FOLLOWING TAB -->
+        <div id="tab-following" class="tab-content">
+          <div class="empty-state">
+            <i class="fa-solid fa-user-plus"></i>
+            <div>Вы ни на кого не подписаны</div>
+          </div>
+        </div>
+
+        <!-- IGNORING TAB -->
+        <div id="tab-ignoring" class="tab-content">
+          <div class="empty-state">
+            <i class="fa-solid fa-user-slash"></i>
+            <div>Список игнорируемых пуст</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/api.js"></script>
+  <script>
+    let currentUser = null;
+
+    // Tabs switching
+    document.querySelectorAll('.account-sidebar a[data-tab]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const tab = a.dataset.tab;
+        document.querySelectorAll('.account-sidebar a').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+        document.getElementById('tab-'+tab).classList.add('active');
+        document.querySelector('.account-title').textContent = a.textContent.trim();
+        
+        if(tab==='profile') loadProfile();
+        if(tab==='alerts') loadAlerts();
+        if(tab==='reactions') loadReactions();
+      });
+    });
+
+    async function loadAccount(){
+      try {
+        const user = await LaffAPI.fetchMe();
+        currentUser = user;
+        document.getElementById('username-display').textContent = user.username;
+        document.getElementById('email-display').textContent = user.email;
+        document.getElementById('avatar-circle').textContent = user.username.charAt(0).toUpperCase();
+        document.getElementById('avatar-circle').style.background = stringToColor(user.username);
+        
+        // Load saved info from localStorage or API
+        const saved = JSON.parse(localStorage.getItem('laff_profile_'+user.id) || '{}');
+        if(saved.location) document.getElementById('location').value = saved.location;
+        if(saved.website) document.getElementById('website').value = saved.website;
+        if(saved.about) document.getElementById('about-editor').innerHTML = saved.about;
+        if(saved.birthMonth) document.getElementById('birth-month').value = saved.birthMonth;
+        if(saved.birthDay) document.getElementById('birth-day').value = saved.birthDay;
+        if(saved.birthYear) document.getElementById('birth-year').value = saved.birthYear;
+        if(saved.showBirth) document.getElementById('show-birth').checked = saved.showBirth;
+        if(saved.showYear) document.getElementById('show-year').checked = saved.showYear;
+        if(saved.emailNews) document.getElementById('email-news').checked = saved.emailNews;
+        
+        initAuth();
+      } catch(e){
+        // Not logged in
+        document.querySelector('.account-content').innerHTML = '<div style="padding:40px; text-align:center;"><h3 style="color:#fff;">Требуется вход</h3><p style="color:#8a8f98; margin-top:8px;">Войдите как tiran / 1213ttt3</p><button onclick="location.href=\'index.html\'" style="margin-top:16px; background:#3b82f6; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">На главную</button></div>';
+      }
+    }
+
+    function stringToColor(str){
+      let hash=0;
+      for(let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
+      const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+      return '#' + '00000'.substring(0,6-c.length) + c;
+    }
+
+    function saveInfo(){
+      if(!currentUser) return;
+      const data = {
+        location: document.getElementById('location').value,
+        website: document.getElementById('website').value,
+        about: document.getElementById('about-editor').innerHTML,
+        birthMonth: document.getElementById('birth-month').value,
+        birthDay: document.getElementById('birth-day').value,
+        birthYear: document.getElementById('birth-year').value,
+        showBirth: document.getElementById('show-birth').checked,
+        showYear: document.getElementById('show-year').checked,
+        emailNews: document.getElementById('email-news').checked
+      };
+      localStorage.setItem('laff_profile_'+currentUser.id, JSON.stringify(data));
+      
+      // Also save to backend
+      fetch('/api/account/update', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+LaffAPI.getToken()},
+        body: JSON.stringify(data)
+      }).then(r=>r.json()).then(d=>{
+        alert('Информация сохранена!');
+      }).catch(()=>{
+        alert('Сохранено локально!');
+      });
+    }
+
+    function changeEmail(){
+      const newEmail = prompt('Новый email:', document.getElementById('email-display').textContent);
+      if(newEmail){
+        fetch('/api/account/email', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+LaffAPI.getToken()},
+          body: JSON.stringify({ email: newEmail })
+        }).then(r=>r.json()).then(d=>{
+          if(d.error) throw new Error(d.error);
+          document.getElementById('email-display').textContent = newEmail;
+          alert('Email изменен!');
+        }).catch(e=>alert(e.message));
+      }
+    }
+
+    function changeAvatar(){
+      document.getElementById('avatar-input').click();
+    }
+
+    function uploadAvatar(input){
+      if(input.files && input.files[0]){
+        const reader = new FileReader();
+        reader.onload = function(e){
+          const circle = document.getElementById('avatar-circle');
+          circle.style.background = 'none';
+          circle.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+          // Save to localStorage
+          localStorage.setItem('laff_avatar_'+currentUser.id, e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function removeAvatar(){
+      const circle = document.getElementById('avatar-circle');
+      circle.style.background = '#ff6b35';
+      circle.textContent = currentUser.username.charAt(0).toUpperCase();
+      localStorage.removeItem('laff_avatar_'+currentUser.id);
+    }
+
+    function loadProfile(){
+      const view = document.getElementById('profile-view');
+      if(!currentUser) return;
+      view.innerHTML = `
+        <div style="display:flex; gap:20px; align-items:start;">
+          <div id="profile-avatar" class="avatar-circle" style="width:96px; height:96px; font-size:36px;">${currentUser.username.charAt(0).toUpperCase()}</div>
+          <div style="flex:1;">
+            <h2 style="font-size:20px; color:#fff;">${currentUser.username} <span style="font-size:11px; background:#dc2626; color:white; padding:2px 8px; border-radius:999px;">${currentUser.role}</span></h2>
+            <div style="margin-top:8px; font-size:12px; color:#8a8f98;">Сообщений: ${currentUser.messages||0} • Репутация: ${currentUser.reputation||0} • Регистрация: ${new Date(currentUser.created_at||Date.now()).toLocaleDateString()}</div>
+            <div style="margin-top:12px; display:flex; gap:8px;">
+              <button class="btn-secondary" onclick="document.querySelector('[data-tab=info]').click()">Редактировать</button>
+              <button class="btn-secondary" onclick="LaffAPI.logout()">Выйти</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadAlerts(){
+      const list = document.getElementById('alerts-list');
+      list.innerHTML = '<div style="padding:20px; text-align:center; color:#8a8f98;">Загрузка...</div>';
+      try {
+        const res = await fetch('/api/account/alerts', { headers:{'Authorization':'Bearer '+LaffAPI.getToken()} });
+        const alerts = await res.json();
+        if(!alerts.length){
+          list.innerHTML = '<div class="empty-state"><i class="fa-regular fa-bell"></i><div>Нет оповещений</div></div>';
+        } else {
+          list.innerHTML = alerts.map(a=>`
+            <div class="notification-item">
+              <img src="${a.avatar||'https://i.pravatar.cc/100?img=1'}">
+              <div class="content"><b>${a.from}</b> ${a.text}<div class="time">${new Date(a.created_at).toLocaleString()}</div></div>
+            </div>
+          `).join('');
+        }
+      } catch {
+        list.innerHTML = '<div class="empty-state"><i class="fa-regular fa-bell"></i><div>Нет оповещений</div><div style="font-size:11px; margin-top:4px;">Когда кто-то ответит в вашу тему, вы получите оповещение</div></div>';
+      }
+    }
+
+    function loadReactions(){
+      // Could fetch from API /api/account/reactions
+    }
+
+    function markAllRead(){
+      alert('Все оповещения отмечены как прочитанные');
+      document.getElementById('alert-count').style.display='none';
+    }
+
+    async function changePassword(){
+      const cur = document.getElementById('current-pass').value;
+      const nw = document.getElementById('new-pass').value;
+      const conf = document.getElementById('confirm-pass').value;
+      if(nw!==conf) return alert('Пароли не совпадают');
+      if(nw.length<6) return alert('Минимум 6 символов');
+      try {
+        const res = await fetch('/api/account/password', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+LaffAPI.getToken()},
+          body: JSON.stringify({ current:cur, newPass:nw })
+        });
+        const data = await res.json();
+        if(data.error) throw new Error(data.error);
+        alert('Пароль изменен!');
+        document.getElementById('current-pass').value='';
+        document.getElementById('new-pass').value='';
+        document.getElementById('confirm-pass').value='';
+      } catch(e){ alert(e.message); }
+    }
+
+    function savePrivacy(){
+      alert('Настройки конфиденциальности сохранены!');
+      localStorage.setItem('laff_privacy', JSON.stringify({
+        online: document.getElementById('privacy-online').checked,
+        profile: document.getElementById('privacy-profile').checked,
+        email: document.getElementById('privacy-email').checked
+      }));
+    }
+
+    function savePrefs(){
+      alert('Настройки сохранены!');
+      localStorage.setItem('laff_prefs', JSON.stringify({
+        emailNews: document.getElementById('pref-email-news').checked,
+        watch: document.getElementById('pref-watch').checked,
+        sound: document.getElementById('pref-sound').checked
+      }));
+    }
+
+    function saveSignature(){
+      const sig = document.getElementById('sig-editor').innerHTML;
+      localStorage.setItem('laff_sig_'+currentUser.id, sig);
+      alert('Подпись сохранена!');
+    }
+
+    // Toolbar for editors
+    document.querySelectorAll('[data-cmd]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const cmd = btn.getAttribute('data-cmd');
+        const editor = btn.closest('.reply-container') ? document.getElementById('about-editor') : document.getElementById('sig-editor');
+        // Find closest editor
+        let target = null;
+        if(btn.closest('.form-row')) target = btn.closest('.form-row').querySelector('[contenteditable]');
+        else target = document.getElementById('about-editor');
+        
+        if(target){
+          target.focus();
+          if(cmd==='link'){
+            const url = prompt('URL:');
+            if(url) document.execCommand('createLink', false, url);
+          } else if(cmd==='image'){
+            const img = prompt('URL изображения:');
+            if(img) document.execCommand('insertImage', false, img);
+          } else if(cmd==='quote'){
+            document.execCommand('formatBlock', false, 'blockquote');
+          } else {
+            document.execCommand(cmd, false, null);
+          }
+        }
+      });
+    });
+
+    function initAuth(){
+      const user = LaffAPI.getUser();
+      const right = document.getElementById('auth-right');
+      if(user){
+        const isAdmin = ['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН'].includes(user.role);
+        right.innerHTML = `
+          ${isAdmin?`<a href="admin.html" style="background:#dc2626; color:white; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600;"><i class="fa-solid fa-shield"></i> Админка</a>`:''}
+          <div style="display:flex; align-items:center; gap:8px; background:#1c1c1c; border:1px solid #2a2a2a; padding:4px 10px 4px 4px; border-radius:999px;">
+            <img src="${user.avatar}" style="width:24px; height:24px; border-radius:50%;">
+            <span style="font-size:12px; font-weight:600; color:#fff;">${user.username}</span>
+          </div>
+          <a href="#" onclick="LaffAPI.logout()" style="color:#8a8f98;"><i class="fa-solid fa-right-from-bracket"></i></a>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      initAuth();
+      loadAccount();
+      if(LaffAPI.getToken()){
+        LaffAPI.fetchMe().then(()=>{ initAuth(); loadAccount(); }).catch(()=>{});
+      }
+      // Load avatar from localStorage
+      const savedAvatar = localStorage.getItem('laff_avatar_'+(LaffAPI.getUser()?.id||'1'));
+      if(savedAvatar){
+        document.getElementById('avatar-circle').innerHTML = `<img src="${savedAvatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+        document.getElementById('avatar-circle').style.background='none';
+      }
+    });
+  </script>
+</body>
+</html>

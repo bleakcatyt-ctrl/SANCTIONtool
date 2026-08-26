@@ -280,6 +280,82 @@ app.get('/api/whats-new', (req,res)=>{
   res.json({ threads, posts });
 });
 
+// Account endpoints - for profile page
+app.get('/api/account/alerts', requireAuth, (req,res)=>{
+  // Mock alerts - in real would be from DB
+  // Generate alerts from recent posts in user's threads
+  const userThreads = DB.threads.filter(t=>t.author_id===req.user.id);
+  const alerts = [];
+  userThreads.forEach(t=>{
+    const replies = DB.posts.filter(p=>p.thread_id===t.id && p.author_id!==req.user.id).slice(-3);
+    replies.forEach(p=>{
+      const author = findUser(p.author_id);
+      alerts.push({
+        id: p.id,
+        from: author?.username||'Пользователь',
+        avatar: author?.avatar,
+        text: `ответил в вашу тему "${t.title.substring(0,30)}"`,
+        created_at: p.created_at,
+        read: false
+      });
+    });
+  });
+  res.json(alerts.sort((a,b)=> new Date(b.created_at)-new Date(a.created_at)).slice(0,20));
+});
+
+app.post('/api/account/update', requireAuth, (req,res)=>{
+  const { location, website, about, birthMonth, birthDay, birthYear, showBirth, showYear, emailNews } = req.body;
+  // Save to user extended profile in DB
+  const user = DB.users.find(u=>u.id===req.user.id);
+  if(!user) return res.status(404).json({ error:'User not found' });
+  
+  if(!user.profile) user.profile = {};
+  user.profile.location = location||'';
+  user.profile.website = website||'';
+  user.profile.about = about||'';
+  user.profile.birthMonth = birthMonth||'';
+  user.profile.birthDay = birthDay||'';
+  user.profile.birthYear = birthYear||'';
+  user.profile.showBirth = !!showBirth;
+  user.profile.showYear = !!showYear;
+  user.profile.emailNews = !!emailNews;
+  user.profile.updated_at = new Date().toISOString();
+  
+  saveDB(DB);
+  res.json({ ok:true, profile: user.profile });
+});
+
+app.post('/api/account/email', requireAuth, (req,res)=>{
+  const { email } = req.body;
+  if(!email || !email.includes('@')) return res.status(400).json({ error:'Неверный email' });
+  if(DB.users.find(u=>u.email===email && u.id!==req.user.id)) return res.status(400).json({ error:'Email уже занят' });
+  
+  const user = DB.users.find(u=>u.id===req.user.id);
+  user.email = email;
+  saveDB(DB);
+  res.json({ ok:true, email });
+});
+
+app.post('/api/account/password', requireAuth, (req,res)=>{
+  const { current, newPass } = req.body;
+  const user = DB.users.find(u=>u.id===req.user.id);
+  if(!bcrypt.compareSync(current, user.password_hash)) return res.status(400).json({ error:'Неверный текущий пароль' });
+  if(!newPass || newPass.length<6) return res.status(400).json({ error:'Минимум 6 символов' });
+  
+  user.password_hash = bcrypt.hashSync(newPass, 10);
+  saveDB(DB);
+  res.json({ ok:true });
+});
+
+app.post('/api/account/avatar', requireAuth, (req,res)=>{
+  const { avatar } = req.body; // base64 or URL
+  if(!avatar) return res.status(400).json({ error:'Нет аватара' });
+  const user = DB.users.find(u=>u.id===req.user.id);
+  user.avatar = avatar;
+  saveDB(DB);
+  res.json({ ok:true, avatar });
+});
+
 // Watch thread
 app.post('/api/threads/:id/watch', requireAuth, (req,res)=>{
   const threadId = parseInt(req.params.id);
