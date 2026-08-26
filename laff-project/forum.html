@@ -3,93 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Форум - LAFF PROJECT ☂️</title>
-  <link rel="stylesheet" href="assets/style.css">
+  <title>Форум - LAFF PROJECT</title>
+  <link rel="stylesheet" href="assets/trace-exact.css">
   <link rel="stylesheet" href="assets/editor.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .thread-row { display:grid; grid-template-columns:48px 1fr 100px 80px; gap:12px; padding:12px 14px; border-bottom:1px solid #242424; align-items:center; background:#1c1c1c; }
+    .thread-row:hover { background:#212121; }
+    .thread-row.pinned { background: rgba(59,130,246,0.06); }
+    .thread-avatar img { width:36px; height:36px; border-radius:6px; }
+    .thread-main h3 { font-size:13.5px; font-weight:600; color:#e5e7eb; }
+    .thread-meta { font-size:11px; color:#8a8f98; margin-top:2px; }
+    .thread-stats { text-align:center; font-size:12px; }
+    .thread-stats b { display:block; color:#e5e7eb; }
+    .thread-stats span { font-size:11px; color:#8a8f98; }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a href="index.html" class="brand"><div class="brand-logo">L</div><div><div class="brand-text">LAFF <span>PROJECT</span></div><div class="brand-sub">ROLE PLAY • RAGE MP</div></div></a>
-      <nav class="nav">
-        <a href="index.html"><i class="fa-solid fa-house"></i> Главная</a>
-        <a href="index.html" class="active"><i class="fa-solid fa-comments"></i> Форум</a>
-        <a href="#"><i class="fa-solid fa-bolt"></i> Что нового</a>
-        <a href="#"><i class="fa-solid fa-users"></i> Пользователи</a>
+  <header class="xf-header">
+    <div class="xf-header-inner">
+      <a href="index.html" class="xf-logo">LAFF <span>PROJECT</span> ☂️</a>
+      <nav class="xf-nav">
+        <a href="index.html">Главная</a>
+        <a href="index.html" class="active">Форум</a>
+        <a href="#">Что нового <i class="fa-solid fa-caret-down" style="font-size:10px"></i></a>
+        <a href="#">Пользователи <i class="fa-solid fa-caret-down" style="font-size:10px"></i></a>
       </nav>
-      <div class="actions">
-        <div class="search-box"><input id="searchInput" placeholder="Поиск..."><i class="fa-solid fa-magnifying-glass"></i></div>
-        <button class="btn btn-ghost" data-modal="loginModal">Войти</button>
-        <button class="btn btn-primary" data-modal="registerModal">Регистрация</button>
+      <div class="xf-nav-right">
+        <a href="index.html">На главную</a>
+        <a href="#" class="search"><i class="fa-solid fa-magnifying-glass"></i> Поиск</a>
       </div>
     </div>
   </header>
-
-  <div class="container">
-    <div class="breadcrumbs">
-      <a href="index.html">Главная</a> <i class="fa-solid fa-chevron-right"></i> <a href="index.html">Форум</a> <i class="fa-solid fa-chevron-right"></i> <span id="forum-title">Загрузка...</span>
+  <div class="xf-subnav">
+    <div class="xf-subnav-inner">
+      <a href="index.html">Главная</a> <span style="color:#4a4a4a">›</span> <a href="index.html">Форум</a> <span style="color:#4a4a4a">›</span> <span id="forum-title" style="color:#e5e7eb">Загрузка...</span>
     </div>
+  </div>
 
+  <div class="xf-page">
     <main>
-      <div class="category">
-        <div class="cat-header">
-          <div class="cat-icon">📁</div>
-          <div><div class="cat-title" id="forum-title">Форум</div><div class="cat-desc" id="forum-desc">Описание форума</div></div>
-          <button class="btn btn-primary" style="margin-left:auto" onclick="openNewThread()"><i class="fa-solid fa-plus"></i> Создать тему</button>
-        </div>
-        <div id="thread-list"></div>
+      <div class="xf-page-header">
+        <h1 id="forum-title-h">Форум</h1>
+        <button class="btn-new" onclick="openNewThread()"><i class="fa-solid fa-plus"></i> Создать тему</button>
+      </div>
+      <div class="xf-category">
+        <div class="xf-category-header" id="forum-desc">Темы раздела</div>
+        <div id="thread-list"><div style="padding:20px; color:#8a8f98;">Загрузка...</div></div>
       </div>
     </main>
-
-    <aside class="sidebar">
-      <div class="side-card">
-        <div class="side-head">Информация</div>
-        <div class="side-body" style="font-size:12px;color:var(--text-dim);line-height:1.6">
-          <p>Это раздел форума LAFF PROJECT с бэкендом. Создавайте темы, ставьте лайки, используйте WYSIWYG редактор.</p>
-          <button class="btn btn-ghost" style="width:100%;margin-top:12px"><i class="fa-solid fa-book"></i> Правила раздела</button>
-        </div>
+    <aside class="xf-sidebar">
+      <div class="xf-side-card">
+        <div class="xf-side-header">Информация</div>
+        <div class="xf-side-body" style="font-size:12px; color:#8a8f98;">Раздел форума LAFF PROJECT. Создавайте темы, используйте WYSIWYG редактор и лайки.</div>
       </div>
-      <div class="side-card"><div class="side-head">Сейчас онлайн</div><div class="side-body"><div id="online-users" class="online-list"></div></div></div>
+      <div class="xf-side-card">
+        <div class="xf-side-header">Пользователи онлайн</div>
+        <div class="xf-side-body" id="online-users"></div>
+      </div>
     </aside>
   </div>
 
-  <div id="newThreadModal" class="modal-backdrop">
-    <div class="modal" style="max-width:700px">
-      <div class="modal-head"><h3>Новая тема</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
-      <div class="modal-body">
-        <div class="form-row"><label>Заголовок</label><input id="newTitle" class="input" placeholder="Название темы"></div>
-        <div class="form-row"><label>Сообщение</label><div id="newThreadEditor"></div></div>
-        <button class="btn btn-primary" style="width:100%" onclick="createThread()"><i class="fa-solid fa-paper-plane"></i> Создать тему</button>
+  <div id="newThreadModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); place-items:center; z-index:100; padding:20px;">
+    <div style="background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; width:100%; max-width:600px; padding:20px;">
+      <h3 style="color:#fff; margin-bottom:12px;">Новая тема</h3>
+      <input id="newTitle" placeholder="Заголовок" style="width:100%; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:10px; color:#fff; margin-bottom:10px;">
+      <div id="newThreadEditor" style="margin-bottom:12px;"></div>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button onclick="document.getElementById('newThreadModal').style.display='none'" style="background:#252525; color:#9ca3af; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Отмена</button>
+        <button onclick="createThread()" style="background:#3b82f6; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">Создать</button>
       </div>
     </div>
   </div>
 
-  <div id="loginModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Вход</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Логин</label><input class="input" placeholder="Maestro"></div><div class="form-row"><label>Пароль</label><input type="password" class="input" placeholder="laff2025"></div><button class="btn btn-primary" style="width:100%">Войти</button></div></div></div>
-  <div id="registerModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Регистрация</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Ник</label><input class="input" placeholder="John_Laff"></div><div class="form-row"><label>Email</label><input class="input" placeholder="you@example.com"></div><div class="form-row"><label>Пароль</label><input type="password" class="input"></div><div class="form-row"><label>Статический ID</label><input class="input"></div><button class="btn btn-primary" style="width:100%">Создать</button></div></div></div>
-
   <script src="assets/api.js"></script>
   <script src="assets/editor.js"></script>
-  <script src="assets/app-v2.js"></script>
   <script>
-    let newThreadEditor;
+    let editor;
     function openNewThread(){
-      if (!LaffAPI.getUser()){ alert('Войдите чтобы создавать темы'); document.getElementById('loginModal').classList.add('open'); return; }
-      document.getElementById('newThreadModal').classList.add('open');
-      if (!newThreadEditor) newThreadEditor = new LaffEditor('newThreadEditor', { placeholder: 'Текст темы...' });
+      if(!LaffAPI.getUser()){ alert('Войдите'); return; }
+      document.getElementById('newThreadModal').style.display='grid';
+      if(!editor) editor = new LaffEditor('newThreadEditor', { placeholder:'Текст темы...' });
     }
     async function createThread(){
       const title = document.getElementById('newTitle').value.trim();
-      const content = newThreadEditor ? newThreadEditor.getText().trim() : '';
-      if (!title) return alert('Введите заголовок');
-      if (!content) return alert('Введите текст');
-      const params = new URLSearchParams(location.search);
-      const forumId = params.get('f') || 'news';
+      const content = editor ? editor.getText().trim() : '';
+      if(!title || !content) return alert('Заполните поля');
+      const forumId = new URLSearchParams(location.search).get('f') || 'news';
       try {
-        const thread = await LaffAPI.createThread(forumId, title, content);
-        location.href = `thread.html?id=${thread.id}&f=${forumId}`;
+        const t = await LaffAPI.createThread(forumId, title, content);
+        location.href = `thread.html?id=${t.id}&f=${forumId}`;
       } catch(e){ alert(e.message); }
     }
+    async function loadThreads(){
+      const forumId = new URLSearchParams(location.search).get('f') || 'news';
+      const titleEl = document.getElementById('forum-title');
+      const titleH = document.getElementById('forum-title-h');
+      const descEl = document.getElementById('forum-desc');
+      try {
+        const forums = await LaffAPI.fetchForums();
+        const forum = forums.flatMap(c=>c.forums).find(f=>f.id===forumId);
+        if(forum){ titleEl.textContent = forum.title; titleH.textContent = forum.title; descEl.textContent = forum.desc; }
+      } catch {}
+      try {
+        const threads = await LaffAPI.fetchThreads(forumId);
+        const list = document.getElementById('thread-list');
+        if(!threads.length){ list.innerHTML = '<div style="padding:40px; text-align:center; color:#8a8f98;">Нет тем. Будьте первым!</div>'; return; }
+        list.innerHTML = threads.map(t=>`
+          <a href="thread.html?id=${t.id}&f=${forumId}" class="thread-row ${t.pinned?'pinned':''}">
+            <div class="thread-avatar"><img src="${t.avatar}"></div>
+            <div class="thread-main">
+              <h3>${t.pinned?'📌 ':''}${t.title}</h3>
+              <div class="thread-meta">${t.author} • ${new Date(t.created_at).toLocaleDateString()} • ${t.role}</div>
+            </div>
+            <div class="thread-stats"><b>${t.replies||0}</b><span>Ответов</span></div>
+            <div class="thread-stats"><b>${t.views||0}</b><span>Просмотров</span></div>
+          </a>
+        `).join('');
+      } catch(e){ document.getElementById('thread-list').innerHTML = `<div style="padding:20px; color:#ef4444;">${e.message}</div>`; }
+    }
+    async function loadOnline(){
+      try {
+        const users = await LaffAPI.fetchOnline();
+        document.getElementById('online-users').innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:2px 0;">${u.name}</div>`).join('');
+      } catch {}
+    }
+    document.addEventListener('DOMContentLoaded', ()=>{ loadThreads(); loadOnline(); });
   </script>
 </body>
 </html>

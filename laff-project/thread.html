@@ -3,49 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Тема - LAFF PROJECT ☂️</title>
-  <link rel="stylesheet" href="assets/style.css">
+  <title>Тема - LAFF PROJECT</title>
+  <link rel="stylesheet" href="assets/trace-exact.css">
   <link rel="stylesheet" href="assets/editor.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .post { display:grid; grid-template-columns:180px 1fr; border-bottom:1px solid #242424; background:#1c1c1c; }
+    @media(max-width:700px){ .post{grid-template-columns:1fr} }
+    .post-user { background:#1a1a1a; border-right:1px solid #242424; padding:16px; text-align:center; }
+    .post-user img { width:72px; height:72px; border-radius:8px; border:1px solid #2a2a2a; }
+    .post-user h4 { margin-top:8px; font-size:13px; color:#e5e7eb; }
+    .post-user .role { margin-top:4px; display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; background:#3b82f6; color:white; }
+    .post-user .role.admin { background:#dc2626; }
+    .post-user .role.mod { background:#8b5cf6; }
+    .post-stats { margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:10px; color:#8a8f98; }
+    .post-content { padding:16px; }
+    .post-content p { margin-bottom:10px; line-height:1.6; color:#cbd5e1; }
+    .post-actions { margin-top:12px; display:flex; gap:6px; border-top:1px solid #242424; padding-top:10px; }
+    .post-actions button { background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:6px 12px; border-radius:6px; font-size:11px; cursor:pointer; }
+    .post-actions button:hover { background:#2a2a2a; color:#fff; }
+    .like-btn.liked { background: rgba(220,38,38,0.15) !important; color:#ef4444 !important; border-color: rgba(220,38,38,0.3) !important; }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a href="index.html" class="brand"><div class="brand-logo">L</div><div><div class="brand-text">LAFF <span>PROJECT</span></div><div class="brand-sub">ROLE PLAY • RAGE MP</div></div></a>
-      <nav class="nav">
+  <header class="xf-header">
+    <div class="xf-header-inner">
+      <a href="index.html" class="xf-logo">LAFF <span>PROJECT</span> ☂️</a>
+      <nav class="xf-nav">
         <a href="index.html">Главная</a>
         <a href="index.html" class="active">Форум</a>
         <a href="#">Что нового</a>
       </nav>
-      <div class="actions">
-        <div class="search-box"><input id="searchInput" placeholder="Поиск..."><i class="fa-solid fa-magnifying-glass"></i></div>
-        <button class="btn btn-ghost" data-modal="loginModal">Войти</button>
-        <button class="btn btn-primary" data-modal="registerModal">Регистрация</button>
+      <div class="xf-nav-right">
+        <a href="index.html">На главную</a>
       </div>
     </div>
   </header>
-
-  <div class="container">
-    <div class="breadcrumbs">
-      <a href="index.html">Главная</a> <i class="fa-solid fa-chevron-right"></i> <a href="index.html">Форум</a> <i class="fa-solid fa-chevron-right"></i> <span>Тема</span>
+  <div class="xf-subnav">
+    <div class="xf-subnav-inner">
+      <a href="index.html">Главная</a> <span style="color:#4a4a4a">›</span> <a href="index.html">Форум</a> <span style="color:#4a4a4a">›</span> <span style="color:#e5e7eb">Тема</span>
     </div>
+  </div>
 
+  <div class="xf-page">
     <main>
-      <div id="thread-view" class="thread-view"></div>
+      <div id="thread-view" style="background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden;"></div>
     </main>
-
-    <aside class="sidebar">
-      <div class="side-card"><div class="side-head">Информация о теме</div><div class="side-body" style="font-size:12px;color:var(--text-dim)"><p>Автор: <b style="color:var(--text)" id="info-author">—</b><br>Просмотров: <span id="info-views">—</span><br>Ответов: <span id="info-replies">—</span></p><button class="btn btn-ghost" style="width:100%;margin-top:12px" onclick="navigator.clipboard.writeText(location.href)"><i class="fa-solid fa-share"></i> Поделиться</button></div></div>
-      <div class="side-card"><div class="side-head">Похожие темы</div><div class="side-body" style="display:flex;flex-direction:column;gap:10px;font-size:12.5px"><a href="#" style="color:var(--accent)">Правила игровых зон</a><a href="#">Общие правила сервера</a><a href="#">Как зайти на сервер</a><a href="#">Заявление на пост лидера</a></div></div>
-      <div class="side-card"><div class="side-head">Сейчас онлайн</div><div class="side-body"><div id="online-users" class="online-list"></div></div></div>
+    <aside class="xf-sidebar">
+      <div class="xf-side-card">
+        <div class="xf-side-header">Информация</div>
+        <div class="xf-side-body" style="font-size:12px; color:#8a8f98;">
+          <div>Автор: <b style="color:#e5e7eb" id="info-author">—</b></div>
+          <div style="margin-top:4px;">Просмотров: <span id="info-views">—</span></div>
+          <div style="margin-top:8px;"><button onclick="navigator.clipboard.writeText(location.href)" style="width:100%; background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:6px; border-radius:6px; cursor:pointer;">Поделиться</button></div>
+        </div>
+      </div>
+      <div class="xf-side-card">
+        <div class="xf-side-header">Сейчас онлайн</div>
+        <div class="xf-side-body" id="online-users"></div>
+      </div>
     </aside>
   </div>
 
-  <div id="loginModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Вход</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Логин</label><input class="input" placeholder="Maestro"></div><div class="form-row"><label>Пароль</label><input type="password" class="input" placeholder="laff2025"></div><div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px;font-size:11px">Админы: Maestro / laff2025</div><button class="btn btn-primary" style="width:100%">Войти</button></div></div></div>
-  <div id="registerModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Регистрация</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Ник</label><input class="input" placeholder="John_Laff"></div><div class="form-row"><label>Email</label><input class="input"></div><div class="form-row"><label>Пароль</label><input type="password" class="input"></div><div class="form-row"><label>Статический ID</label><input class="input"></div><button class="btn btn-primary" style="width:100%">Создать</button></div></div></div>
-
   <script src="assets/api.js"></script>
   <script src="assets/editor.js"></script>
-  <script src="assets/app-v2.js"></script>
+  <script>
+    function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    async function loadThread(){
+      const id = new URLSearchParams(location.search).get('id');
+      if(!id) return;
+      const container = document.getElementById('thread-view');
+      container.innerHTML = '<div style="padding:40px; text-align:center; color:#8a8f98;">Загрузка...</div>';
+      try {
+        const t = await LaffAPI.fetchThread(id);
+        document.getElementById('info-author').textContent = t.author;
+        document.getElementById('info-views').textContent = t.views;
+        container.innerHTML = `
+          <div style="padding:16px 20px; border-bottom:1px solid #2a2a2a;">
+            <h1 style="font-size:18px; font-weight:700; color:#fff;">${t.pinned?'📌 ':''}${escapeHtml(t.title)}</h1>
+            <div style="margin-top:6px; font-size:11px; color:#8a8f98; display:flex; gap:12px;">
+              <span>👤 ${t.author}</span><span>🕒 ${new Date(t.created_at).toLocaleDateString()}</span><span>👁️ ${t.views}</span><span>💬 ${t.posts.length}</span>
+            </div>
+          </div>
+          <div class="post">
+            <div class="post-user">
+              <img src="${t.avatar}">
+              <h4>${t.author}</h4>
+              <div class="role ${t.role.includes('ОСНОВАТЕЛЬ')||t.role.includes('ГЛ.')?'admin':t.role.includes('ТЕХ')?'mod':''}">${t.role}</div>
+              <div class="post-stats"><div><b>${t.author_messages||0}</b><br>сообщений</div><div><b>${t.author_rep||0}</b><br>репутация</div></div>
+            </div>
+            <div class="post-content">
+              <div style="white-space:pre-wrap; color:#cbd5e1;">${escapeHtml(t.content)}</div>
+              <div style="margin-top:12px; padding:10px; background:#111; border:1px solid #2a2a2a; border-radius:6px; font-size:11px; color:#8a8f98;">IP: play.laff-project.com • LAFF PROJECT — точная копия Trace RP</div>
+              <div class="post-actions">
+                <button class="like-btn" onclick="likeThread(${t.id}, this)"><i class="fa-solid fa-heart"></i> Нравится (${t.likes||0})</button>
+                <button onclick="document.getElementById('replyEditor').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-reply"></i> Ответить</button>
+              </div>
+            </div>
+          </div>
+          <div id="posts-list">
+            ${t.posts.map(p=>`
+              <div class="post">
+                <div class="post-user">
+                  <img src="${p.avatar}">
+                  <h4>${p.author}</h4>
+                  <div class="role ${p.role.includes('ОСНОВАТЕЛЬ')||p.role.includes('ГЛ.')?'admin':p.role.includes('ТЕХ')?'mod':''}">${p.role}</div>
+                  <div class="post-stats"><div><b>${p.author_messages||0}</b><br>сообщений</div><div><b>${p.author_rep||0}</b><br>репутация</div></div>
+                </div>
+                <div class="post-content">
+                  <div style="font-size:10px; color:#6b7280; margin-bottom:6px;">${new Date(p.created_at).toLocaleString()}</div>
+                  <div style="white-space:pre-wrap; color:#cbd5e1;">${escapeHtml(p.content)}</div>
+                  <div class="post-actions">
+                    <button class="like-btn" onclick="likePost(${p.id}, this)"><i class="fa-solid fa-heart"></i> ${p.likes||0}</button>
+                    <button onclick="quotePost('${escapeHtml(p.author)}', \`${escapeHtml(p.content).substring(0,150)}\`)"><i class="fa-solid fa-quote-left"></i> Цитата</button>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div style="padding:16px; background:#1a1a1a; border-top:1px solid #2a2a2a;">
+            <h4 style="font-size:13px; color:#e5e7eb; margin-bottom:10px;">Ответить в тему</h4>
+            <div id="replyEditor"></div>
+            <div style="margin-top:10px; display:flex; justify-content:flex-end; gap:8px;">
+              <button onclick="editor.clear()" style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:8px 16px; border-radius:6px; cursor:pointer;">Очистить</button>
+              <button onclick="postReply(${t.id})" style="background:#3b82f6; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">Отправить</button>
+            </div>
+          </div>
+        `;
+        window.editor = new LaffEditor('replyEditor', { placeholder:'Напишите ответ...' });
+      } catch(e){ container.innerHTML = `<div style="padding:40px; text-align:center; color:#ef4444;">${e.message}</div>`; }
+    }
+    async function postReply(threadId){
+      const content = window.editor ? window.editor.getText().trim() : '';
+      if(!content) return alert('Введите сообщение');
+      if(!LaffAPI.getUser()) return alert('Войдите');
+      try { await LaffAPI.replyThread(threadId, content); location.reload(); } catch(e){ alert(e.message); }
+    }
+    async function likeThread(id, btn){
+      if(!LaffAPI.getUser()) return alert('Войдите');
+      try {
+        const r = await LaffAPI.likeThread(id);
+        btn.classList.toggle('liked', r.liked);
+        const m = btn.textContent.match(/\d+/); let c = m?parseInt(m[0]):0;
+        btn.innerHTML = `<i class="fa-solid fa-heart"></i> Нравится (${r.liked?c+1:Math.max(0,c-1)})`;
+      } catch(e){ alert(e.message); }
+    }
+    async function likePost(id, btn){
+      if(!LaffAPI.getUser()) return alert('Войдите');
+      try {
+        const r = await LaffAPI.likePost(id);
+        btn.classList.toggle('liked', r.liked);
+        let c = parseInt(btn.textContent)||0;
+        btn.innerHTML = `<i class="fa-solid fa-heart"></i> ${r.liked?c+1:Math.max(0,c-1)}`;
+      } catch(e){ alert(e.message); }
+    }
+    function quotePost(author, content){
+      if(window.editor){ window.editor.setHTML(`<blockquote><b>${author} писал:</b><br>${content}</blockquote><br>`); document.getElementById('replyEditor').scrollIntoView({behavior:'smooth'}); }
+    }
+    async function loadOnline(){
+      try {
+        const users = await LaffAPI.fetchOnline();
+        document.getElementById('online-users').innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:2px 0;">${u.name}</div>`).join('');
+      } catch {}
+    }
+    document.addEventListener('DOMContentLoaded', ()=>{ loadThread(); loadOnline(); });
+  </script>
 </body>
 </html>
