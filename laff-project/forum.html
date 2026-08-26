@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Форум - LAFF PROJECT ☂️</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-logo">L</div>
+        <div><div class="brand-text">LAFF <span>PROJECT</span></div><div class="brand-sub">ROLE PLAY • RAGE MP</div></div>
+      </a>
+      <nav class="nav">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Главная</a>
+        <a href="index.html" class="active"><i class="fa-solid fa-comments"></i> Форум</a>
+        <a href="#"><i class="fa-solid fa-bolt"></i> Что нового</a>
+        <a href="#"><i class="fa-solid fa-users"></i> Пользователи</a>
+      </nav>
+      <div class="actions">
+        <div class="search-box"><input id="searchInput" placeholder="Поиск..."><i class="fa-solid fa-magnifying-glass"></i></div>
+        <button class="btn btn-ghost" data-modal="loginModal">Войти</button>
+        <button class="btn btn-primary" data-modal="registerModal">Регистрация</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="index.html">Главная</a> <i class="fa-solid fa-chevron-right"></i> <a href="index.html">Форум</a> <i class="fa-solid fa-chevron-right"></i> <span id="forum-title">Загрузка...</span>
+    </div>
+
+    <main>
+      <div class="category">
+        <div class="cat-header">
+          <div class="cat-icon">📁</div>
+          <div><div class="cat-title" id="forum-title">Форум</div><div class="cat-desc" id="forum-desc">Описание форума</div></div>
+          <button class="btn btn-primary" style="margin-left:auto" onclick="document.getElementById('newThreadModal').classList.add('open')"><i class="fa-solid fa-plus"></i> Создать тему</button>
+        </div>
+        <div id="thread-list"></div>
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="side-card">
+        <div class="side-head">Информация</div>
+        <div class="side-body" style="font-size:12px;color:var(--text-dim);line-height:1.6">
+          <p>Это раздел форума LAFF PROJECT. Здесь вы можете создавать темы, общаться, задавать вопросы.</p>
+          <p style="margin-top:10px">Пожалуйста, соблюдайте правила проекта.</p>
+          <button class="btn btn-ghost" style="width:100%;margin-top:12px"><i class="fa-solid fa-book"></i> Правила раздела</button>
+        </div>
+      </div>
+      <div class="side-card">
+        <div class="side-head">Сейчас онлайн</div>
+        <div class="side-body"><div id="online-users" class="online-list"></div></div>
+      </div>
+    </aside>
+  </div>
+
+  <div id="newThreadModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head"><h3>Новая тема</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="modal-body">
+        <div class="form-row"><label>Заголовок</label><input id="newTitle" class="input" placeholder="Название темы"></div>
+        <div class="form-row"><label>Сообщение</label><textarea id="newContent" class="input textarea" placeholder="Текст темы..."></textarea></div>
+        <button class="btn btn-primary" style="width:100%" onclick="createThread()">Создать</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loginModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Вход</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Логин</label><input class="input"></div><div class="form-row"><label>Пароль</label><input type="password" class="input"></div><button class="btn btn-primary" style="width:100%">Войти</button></div></div></div>
+  <div id="registerModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Регистрация</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Ник</label><input class="input" placeholder="John_Laff"></div><button class="btn btn-primary" style="width:100%">Создать</button></div></div></div>
+
+  <script src="assets/app.js"></script>
+  <script>
+    function createThread(){
+      const title = document.getElementById('newTitle').value;
+      const content = document.getElementById('newContent').value;
+      if(!title.trim()) return alert('Введите заголовок');
+      const params = new URLSearchParams(location.search);
+      const f = params.get('f') || 'news';
+      const threads = JSON.parse(localStorage.getItem('laff_threads_'+f) || '[]');
+      threads.unshift({ id: Date.now(), title, author: 'Вы', avatar: 'https://i.pravatar.cc/100?img=20', role: 'ИГРОК', replies:0, views:1, time:'Только что', pinned:false, content });
+      localStorage.setItem('laff_threads_'+f, JSON.stringify(threads));
+      location.reload();
+    }
+    // merge local storage threads
+    const origRender = window.renderThreadList;
+    const oldFn = renderThreadList;
+    // override to include localStorage
+    function renderThreadList(){
+      oldFn();
+      const params = new URLSearchParams(location.search);
+      const forumId = params.get('f') || 'news';
+      const extra = JSON.parse(localStorage.getItem('laff_threads_'+forumId) || '[]');
+      if(extra.length){
+        const list = document.getElementById('thread-list');
+        const extraHTML = extra.map(t => `
+          <a href="thread.html?id=${t.id}&f=${forumId}" class="thread-item">
+            <div class="t-avatar"><img src="${t.avatar}"></div>
+            <div class="t-main"><h3>${t.title} <span class="badge-new">NEW</span></h3><div class="t-meta"><span>${t.author}</span> • <span>${t.time}</span></div></div>
+            <div class="t-stats"><div style="display:flex;gap:18px;justify-content:flex-end"><div><b>${t.replies}</b><div style="font-size:11px;color:var(--text-dim)">ответов</div></div><div><b>${t.views}</b><div style="font-size:11px;color:var(--text-dim)">просм.</div></div></div></div>
+          </a>
+        `).join('');
+        list.insertAdjacentHTML('beforeend', extraHTML);
+      }
+    }
+  </script>
+</body>
+</html>

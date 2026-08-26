@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тема - LAFF PROJECT ☂️</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand"><div class="brand-logo">L</div><div><div class="brand-text">LAFF <span>PROJECT</span></div><div class="brand-sub">ROLE PLAY • RAGE MP</div></div></a>
+      <nav class="nav">
+        <a href="index.html">Главная</a>
+        <a href="index.html" class="active">Форум</a>
+        <a href="#">Что нового</a>
+      </nav>
+      <div class="actions">
+        <button class="btn btn-ghost" data-modal="loginModal">Войти</button>
+        <button class="btn btn-primary">Регистрация</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="index.html">Главная</a> <i class="fa-solid fa-chevron-right"></i> <a href="index.html">Форум</a> <i class="fa-solid fa-chevron-right"></i> <span>Тема</span>
+    </div>
+
+    <main>
+      <div id="thread-view" class="thread-view"></div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="side-card"><div class="side-head">Информация о теме</div><div class="side-body" style="font-size:12px;color:var(--text-dim)"><p>Автор: <b style="color:var(--text)">Maestro</b><br>Дата создания: 19.06.2025<br>Просмотров: 2,291</p><button class="btn btn-ghost" style="width:100%;margin-top:12px"><i class="fa-solid fa-share"></i> Поделиться</button></div></div>
+      <div class="side-card"><div class="side-head">Похожие темы</div><div class="side-body" style="display:flex;flex-direction:column;gap:10px;font-size:12.5px"><a href="#" style="color:var(--accent)">Правила игровых зон</a><a href="#">Общие правила сервера</a><a href="#">Как зайти на сервер</a><a href="#">Заявление на пост лидера</a></div></div>
+      <div class="side-card"><div class="side-head">Сейчас онлайн</div><div class="side-body"><div id="online-users" class="online-list"></div></div></div>
+    </aside>
+  </div>
+
+  <div id="loginModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Вход</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Логин</label><input class="input"></div><div class="form-row"><label>Пароль</label><input type="password" class="input"></div><button class="btn btn-primary" style="width:100%">Войти</button></div></div></div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

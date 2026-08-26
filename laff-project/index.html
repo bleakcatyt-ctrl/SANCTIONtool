@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Форум LAFF PROJECT ☂️ — Главная</title>
+  <link rel="icon" href="assets/logo.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-logo">L</div>
+        <div>
+          <div class="brand-text">LAFF <span>PROJECT</span></div>
+          <div class="brand-sub">ROLE PLAY • RAGE MP</div>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html" class="active"><i class="fa-solid fa-house"></i> Главная</a>
+        <a href="index.html"><i class="fa-solid fa-comments"></i> Форум</a>
+        <a href="#"><i class="fa-solid fa-bolt"></i> Что нового</a>
+        <a href="#"><i class="fa-solid fa-users"></i> Пользователи</a>
+        <a href="#"><i class="fa-brands fa-discord"></i> Discord</a>
+      </nav>
+      <div class="actions">
+        <div class="search-box">
+          <input id="searchInput" placeholder="Поиск...">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <button class="btn btn-ghost" data-modal="loginModal"><i class="fa-solid fa-right-to-bracket"></i> Войти</button>
+        <button class="btn btn-primary" data-modal="registerModal"><i class="fa-solid fa-user-plus"></i> Регистрация</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Welcome Banner -->
+    <div class="welcome">
+      <div class="welcome-left">
+        <h1>Добро пожаловать на <span>LAFF PROJECT</span> ☂️</h1>
+        <p>Полная копия форума Trace RP — теперь в стиле LAFF PROJECT. Лучший GTA 5 RP проект на RAGE MP с уникальной экономикой, семьями, войнами за территории и активным комьюнити. IP: <b>play.laff-project.com</b></p>
+        <div style="margin-top:14px; display:flex; gap:10px">
+          <button class="btn btn-primary" data-modal="registerModal"><i class="fa-solid fa-rocket"></i> Начать играть</button>
+          <a href="#" class="btn btn-ghost"><i class="fa-brands fa-discord"></i> Наш Discord</a>
+        </div>
+      </div>
+      <div class="welcome-stats">
+        <div class="w-stat"><b>1,243</b><span>Игроков</span></div>
+        <div class="w-stat"><b>342</b><span>Онлайн</span></div>
+        <div class="w-stat"><b>24/7</b><span>Работаем</span></div>
+      </div>
+    </div>
+
+    <div class="breadcrumbs">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Главная</a> <i class="fa-solid fa-chevron-right"></i> <span>Форум</span>
+    </div>
+
+    <!-- Main Forum List -->
+    <main>
+      <div id="forum-container"></div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="discord-card">
+        <h4><i class="fa-brands fa-discord"></i> Discord LAFF PROJECT</h4>
+        <p>Присоединяйся к 5,200+ участникам. Новости, общение, поддержка.</p>
+        <button class="btn"><i class="fa-solid fa-arrow-right"></i> Вступить</button>
+      </div>
+
+      <div class="side-card">
+        <div class="side-head"><span><i class="fa-solid fa-circle" style="color:var(--online);font-size:8px"></i> Сейчас онлайн</span><span style="color:var(--text-dim);font-weight:500">342</span></div>
+        <div class="side-body">
+          <div id="online-users" class="online-list"></div>
+          <div style="margin-top:12px; font-size:11px; color:var(--text-dim)">Всего: 342 (пользователей: 87, гостей: 255)<br>Рекорд: 892 (12.06.2025)</div>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <div class="side-head"><i class="fa-solid fa-chart-simple"></i> Статистика форума</div>
+        <div class="side-body">
+          <div class="stat-grid">
+            <div class="stat-box"><b id="stat-threads">1,847</b><span>Тем</span></div>
+            <div class="stat-box"><b id="stat-messages">12,432</b><span>Сообщений</span></div>
+            <div class="stat-box"><b id="stat-users">1,243</b><span>Участников</span></div>
+            <div class="stat-box"><b>Maestro</b><span>Новый</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <div class="side-head"><i class="fa-solid fa-trophy"></i> Топ семей недели</div>
+        <div class="side-body" style="display:flex; flex-direction:column; gap:10px">
+          <div style="display:flex; justify-content:space-between; align-items:center"><span>🥇 Laff Family</span><b>2,430 очков</b></div>
+          <div style="display:flex; justify-content:space-between; align-items:center"><span>🥈 Trapsizzeti</span><b>1,980 очков</b></div>
+          <div style="display:flex; justify-content:space-between; align-items:center"><span>🥉 Vagos Laff</span><b>1,720 очков</b></div>
+          <div style="display:flex; justify-content:space-between; align-items:center"><span>4. Ballas</span><b>1,430 очков</b></div>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <div class="side-head"><i class="fa-solid fa-server"></i> Мониторинг</div>
+        <div class="side-body">
+          <div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <div style="display:flex;justify-content:space-between"><span>Статус</span><span style="color:var(--online)"><i class="fa-solid fa-circle" style="font-size:8px"></i> Online</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px"><span>Игроков</span><b>342 / 1000</b></div>
+            <div style="margin-top:10px;background:var(--bg);height:6px;border-radius:999px;overflow:hidden"><div style="width:34%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))"></div></div>
+            <div style="margin-top:10px;font-size:11px;color:var(--text-dim)">IP: play.laff-project.com</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="footer">
+    <div>
+      <b>LAFF PROJECT</b> © 2025 — Лучший RAGE MP проект. Копия форума Trace RP с улучшениями.<br>
+      <span>Дизайн вдохновлён XenForo + Trace RP. Сделано с 💜 для комьюнити.</span>
+    </div>
+    <div style="display:flex; gap:16px">
+      <a href="#">Правила</a>
+      <a href="#">Помощь</a>
+      <a href="#">Контакты</a>
+      <a href="#">VK</a>
+      <a href="#">Discord</a>
+    </div>
+  </footer>
+
+  <!-- Modals -->
+  <div id="loginModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head"><h3>Вход</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="modal-body">
+        <div class="form-row"><label>Логин или Email</label><input class="input" placeholder="Ваш логин"></div>
+        <div class="form-row"><label>Пароль</label><input type="password" class="input" placeholder="••••••••"></div>
+        <button class="btn btn-primary" style="width:100%">Войти</button>
+        <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-dim)">Нет аккаунта? <a href="#" style="color:var(--accent)" data-modal="registerModal">Регистрация</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="registerModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head"><h3>Регистрация на LAFF PROJECT</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="modal-body">
+        <div class="form-row"><label>Никнейм (IC)</label><input class="input" placeholder="John_Laff"></div>
+        <div class="form-row"><label>Email</label><input class="input" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Пароль</label><input type="password" class="input" placeholder="Минимум 8 символов"></div>
+        <div class="form-row"><label>Статический ID (если есть)</label><input class="input" placeholder="19583"></div>
+        <button class="btn btn-primary" style="width:100%"><i class="fa-solid fa-user-plus"></i> Создать аккаунт</button>
+        <div style="margin-top:12px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:11px;color:var(--text-dim)">Регистрируясь, вы соглашаетесь с <a href="#" style="color:var(--accent)">правилами проекта</a>. IP сервера: play.laff-project.com</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
