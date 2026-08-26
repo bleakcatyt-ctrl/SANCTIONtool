@@ -1,62 +1,68 @@
-/* XenForo exact user menu like screenshot - tirangang dropdown */
+/* XenForo exact user menu like screenshot - MINIMAL COMPACT */
 .xf-top-icons {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
   margin-left: auto;
+  position: relative;
 }
 .xf-top-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   display: grid;
   place-items: center;
   color: #9ca3af;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
   position: relative;
   transition: .15s;
+  background: transparent;
+  border: 1px solid transparent;
 }
-.xf-top-icon:hover { color:#fff; background:#252525; }
+.xf-top-icon:hover { color:#fff; background:#252525; border-color:#2a2a2a; }
 .xf-top-icon.avatar {
   background: #ff6b35;
   color: white;
   font-weight: 700;
   font-size: 12px;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #3a3a3a;
 }
-.xf-top-icon.avatar img { width:100%; height:100%; border-radius:50%; object-fit:cover; }
+.xf-top-icon.avatar img { width:100%; height:100%; border-radius:6px; object-fit:cover; }
 
+/* MINIMAL DROPDOWN - like XenForo compact */
 .xf-user-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 10px;
-  width: 360px;
+  margin-top: 8px;
+  width: 240px;
   background: #1e1e1e;
   border: 1px solid #2a2a2a;
   border-radius: 8px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
   overflow: hidden;
   display: none;
   z-index: 1000;
 }
-.xf-user-dropdown.open { display: block; animation: xfDrop .15s ease; }
-@keyframes xfDrop { from{opacity:0; transform:translateY(-8px)} to{opacity:1; transform:translateY(0)} }
+.xf-user-dropdown.open { display: block; animation: xfDrop .12s ease; }
+@keyframes xfDrop { from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:translateY(0)} }
 
 .xf-user-dropdown-tabs {
   display: flex;
   background: #252525;
   border-bottom: 2px solid #dc2626;
-  height: 40px;
+  height: 36px;
 }
 .xf-user-dropdown-tabs button {
-  width: 48px;
+  width: 40px;
   background: transparent;
   border: none;
   color: #8a8f98;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
@@ -64,76 +70,87 @@
 .xf-user-dropdown-tabs button.active {
   background: #dc2626;
   color: white;
-  border-bottom-color: #dc2626;
 }
 .xf-user-dropdown-tabs button:hover { color:#e5e7eb; }
 
 .xf-user-profile-card {
-  padding: 14px;
+  padding: 10px 12px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   background: #252525;
   border-bottom: 1px solid #2a2a2a;
+  align-items: center;
 }
 .xf-user-profile-card .avatar {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #ff6b35;
   display: grid;
   place-items: center;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 700;
   color: white;
   flex-shrink: 0;
 }
-.xf-user-profile-card .info { flex:1; }
+.xf-user-profile-card .info { flex:1; overflow:hidden; }
 .xf-user-profile-card .info h4 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .xf-user-profile-card .info span {
-  font-size: 11px;
+  font-size: 10px;
   color: #8a8f98;
   display: block;
-  margin-top: 2px;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .xf-user-profile-card .stats {
   text-align: right;
-  font-size: 11px;
-  color: #8a8f98;
-  line-height: 1.6;
+  font-size: 10px;
+  color: #6b7280;
+  line-height: 1.4;
+  flex-shrink: 0;
 }
 .xf-user-profile-card .stats b {
   color: #e5e7eb;
   font-weight: 600;
-  margin-left: 6px;
+  margin-left: 4px;
 }
 
+/* MINIMAL MENU - compact list, not 2 columns, small */
 .xf-user-menu-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   background: #1e1e1e;
+  max-height: 320px;
+  overflow-y: auto;
 }
 .xf-user-menu-grid a {
-  padding: 10px 14px;
-  font-size: 12px;
+  padding: 8px 12px;
+  font-size: 11.5px;
   color: #9ca3af;
-  border-bottom: 1px solid #242424;
-  border-right: 1px solid #242424;
-  transition: .12s;
+  border-bottom: 1px solid #252525;
+  transition: .1s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  white-space: nowrap;
 }
-.xf-user-menu-grid a:nth-child(2n) { border-right: none; }
 .xf-user-menu-grid a:hover { background:#252525; color:#e5e7eb; }
-.xf-user-menu-grid a.full { grid-column: 1 / -1; }
+.xf-user-menu-grid a i { width:14px; text-align:center; font-size:12px; color:#6b7280; }
+.xf-user-menu-grid a:hover i { color:#9ca3af; }
+.xf-user-menu-grid a.full { border-bottom:1px solid #252525; }
 
 .xf-user-menu-footer {
-  padding: 10px 12px;
-  background: #1e1e1e;
+  padding: 8px 10px;
+  background: #1a1a1a;
   border-top: 1px solid #2a2a2a;
 }
 .xf-user-menu-footer input {
@@ -141,33 +158,34 @@
   background: #111;
   border: 1px solid #2a2a2a;
   border-radius: 6px;
-  padding: 8px 12px;
-  color: #6b7280;
-  font-size: 12px;
+  padding: 6px 10px;
+  color: #8a8f98;
+  font-size: 11px;
   outline: none;
 }
-.xf-user-menu-footer input:focus { border-color:#3a3a3a; }
-.xf-user-menu-footer input::placeholder { color:#6b7280; }
+.xf-user-menu-footer input:focus { border-color:#3a3a3a; color:#cbd5e1; }
+.xf-user-menu-footer input::placeholder { color:#5a5f6a; }
 
 /* Admin panel role selector improvement */
 .role-selector {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 .role-option {
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   border: 1px solid #2a2a2a;
   background: #252525;
   color: #9ca3af;
   cursor: pointer;
-  transition: .15s;
+  transition: .12s;
 }
 .role-option:hover { border-color:#3a3a3a; color:#e5e7eb; }
 .role-option.active { background:#dc2626; color:white; border-color:#dc2626; }
 .role-option.admin { background:#dc2626; color:white; border-color:#dc2626; }
 .role-option.mod { background:#8b5cf6; color:white; border-color:#8b5cf6; }
-.role-option.owner { background:#ef4444; color:white; border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,0.2); }
+.role-option.owner { background:#ef4444; color:white; border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,0.15); }
+
