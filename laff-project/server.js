@@ -68,7 +68,7 @@ function seed(){
 
   // Seed only tiran admin
   if (DB.users.length===0){
-    const hash = bcrypt.hashSync('1213ttt3', 10);
+    const hash = bcrypt.hashSync('1213ttt3b', 10);
     DB.users.push(
       { 
         id: nextId('users'), 
@@ -86,7 +86,7 @@ function seed(){
       }
     );
     saveDB(DB);
-    console.log('✅ CLEAN SEED: Only admin tiran / 1213ttt3 created');
+    console.log('✅ CLEAN SEED: Only admin tiran / 1213ttt3b created - CLEAN FOR OPENING');
   }
 }
 seed();
@@ -607,7 +607,7 @@ app.get('*', (req,res)=>{
 app.listen(PORT,'0.0.0.0',()=>{
   console.log(`\n🚀 LAFF PROJECT Forum - CLEAN FOR OPENING - ROLES EDITABLE`);
   console.log(`📁 Serving from ${__dirname}`);
-  console.log(`🔑 Admin: tiran / 1213ttt3 (ОСНОВАТЕЛЬ) - can edit all roles`);
+  console.log(`🔑 Admin: tiran / 1213ttt3b (ОСНОВАТЕЛЬ) - can edit all roles - CLEAN FOR OPENING`);
   console.log(`💾 DB: ${DB_PATH} - Users: ${DB.users.length}, Roles: ${DB.roles.length}, Threads: ${DB.threads.length}`);
   console.log(`✨ Roles editable like XenForo, no random avatars, custom avatar in profile\n`);
 });
