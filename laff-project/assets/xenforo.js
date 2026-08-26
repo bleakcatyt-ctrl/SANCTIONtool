@@ -1,4 +1,4 @@
-/* XenForo-like header - MINIMAL COMPACT FIXED - NO AUTO-OPEN */
+/* XenForo-like header - MINIMAL COMPACT - FINAL FIX NO AUTO-OPEN */
 function initXenforoHeader(){
   const user = LaffAPI.getUser();
   const right = document.getElementById('auth-right');
@@ -9,17 +9,17 @@ function initXenforoHeader(){
   if(user){
     right.innerHTML = `
       <div class="xf-top-icons" style="position:relative;">
-        <div class="xf-top-icon avatar" id="topAvatar" style="background:${stringToColor(user.username)}">
+        <div class="xf-top-icon avatar" id="topAvatar" style="background:${stringToColor(user.username)}" title="Профиль">
           ${user.avatar && user.avatar.length>10 ? `<img src="${user.avatar}" alt="">` : user.username.charAt(0).toUpperCase()}
         </div>
         <div class="xf-top-icon" title="Сообщения"><i class="fa-regular fa-envelope"></i></div>
         <div class="xf-top-icon" title="Оповещения"><i class="fa-regular fa-bell"></i></div>
         <div class="xf-top-icon" title="Поиск"><i class="fa-solid fa-magnifying-glass"></i></div>
         
-        <div class="xf-user-dropdown" id="userDropdownExact">
+        <div class="xf-user-dropdown" id="userDropdownExact" hidden style="display:none !important;">
           <div class="xf-user-dropdown-tabs">
-            <button class="active" title="Профиль"><i class="fa-regular fa-user"></i></button>
-            <button title="Закладки"><i class="fa-regular fa-bookmark"></i></button>
+            <button class="active"><i class="fa-regular fa-user"></i></button>
+            <button><i class="fa-regular fa-bookmark"></i></button>
           </div>
           <div class="xf-user-profile-card">
             <div class="avatar" style="background:${stringToColor(user.username)}">${user.avatar && user.avatar.length>10 ? `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : user.username.charAt(0).toUpperCase()}</div>
@@ -51,45 +51,74 @@ function initXenforoHeader(){
       </div>
     `;
 
-    // Attach events after render - ensure closed
+    const forceClose = ()=>{
+      const dd = document.getElementById('userDropdownExact');
+      if(dd){
+        dd.classList.remove('open');
+        dd.hidden = true;
+        dd.style.setProperty('display','none','important');
+      }
+    };
+    forceClose();
+    setTimeout(forceClose, 50);
+    setTimeout(forceClose, 200);
+    setTimeout(forceClose, 600);
+
     setTimeout(()=>{
       const avatar = document.getElementById('topAvatar');
       const dropdown = document.getElementById('userDropdownExact');
       if(avatar && dropdown){
-        dropdown.classList.remove('open');
         avatar.addEventListener('click', (e)=>{
           e.stopPropagation();
           e.preventDefault();
-          dropdown.classList.toggle('open');
+          const isOpen = dropdown.classList.contains('open');
+          if(isOpen){
+            dropdown.classList.remove('open');
+            dropdown.hidden = true;
+            dropdown.dataset.userOpened = '';
+            dropdown.style.setProperty('display','none','important');
+          } else {
+            dropdown.classList.add('open');
+            dropdown.hidden = false;
+            dropdown.dataset.userOpened = '1';
+            dropdown.style.setProperty('display','block','important');
+            // Clear userOpened flag after 100ms so auto-close on scroll still works but not immediate
+            setTimeout(()=>{ dropdown.dataset.userOpened = ''; }, 100);
+          }
         });
       }
-    }, 50);
+    }, 100);
 
-    // Close on outside click
-    const closeHandler = (e)=>{
+    document.addEventListener('click', (e)=>{
       const dropdown = document.getElementById('userDropdownExact');
       const avatar = document.getElementById('topAvatar');
       if(dropdown && avatar && !avatar.contains(e.target) && !dropdown.contains(e.target)){
         dropdown.classList.remove('open');
+        dropdown.hidden = true;
+        dropdown.style.setProperty('display','none','important');
       }
-    };
-    document.removeEventListener('click', closeHandler);
-    document.addEventListener('click', closeHandler);
+    });
 
-    // Close on scroll
     window.addEventListener('scroll', ()=>{
-      document.getElementById('userDropdownExact')?.classList.remove('open');
-    }, { passive:true });
+      const dd = document.getElementById('userDropdownExact');
+      if(dd){ dd.classList.remove('open'); dd.hidden=true; dd.style.setProperty('display','none','important'); }
+    }, {passive:true});
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape'){
+        const dd = document.getElementById('userDropdownExact');
+        if(dd){ dd.classList.remove('open'); dd.hidden=true; dd.style.setProperty('display','none','important'); }
+      }
+    });
 
     const adminCard = document.getElementById('admin-card');
     if(isAdmin && adminCard){
       adminCard.style.display = 'block';
-      const userEl = document.getElementById('admin-card-user');
-      if(userEl) userEl.textContent = user.username;
+      const el = document.getElementById('admin-card-user');
+      if(el) el.textContent = user.username;
     }
     const footerAdmin = document.getElementById('footer-admin-link');
     if(footerAdmin) footerAdmin.style.display = isAdmin ? 'inline' : 'none';
-    
   } else {
     right.innerHTML = `
       <a href="#" onclick="document.getElementById('loginModal')?.classList.add('open'); return false;"><i class="fa-solid fa-right-to-bracket"></i> Вход</a>
@@ -118,7 +147,8 @@ function updateStatus(text){
   localStorage.setItem('laff_status_'+user.id, text);
   const input = document.querySelector('.xf-user-menu-footer input');
   if(input) input.value = '';
-  document.getElementById('userDropdownExact')?.classList.remove('open');
+  const dd = document.getElementById('userDropdownExact');
+  if(dd){ dd.classList.remove('open'); dd.hidden=true; dd.style.setProperty('display','none','important'); }
   const note = document.createElement('div');
   note.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#16a34a; color:white; padding:8px 14px; border-radius:6px; font-size:11px; z-index:10000;';
   note.textContent = 'Статус: ' + text;
@@ -126,10 +156,24 @@ function updateStatus(text){
   setTimeout(()=>note.remove(), 2500);
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
-  initXenforoHeader();
-  setTimeout(()=>{ document.getElementById('userDropdownExact')?.classList.remove('open'); }, 150);
-  if(LaffAPI.getToken()){
-    LaffAPI.fetchMe().then(()=>initXenforoHeader()).catch(()=>{});
-  }
-});
+(function(){
+  const closeAll = ()=>{
+    const dd = document.getElementById('userDropdownExact');
+    if(dd && !dd.dataset.userOpened){
+      dd.classList.remove('open');
+      dd.hidden=true;
+      dd.style.setProperty('display','none','important');
+    }
+  };
+  document.addEventListener('DOMContentLoaded', ()=>{
+    closeAll();
+    initXenforoHeader();
+    setTimeout(closeAll, 100);
+    setTimeout(closeAll, 500);
+    setTimeout(closeAll, 1000);
+    if(LaffAPI.getToken()){
+      LaffAPI.fetchMe().then(()=>{ initXenforoHeader(); setTimeout(closeAll, 100); }).catch(()=>{});
+    }
+  });
+  window.addEventListener('load', closeAll);
+})();
