@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль - LAFF PROJECT</title>
+  <link rel="stylesheet" href="assets/trace-exact.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .profile-header {
+      background: #1c1c1c;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .profile-banner {
+      height: 140px;
+      background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e1a2e 100%);
+      position: relative;
+    }
+    .profile-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(600px 200px at 30% 0%, rgba(139,92,246,0.2), transparent);
+    }
+    .profile-main {
+      padding: 0 20px 16px;
+      display: flex;
+      gap: 16px;
+      align-items: end;
+      margin-top: -40px;
+      position: relative;
+    }
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 12px;
+      border: 3px solid #1c1c1c;
+      background: #ff6b35;
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .profile-info h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .profile-info .role-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      color: white;
+    }
+    .profile-info .meta {
+      font-size: 12px;
+      color: #8a8f98;
+      margin-top: 4px;
+      display: flex;
+      gap: 12px;
+    }
+    .profile-tabs {
+      display: flex;
+      gap: 2px;
+      background: #252525;
+      border-top: 1px solid #2a2a2a;
+      padding: 0 20px;
+      overflow-x: auto;
+    }
+    .profile-tabs a {
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #9ca3af;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .profile-tabs a:hover { color:#e5e7eb; }
+    .profile-tabs a.active { color:#fff; border-bottom-color:#3b82f6; }
+
+    .profile-content {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media(max-width:900px){ .profile-content{grid-template-columns:1fr} }
+
+    .profile-card {
+      background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden; margin-bottom:16px;
+    }
+    .profile-card-header {
+      background:#252525; padding:10px 14px; font-size:12px; font-weight:700; color:#e5e7eb; border-bottom:1px solid #2a2a2a; text-transform:uppercase; letter-spacing:0.05em;
+    }
+    .profile-card-body { padding:14px; }
+
+    .stat-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #242424; font-size:12px; }
+    .stat-row:last-child { border-bottom:none; }
+    .stat-row span { color:#8a8f98; }
+    .stat-row b { color:#e5e7eb; }
+
+    .post-mini { padding:10px 0; border-bottom:1px solid #242424; }
+    .post-mini:last-child { border-bottom:none; }
+    .post-mini a { font-size:12.5px; color:#e5e7eb; font-weight:500; }
+    .post-mini a:hover { color:#3b82f6; }
+    .post-mini .meta { font-size:11px; color:#6b7280; margin-top:2px; }
+  </style>
+</head>
+<body>
+  <header class="xf-header">
+    <div class="xf-header-inner">
+      <a href="index.html" class="xf-logo">LAFF <span>PROJECT</span> ☂️</a>
+      <nav class="xf-nav">
+        <a href="index.html">Главная</a>
+        <a href="index.html">Форум</a>
+        <a href="whats-new.html">Что нового</a>
+        <a href="users.html">Пользователи</a>
+      </nav>
+      <div class="xf-nav-right" id="auth-right">
+        <a href="index.html">На главную</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="xf-subnav">
+    <div class="xf-subnav-inner">
+      <a href="index.html">Главная</a> <span style="color:#4a4a4a">›</span> <a href="users.html">Пользователи</a> <span style="color:#4a4a4a">›</span> <span id="breadcrumb-name" style="color:#e5e7eb">Профиль</span>
+    </div>
+  </div>
+
+  <div style="max-width:1280px; margin:0 auto; padding:20px 16px 40px;">
+    <div class="profile-header">
+      <div class="profile-banner"></div>
+      <div class="profile-main">
+        <div id="profile-avatar" class="profile-avatar">T</div>
+        <div class="profile-info" style="flex:1;">
+          <h1 id="profile-name">tiran <span id="profile-role" class="role-badge" style="background:#dc2626;">ОСНОВАТЕЛЬ</span></h1>
+          <div class="meta">
+            <span><i class="fa-regular fa-calendar"></i> Регистрация: <span id="profile-reg">—</span></span>
+            <span><i class="fa-regular fa-clock"></i> Был в сети: <span id="profile-last">Только что</span></span>
+            <span><i class="fa-regular fa-message"></i> Сообщений: <span id="profile-messages">0</span></span>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <button class="xf-profile-btn" onclick="alert('Написать сообщение')"><i class="fa-regular fa-envelope"></i> Сообщение</button>
+          <button class="xf-profile-btn" onclick="alert('Подписка')"><i class="fa-solid fa-user-plus"></i> Подписаться</button>
+          <button class="xf-profile-btn" id="edit-profile-btn" style="display:none;" onclick="location.href='account.html'"><i class="fa-solid fa-pen"></i> Редактировать</button>
+        </div>
+      </div>
+      <div class="profile-tabs">
+        <a href="#" class="active" data-tab="posts"><i class="fa-regular fa-file-lines"></i> Сообщения профиля</a>
+        <a href="#" data-tab="activity"><i class="fa-solid fa-clock-rotate-left"></i> Последняя активность</a>
+        <a href="#" data-tab="about"><i class="fa-regular fa-address-card"></i> Информация</a>
+        <a href="#" data-tab="threads"><i class="fa-solid fa-comments"></i> Темы</a>
+      </div>
+    </div>
+
+    <div class="profile-content">
+      <div>
+        <div id="tab-posts" class="tab-content active">
+          <div class="profile-card">
+            <div class="profile-card-header">Сообщения профиля</div>
+            <div class="profile-card-body" id="profile-posts">
+              <div style="padding:20px; text-align:center; color:#6b7280;">
+                <i class="fa-regular fa-comments" style="font-size:32px; opacity:0.5; display:block; margin-bottom:8px;"></i>
+                Нет сообщений профиля<br>
+                <span style="font-size:11px;">Форум чист для открытия</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-activity" class="tab-content" style="display:none;">
+          <div class="profile-card">
+            <div class="profile-card-header">Последняя активность</div>
+            <div class="profile-card-body" id="activity-list">
+              <div style="padding:20px; text-align:center; color:#6b7280;">Нет активности</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-about" class="tab-content" style="display:none;">
+          <div class="profile-card">
+            <div class="profile-card-header">Информация</div>
+            <div class="profile-card-body" id="about-info">
+              <div style="color:#8a8f98; font-size:12px;">Пользователь не заполнил информацию о себе</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-threads" class="tab-content" style="display:none;">
+          <div class="profile-card">
+            <div class="profile-card-header">Темы пользователя</div>
+            <div class="profile-card-body" id="user-threads">
+              <div style="padding:20px; text-align:center; color:#6b7280;">Нет тем</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="profile-card">
+          <div class="profile-card-header">Информация</div>
+          <div class="profile-card-body">
+            <div class="stat-row"><span>Сообщений:</span><b id="stat-messages">0</b></div>
+            <div class="stat-row"><span>Реакции:</span><b id="stat-reactions">0</b></div>
+            <div class="stat-row"><span>Репутация:</span><b id="stat-rep">0</b></div>
+            <div class="stat-row"><span>Регистрация:</span><b id="stat-reg">—</b></div>
+            <div class="stat-row"><span>Последний визит:</span><b>Только что</b></div>
+            <div class="stat-row"><span>Местоположение:</span><b id="stat-location">—</b></div>
+            <div class="stat-row"><span>Сайт:</span><b id="stat-website">—</b></div>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-card-header">Подпись</div>
+          <div class="profile-card-body" id="signature-box" style="font-size:12px; color:#8a8f98;">
+            Нет подписи
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/api.js"></script>
+  <script>
+    let profileUser = null;
+
+    function stringToColor(str){
+      let hash=0;
+      for(let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
+      const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+      return '#' + '00000'.substring(0,6-c.length) + c;
+    }
+
+    async function loadProfile(){
+      const params = new URLSearchParams(location.search);
+      const username = params.get('u') || 'tiran';
+      
+      try {
+        // Try to fetch user from API
+        let user = null;
+        try {
+          const users = await LaffAPI.fetchOnline();
+          user = users.find(u=>u.name===username);
+          if(!user){
+            const all = await fetch('/api/users').then(r=>r.json());
+            const found = all.find(u=>u.username===username);
+            if(found) user = { name: found.username, avatar: found.avatar, role: found.role, id: found.id, messages: found.messages, reputation: found.reputation, created_at: found.created_at };
+          }
+        } catch {}
+
+        // Fallback to current user if viewing own profile
+        if(!user && LaffAPI.getUser() && LaffAPI.getUser().username===username){
+          const me = LaffAPI.getUser();
+          user = { name: me.username, avatar: me.avatar, role: me.role, id: me.id, messages: me.messages, reputation: me.reputation, created_at: new Date().toISOString() };
+        }
+
+        // If still not found, create mock for tiran
+        if(!user && username==='tiran'){
+          user = { name:'tiran', avatar:'https://i.pravatar.cc/100?img=1', role:'ОСНОВАТЕЛЬ', id:1, messages:0, reputation:0, created_at: new Date().toISOString() };
+        }
+
+        if(!user){
+          document.querySelector('.profile-header').innerHTML = '<div style="padding:40px; text-align:center; color:#ef4444;">Пользователь не найден</div>';
+          return;
+        }
+
+        profileUser = user;
+        document.getElementById('breadcrumb-name').textContent = user.name;
+        document.getElementById('profile-name').innerHTML = `${user.name} <span class="role-badge" style="background:${user.role==='ОСНОВАТЕЛЬ'?'#dc2626':user.role.includes('АДМИН')?'#8b5cf6':'#4b5563'}">${user.role}</span>`;
+        document.getElementById('profile-avatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('profile-avatar').style.background = stringToColor(user.name);
+        if(user.avatar && user.avatar.startsWith('http')){
+          document.getElementById('profile-avatar').innerHTML = `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:12px; object-fit:cover;">`;
+        }
+        document.getElementById('profile-messages').textContent = user.messages||0;
+        document.getElementById('stat-messages').textContent = user.messages||0;
+        document.getElementById('stat-rep').textContent = user.reputation||0;
+        document.getElementById('stat-reactions').textContent = user.reputation||0;
+        document.getElementById('profile-reg').textContent = user.created_at ? new Date(user.created_at).toLocaleDateString() : '—';
+        document.getElementById('stat-reg').textContent = user.created_at ? new Date(user.created_at).toLocaleDateString() : '—';
+
+        // Load extended profile
+        const saved = JSON.parse(localStorage.getItem('laff_profile_'+(user.id||1)) || '{}');
+        if(saved.location){
+          document.getElementById('stat-location').textContent = saved.location;
+          document.getElementById('stat-location').style.color = '#e5e7eb';
+        }
+        if(saved.website){
+          document.getElementById('stat-website').innerHTML = `<a href="${saved.website}" target="_blank" style="color:#3b82f6;">${saved.website}</a>`;
+        }
+        if(saved.about){
+          document.getElementById('about-info').innerHTML = `<div style="color:#cbd5e1; line-height:1.6;">${saved.about}</div>`;
+        }
+        const sig = localStorage.getItem('laff_sig_'+(user.id||1));
+        if(sig){
+          document.getElementById('signature-box').innerHTML = sig;
+          document.getElementById('signature-box').style.color = '#cbd5e1';
+        }
+
+        // Load user threads
+        try {
+          const threads = await LaffAPI.fetchThreads();
+          const userThreads = threads.filter(t=>t.author===user.name);
+          if(userThreads.length){
+            document.getElementById('user-threads').innerHTML = userThreads.map(t=>`
+              <div class="post-mini">
+                <a href="thread.html?id=${t.id}">${t.title}</a>
+                <div class="meta">${new Date(t.created_at).toLocaleDateString()} • Просмотров: ${t.views} • Ответов: ${t.replies||0}</div>
+              </div>
+            `).join('');
+            document.getElementById('profile-posts').innerHTML = userThreads.slice(0,5).map(t=>`
+              <div class="post-mini">
+                <a href="thread.html?id=${t.id}">${t.title}</a>
+                <div class="meta">${t.content.substring(0,100)}...</div>
+              </div>
+            `).join('');
+          }
+        } catch {}
+
+        // Show edit button if own profile
+        const me = LaffAPI.getUser();
+        if(me && me.username===user.name){
+          document.getElementById('edit-profile-btn').style.display = 'inline-flex';
+        }
+
+      } catch(e){
+        console.error(e);
+      }
+    }
+
+    // Tabs
+    document.querySelectorAll('.profile-tabs a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        document.querySelectorAll('.profile-tabs a').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
+        const tab = a.dataset.tab;
+        document.getElementById('tab-'+tab).style.display='block';
+      });
+    });
+
+    function initAuth(){
+      const user = LaffAPI.getUser();
+      const right = document.getElementById('auth-right');
+      if(user){
+        const isAdmin = ['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН'].includes(user.role);
+        right.innerHTML = `
+          <div class="xf-user-menu" id="userMenu">
+            <div class="xf-user-trigger" onclick="document.getElementById('userDropdown').classList.toggle('open')">
+              <img src="${user.avatar}" alt="">
+              <span>${user.username}</span>
+              <i class="fa-solid fa-caret-down"></i>
+            </div>
+            <div class="xf-dropdown" id="userDropdown">
+              <div class="xf-dropdown-header">
+                <img src="${user.avatar}" alt="">
+                <div>
+                  <h4>${user.username}</h4>
+                  <span>${user.role}</span>
+                </div>
+              </div>
+              <div class="xf-dropdown-menu">
+                <a href="profile.html?u=${user.username}"><i class="fa-regular fa-user"></i> Ваш профиль</a>
+                <a href="account.html"><i class="fa-solid fa-gear"></i> Ваша учетная запись</a>
+                ${isAdmin?`<a href="admin.html"><i class="fa-solid fa-shield"></i> Админ-панель</a>`:''}
+                <div class="sep"></div>
+                <a href="#" class="danger" onclick="LaffAPI.logout(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Выйти</a>
+              </div>
+            </div>
+          </div>
+        `;
+        document.addEventListener('click', (e)=>{
+          const menu = document.getElementById('userMenu');
+          const dropdown = document.getElementById('userDropdown');
+          if(menu && !menu.contains(e.target) && dropdown) dropdown.classList.remove('open');
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      initAuth();
+      loadProfile();
+      if(LaffAPI.getToken()) LaffAPI.fetchMe().then(()=>{ initAuth(); loadProfile(); }).catch(()=>{});
+    });
+  </script>
+</body>
+</html>
