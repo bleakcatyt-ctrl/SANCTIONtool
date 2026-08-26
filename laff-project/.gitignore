@@ -1,0 +1,5 @@
+node_modules/
+laff-db.json
+laff.db
+*.log
+.DS_Store

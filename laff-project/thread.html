@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Тема - LAFF PROJECT ☂️</title>
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/editor.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -17,8 +18,9 @@
         <a href="#">Что нового</a>
       </nav>
       <div class="actions">
+        <div class="search-box"><input id="searchInput" placeholder="Поиск..."><i class="fa-solid fa-magnifying-glass"></i></div>
         <button class="btn btn-ghost" data-modal="loginModal">Войти</button>
-        <button class="btn btn-primary">Регистрация</button>
+        <button class="btn btn-primary" data-modal="registerModal">Регистрация</button>
       </div>
     </div>
   </header>
@@ -33,14 +35,17 @@
     </main>
 
     <aside class="sidebar">
-      <div class="side-card"><div class="side-head">Информация о теме</div><div class="side-body" style="font-size:12px;color:var(--text-dim)"><p>Автор: <b style="color:var(--text)">Maestro</b><br>Дата создания: 19.06.2025<br>Просмотров: 2,291</p><button class="btn btn-ghost" style="width:100%;margin-top:12px"><i class="fa-solid fa-share"></i> Поделиться</button></div></div>
+      <div class="side-card"><div class="side-head">Информация о теме</div><div class="side-body" style="font-size:12px;color:var(--text-dim)"><p>Автор: <b style="color:var(--text)" id="info-author">—</b><br>Просмотров: <span id="info-views">—</span><br>Ответов: <span id="info-replies">—</span></p><button class="btn btn-ghost" style="width:100%;margin-top:12px" onclick="navigator.clipboard.writeText(location.href)"><i class="fa-solid fa-share"></i> Поделиться</button></div></div>
       <div class="side-card"><div class="side-head">Похожие темы</div><div class="side-body" style="display:flex;flex-direction:column;gap:10px;font-size:12.5px"><a href="#" style="color:var(--accent)">Правила игровых зон</a><a href="#">Общие правила сервера</a><a href="#">Как зайти на сервер</a><a href="#">Заявление на пост лидера</a></div></div>
       <div class="side-card"><div class="side-head">Сейчас онлайн</div><div class="side-body"><div id="online-users" class="online-list"></div></div></div>
     </aside>
   </div>
 
-  <div id="loginModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Вход</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Логин</label><input class="input"></div><div class="form-row"><label>Пароль</label><input type="password" class="input"></div><button class="btn btn-primary" style="width:100%">Войти</button></div></div></div>
+  <div id="loginModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Вход</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Логин</label><input class="input" placeholder="Maestro"></div><div class="form-row"><label>Пароль</label><input type="password" class="input" placeholder="laff2025"></div><div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px;font-size:11px">Админы: Maestro / laff2025</div><button class="btn btn-primary" style="width:100%">Войти</button></div></div></div>
+  <div id="registerModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Регистрация</h3><button class="btn btn-ghost btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-row"><label>Ник</label><input class="input" placeholder="John_Laff"></div><div class="form-row"><label>Email</label><input class="input"></div><div class="form-row"><label>Пароль</label><input type="password" class="input"></div><div class="form-row"><label>Статический ID</label><input class="input"></div><button class="btn btn-primary" style="width:100%">Создать</button></div></div></div>
 
-  <script src="assets/app.js"></script>
+  <script src="assets/api.js"></script>
+  <script src="assets/editor.js"></script>
+  <script src="assets/app-v2.js"></script>
 </body>
 </html>

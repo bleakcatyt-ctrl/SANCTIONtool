@@ -1,0 +1,83 @@
+/* WYSIWYG Editor - XenForo style */
+.editor-wrapper{
+  background: var(--bg-soft);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+.editor-toolbar{
+  display:flex; flex-wrap:wrap; gap:4px;
+  padding:8px 10px;
+  background: var(--bg-card-2);
+  border-bottom:1px solid var(--border);
+}
+.editor-toolbar button{
+  width:32px;height:32px;
+  background: transparent;
+  border:1px solid transparent;
+  border-radius:8px;
+  color: var(--text-dim);
+  display:grid; place-items:center;
+  font-size:14px; transition:.15s;
+}
+.editor-toolbar button:hover{
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text);
+}
+.editor-toolbar button.active{
+  background: var(--accent);
+  color:white;
+  border-color: var(--accent);
+}
+.editor-toolbar .sep{
+  width:1px; height:24px; background: var(--border);
+  margin:0 4px; align-self:center;
+}
+.editor-content{
+  min-height:160px; max-height:400px;
+  overflow-y:auto;
+  padding:14px 16px;
+  outline:none;
+  color: var(--text);
+  line-height:1.6;
+}
+.editor-content:empty:before{
+  content: attr(data-placeholder);
+  color: var(--text-faint);
+}
+.editor-content b{font-weight:700}
+.editor-content i{font-style:italic}
+.editor-content blockquote{
+  border-left:3px solid var(--accent);
+  background: rgba(139,92,246,0.08);
+  padding:8px 12px; margin:8px 0;
+  border-radius:0 8px 8px 0;
+  color: var(--text-dim);
+}
+.editor-content pre{
+  background: #0e1016;
+  border:1px solid var(--border);
+  padding:10px 12px;
+  border-radius:8px;
+  font-family: monospace;
+  font-size:13px;
+  overflow-x:auto;
+}
+.editor-content a{color: var(--accent); text-decoration:underline}
+.editor-footer{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 12px;
+  background: var(--bg-card-2);
+  border-top:1px solid var(--border);
+  font-size:11px; color: var(--text-dim);
+}
+
+/* Likes animation */
+.like-btn.liked{
+  background: rgba(239,68,68,0.15) !important;
+  border-color: rgba(239,68,68,0.3) !important;
+  color: #ef4444 !important;
+}
+.like-btn.liked i{animation: heartPop .3s ease}
+@keyframes heartPop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}

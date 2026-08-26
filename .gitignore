@@ -132,3 +132,11 @@ dist
 # Custom
 .DS_Store
 *.js
+!laff-project/**/*.js
+!laff-project/*.js
+!laff-project/**/*.json
+!laff-project/*.json
+!laff-project/**/package.json
+!laff-project/**/forums.json
+!laff-project/**/*.js
+!*.config.js
