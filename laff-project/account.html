@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Информация - LAFF PROJECT</title>
-  <link rel="stylesheet" href="assets/trace-exact.css">
+  <link rel="stylesheet" href="assets/trace-exact.css"
+  <link rel="stylesheet" href="assets/xenforo-user-menu.css">
   <link rel="stylesheet" href="assets/reply-exact.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -586,8 +587,19 @@
           const circle = document.getElementById('avatar-circle');
           circle.style.background = 'none';
           circle.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-          // Save to localStorage
+          // Save to localStorage and backend
           localStorage.setItem('laff_avatar_'+currentUser.id, e.target.result);
+          fetch('/api/account/avatar', {
+            method:'POST',
+            headers:{'Content-Type':'application/json','Authorization':'Bearer '+LaffAPI.getToken()},
+            body: JSON.stringify({ avatar: e.target.result })
+          }).then(r=>r.json()).then(d=>{
+            if(d.ok) {
+              // Update header avatar too
+              const headerImg = document.querySelector('#auth-right img');
+              if(headerImg) headerImg.src = e.target.result;
+            }
+          });
         };
         reader.readAsDataURL(input.files[0]);
       }
@@ -598,6 +610,11 @@
       circle.style.background = '#ff6b35';
       circle.textContent = currentUser.username.charAt(0).toUpperCase();
       localStorage.removeItem('laff_avatar_'+currentUser.id);
+      fetch('/api/account/avatar', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+LaffAPI.getToken()},
+        body: JSON.stringify({ avatar: '' })
+      });
     }
 
     function loadProfile(){

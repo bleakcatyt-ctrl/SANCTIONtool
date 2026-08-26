@@ -13,19 +13,21 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// --- Simple JSON DB (no native deps) ---
+// --- Simple JSON DB ---
 const DB_PATH = path.join(__dirname, 'laff-db.json');
 
 function loadDB(){
-  if (!fs.existsSync(DB_PATH)){
-    return { users: [], threads: [], posts: [], likes: [], watched: [], seq: { users:1, threads:1, posts:1, likes:1 } };
-  }
+  const empty = { users: [], threads: [], posts: [], likes: [], watched: [], roles: [], seq: { users:1, threads:1, posts:1, likes:1, roles:1 } };
+  if (!fs.existsSync(DB_PATH)) return empty;
   try { 
     const data = JSON.parse(fs.readFileSync(DB_PATH,'utf-8'));
     if(!data.watched) data.watched = [];
-    if(!data.seq) data.seq = { users:1, threads:1, posts:1, likes:1 };
+    if(!data.roles) data.roles = [];
+    if(!data.likes) data.likes = [];
+    if(!data.seq) data.seq = { users:1, threads:1, posts:1, likes:1, roles:1 };
+    if(!data.seq.roles) data.seq.roles = 1;
     return data;
-  } catch { return { users: [], threads: [], posts: [], likes: [], watched: [], seq: { users:1, threads:1, posts:1, likes:1 } }; }
+  } catch { return empty; }
 }
 function saveDB(db){ fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2)); }
 
@@ -37,8 +39,34 @@ function nextId(table){
   return id;
 }
 
-// CLEAN SEED - ONLY ADMIN TIRAN FOR OPENING
+function stringToColor(str){
+  if(!str) return '#4b5563';
+  let hash=0;
+  for(let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
+  const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+  return '#' + '00000'.substring(0,6-c.length) + c;
+}
+
+// Default roles like XenForo
+const DEFAULT_ROLES = [
+  { name: 'ИГРОК', color: '#4b5563', permissions: { viewForum:true, createThread:true, replyThread:true, uploadAvatar:true, editOwnProfile:true }, isAdmin:false, isFounder:false, priority:0 },
+  { name: 'Модератор', color: '#16a34a', permissions: { viewForum:true, createThread:true, replyThread:true, uploadAvatar:true, editOwnProfile:true, deletePost:true, deleteThread:true, lockThread:true, banUser:false, manageUsers:false, manageRoles:false, viewAdmin:false }, isAdmin:false, isFounder:false, priority:10 },
+  { name: 'ТЕХ. АДМИН', color: '#8b5cf6', permissions: { viewForum:true, createThread:true, replyThread:true, uploadAvatar:true, editOwnProfile:true, deletePost:true, deleteThread:true, lockThread:true, pinThread:true, banUser:true, manageUsers:true, manageRoles:false, viewAdmin:true }, isAdmin:true, isFounder:false, priority:50 },
+  { name: 'ГЛ. АДМИН', color: '#dc2626', permissions: { viewForum:true, createThread:true, replyThread:true, uploadAvatar:true, editOwnProfile:true, deletePost:true, deleteThread:true, lockThread:true, pinThread:true, banUser:true, manageUsers:true, manageRoles:true, viewAdmin:true }, isAdmin:true, isFounder:false, priority:90 },
+  { name: 'ОСНОВАТЕЛЬ', color: '#ef4444', permissions: { viewForum:true, createThread:true, replyThread:true, uploadAvatar:true, editOwnProfile:true, deletePost:true, deleteThread:true, lockThread:true, pinThread:true, banUser:true, manageUsers:true, manageRoles:true, viewAdmin:true, isFounder:true }, isAdmin:true, isFounder:true, priority:100 }
+];
+
 function seed(){
+  // Seed roles if empty
+  if (DB.roles.length===0){
+    DEFAULT_ROLES.forEach(r=>{
+      DB.roles.push({ id: nextId('roles'), ...r, created_at: new Date().toISOString() });
+    });
+    saveDB(DB);
+    console.log('✅ Seeded roles:', DB.roles.map(r=>r.name).join(', '));
+  }
+
+  // Seed only tiran admin
   if (DB.users.length===0){
     const hash = bcrypt.hashSync('1213ttt3', 10);
     DB.users.push(
@@ -48,35 +76,38 @@ function seed(){
         email:'tiran@laff-project.com', 
         password_hash:hash, 
         role:'ОСНОВАТЕЛЬ', 
-        avatar:'https://i.pravatar.cc/100?img=1', 
+        avatar:'', // No random avatar - empty, will show letter
         messages:0, 
         reputation:0, 
         static_id:null, 
         created_at:new Date().toISOString(), 
-        banned:0 
+        banned:0,
+        profile: {}
       }
     );
     saveDB(DB);
-    console.log('✅ CLEAN SEED: Only admin tiran / 1213ttt3 created - forum ready for opening');
-  }
-  // NO THREADS SEED - clean forum for opening
-  if (DB.threads.length>0 || DB.posts.length>0 || DB.likes.length>0){
-    // If old data exists, clean it (only if user explicitly wants clean, we keep but log)
-    console.log(`DB has ${DB.threads.length} threads, ${DB.posts.length} posts - forum not clean, but keeping. Delete laff-db.json to clean.`);
+    console.log('✅ CLEAN SEED: Only admin tiran / 1213ttt3 created');
   }
 }
 seed();
 
 // Helpers
 function findUser(id){ return DB.users.find(u=>u.id===id); }
+function findRole(name){ return DB.roles.find(r=>r.name===name); }
+function getRolePerms(roleName){
+  const role = findRole(roleName);
+  return role ? role.permissions : {};
+}
 function enrichThread(t){
   const author = findUser(t.author_id);
   const replies = DB.posts.filter(p=>p.thread_id===t.id).length;
-  return { ...t, author: author?.username||'—', avatar: author?.avatar, role: author?.role||'ИГРОК', author_messages: author?.messages||0, author_rep: author?.reputation||0, replies };
+  const role = author ? findRole(author.role) : null;
+  return { ...t, author: author?.username||'—', avatar: author?.avatar||'', role: author?.role||'ИГРОК', roleColor: role?.color||'#4b5563', author_messages: author?.messages||0, author_rep: author?.reputation||0, replies };
 }
 function enrichPost(p){
   const author = findUser(p.author_id);
-  return { ...p, author: author?.username||'—', avatar: author?.avatar, role: author?.role||'ИГРОК', author_messages: author?.messages||0, author_rep: author?.reputation||0 };
+  const role = author ? findRole(author.role) : null;
+  return { ...p, author: author?.username||'—', avatar: author?.avatar||'', role: author?.role||'ИГРОК', roleColor: role?.color||'#4b5563', author_messages: author?.messages||0, author_rep: author?.reputation||0 };
 }
 
 // Auth middleware
@@ -87,8 +118,14 @@ function authMiddleware(req,res,next){
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const u = DB.users.find(x=>x.id===decoded.id);
-    if (u) req.user = { id:u.id, username:u.username, email:u.email, role:u.role, avatar:u.avatar, messages:u.messages, reputation:u.reputation, banned:u.banned };
-    else req.user=null;
+    if (u) {
+      const role = findRole(u.role);
+      req.user = { 
+        id:u.id, username:u.username, email:u.email, role:u.role, roleColor: role?.color||'#4b5563', 
+        avatar:u.avatar, messages:u.messages, reputation:u.reputation, banned:u.banned,
+        permissions: role?.permissions||{}, profile: u.profile||{}
+      };
+    } else req.user=null;
   } catch { req.user=null; }
   next();
 }
@@ -98,7 +135,15 @@ function requireAuth(req,res,next){
   next();
 }
 function requireAdmin(req,res,next){
-  if (!req.user || !['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН'].includes(req.user.role)) return res.status(403).json({ error:'Нет прав администратора' });
+  if (!req.user) return res.status(403).json({ error:'Нет прав' });
+  const role = findRole(req.user.role);
+  if (!role || !role.isAdmin) return res.status(403).json({ error:'Нет прав администратора' });
+  next();
+}
+function requireFounder(req,res,next){
+  if (!req.user) return res.status(403).json({ error:'Нет прав' });
+  const role = findRole(req.user.role);
+  if (!role || !role.isFounder) return res.status(403).json({ error:'Только основатель' });
   next();
 }
 
@@ -109,7 +154,7 @@ const forumsPath = path.join(__dirname, 'forums.json');
 let CATEGORIES = [];
 if (fs.existsSync(forumsPath)) CATEGORIES = JSON.parse(fs.readFileSync(forumsPath,'utf-8'));
 
-// API
+// API - Auth
 app.post('/api/register', (req,res)=>{
   const { username, email, password, static_id } = req.body;
   if (!username || !email || !password) return res.status(400).json({ error:'Заполните все поля' });
@@ -117,10 +162,16 @@ app.post('/api/register', (req,res)=>{
   if (username.length < 3) return res.status(400).json({ error:'Ник минимум 3 символа' });
   if (DB.users.find(u=>u.username===username || u.email===email)) return res.status(400).json({ error:'Пользователь с таким ником или email уже существует' });
   const hash = bcrypt.hashSync(password,10);
-  const user = { id: nextId('users'), username, email, password_hash:hash, role:'ИГРОК', avatar:`https://i.pravatar.cc/100?img=${Math.floor(Math.random()*70)+1}`, messages:0, reputation:0, static_id: static_id||null, created_at:new Date().toISOString(), banned:0 };
+  // NO RANDOM AVATAR - empty, will show letter in frontend
+  const user = { 
+    id: nextId('users'), username, email, password_hash:hash, role:'ИГРОК', 
+    avatar:'', // Empty - no random avatar
+    messages:0, reputation:0, static_id: static_id||null, created_at:new Date().toISOString(), banned:0, profile:{} 
+  };
   DB.users.push(user); saveDB(DB);
   const token = jwt.sign({ id:user.id }, JWT_SECRET, { expiresIn:'30d' });
-  res.json({ token, user: { id:user.id, username:user.username, email:user.email, role:user.role, avatar:user.avatar } });
+  const role = findRole(user.role);
+  res.json({ token, user: { id:user.id, username:user.username, email:user.email, role:user.role, roleColor:role?.color, avatar:user.avatar } });
 });
 
 app.post('/api/login', (req,res)=>{
@@ -131,13 +182,14 @@ app.post('/api/login', (req,res)=>{
   if (!bcrypt.compareSync(password, user.password_hash)) return res.status(400).json({ error:'Неверный пароль' });
   if (user.banned) return res.status(403).json({ error:'Аккаунт забанен' });
   const token = jwt.sign({ id:user.id }, JWT_SECRET, { expiresIn:'30d' });
-  res.json({ token, user: { id:user.id, username:user.username, email:user.email, role:user.role, avatar:user.avatar, messages:user.messages, reputation:user.reputation } });
+  const role = findRole(user.role);
+  res.json({ token, user: { id:user.id, username:user.username, email:user.email, role:user.role, roleColor:role?.color, avatar:user.avatar, messages:user.messages, reputation:user.reputation } });
 });
 
 app.get('/api/me', requireAuth, (req,res)=>{ res.json(req.user); });
 
+// Forums
 app.get('/api/forums', (req,res)=>{
-  // CLEAN: only real counts from DB, no fake + numbers
   const enriched = CATEGORIES.map(cat=>{
     const forums = cat.forums.map(f=>{
       const threadsInForum = DB.threads.filter(t=>t.forum_id===f.id);
@@ -146,7 +198,7 @@ app.get('/api/forums', (req,res)=>{
       let last = null;
       if (lastThread){
         const author = findUser(lastThread.author_id);
-        last = { title:lastThread.title, user:author?.username||'—', avatar:author?.avatar, time:lastThread.created_at };
+        last = { title:lastThread.title, user:author?.username||'—', avatar:author?.avatar||'', time:lastThread.created_at };
       }
       return { ...f, threads: threadsInForum.length, messages: postsInForum.length, last };
     });
@@ -155,6 +207,7 @@ app.get('/api/forums', (req,res)=>{
   res.json(enriched);
 });
 
+// Threads
 app.get('/api/threads', (req,res)=>{
   const { forum_id, search } = req.query;
   let threads = DB.threads.slice();
@@ -181,6 +234,7 @@ app.get('/api/threads/:id', (req,res)=>{
 });
 
 app.post('/api/threads', requireAuth, (req,res)=>{
+  if(!req.user.permissions.createThread) return res.status(403).json({ error:'Нет прав создавать темы' });
   const { forum_id, title, content } = req.body;
   if (!forum_id || !title || !content) return res.status(400).json({ error:'Заполните все поля' });
   if (title.length<3) return res.status(400).json({ error:'Заголовок слишком короткий' });
@@ -193,6 +247,7 @@ app.post('/api/threads', requireAuth, (req,res)=>{
 });
 
 app.post('/api/threads/:id/replies', requireAuth, (req,res)=>{
+  if(!req.user.permissions.replyThread) return res.status(403).json({ error:'Нет прав отвечать' });
   const threadId = parseInt(req.params.id);
   const thread = DB.threads.find(t=>t.id===threadId);
   if (!thread) return res.status(404).json({ error:'Тема не найдена' });
@@ -208,6 +263,7 @@ app.post('/api/threads/:id/replies', requireAuth, (req,res)=>{
   res.json(enrichPost(post));
 });
 
+// Likes
 app.post('/api/threads/:id/like', requireAuth, (req,res)=>{
   const threadId = parseInt(req.params.id);
   const thread = DB.threads.find(t=>t.id===threadId);
@@ -252,21 +308,28 @@ app.post('/api/posts/:id/like', requireAuth, (req,res)=>{
   }
 });
 
+// Users & stats
 app.get('/api/online', (req,res)=>{
   const users = [...DB.users].filter(u=>!u.banned).sort((a,b)=>{
-    const rank = { 'ОСНОВАТЕЛЬ':0,'ГЛ. АДМИН':1,'ТЕХ. АДМИН':2,'ИГРОК':3 };
-    const ra = rank[a.role]??3, rb = rank[b.role]??3;
-    if (ra!==rb) return ra-rb;
+    const ra = findRole(a.role)?.priority||0;
+    const rb = findRole(b.role)?.priority||0;
+    if (ra!==rb) return rb-ra;
     return b.messages - a.messages;
-  }).slice(0,12).map(u=>({ id:u.id, name:u.username, avatar:u.avatar, role:u.role, color: u.role==='ОСНОВАТЕЛЬ'?'#ef4444': u.role.includes('АДМИН')?'#8b5cf6':'#e6e8ee' }));
+  }).slice(0,12).map(u=>{
+    const role = findRole(u.role);
+    return { id:u.id, name:u.username, avatar:u.avatar||'', role:u.role, color: role?.color||'#4b5563' };
+  });
   res.json(users);
 });
 
 app.get('/api/users', (req,res)=>{
-  // Public users list without sensitive data
-  const users = DB.users.filter(u=>!u.banned).map(u=>({
-    id:u.id, username:u.username, avatar:u.avatar, role:u.role, messages:u.messages, reputation:u.reputation, created_at:u.created_at
-  })).sort((a,b)=> b.messages - a.messages);
+  const users = DB.users.filter(u=>!u.banned).map(u=>{
+    const role = findRole(u.role);
+    return {
+      id:u.id, username:u.username, avatar:u.avatar||'', role:u.role, roleColor: role?.color||'#4b5563',
+      messages:u.messages, reputation:u.reputation, created_at:u.created_at, profile: u.profile||{}
+    };
+  }).sort((a,b)=> b.messages - a.messages);
   res.json(users);
 });
 
@@ -280,10 +343,68 @@ app.get('/api/whats-new', (req,res)=>{
   res.json({ threads, posts });
 });
 
-// Account endpoints - for profile page
+// Roles - XenForo-like editable
+app.get('/api/roles', (req,res)=>{
+  res.json(DB.roles.sort((a,b)=> a.priority - b.priority));
+});
+
+app.post('/api/roles', requireAuth, requireFounder, (req,res)=>{
+  const { name, color, permissions, isAdmin, isFounder, priority } = req.body;
+  if(!name) return res.status(400).json({ error:'Название обязательно' });
+  if(DB.roles.find(r=>r.name===name)) return res.status(400).json({ error:'Роль уже существует' });
+  
+  const role = {
+    id: nextId('roles'),
+    name,
+    color: color||'#4b5563',
+    permissions: permissions||{ viewForum:true, createThread:true, replyThread:true },
+    isAdmin: !!isAdmin,
+    isFounder: !!isFounder,
+    priority: priority||0,
+    created_at: new Date().toISOString()
+  };
+  DB.roles.push(role);
+  saveDB(DB);
+  res.json(role);
+});
+
+app.put('/api/roles/:id', requireAuth, requireFounder, (req,res)=>{
+  const id = parseInt(req.params.id);
+  const role = DB.roles.find(r=>r.id===id);
+  if(!role) return res.status(404).json({ error:'Роль не найдена' });
+  if(role.name==='ОСНОВАТЕЛЬ' && req.user.username!=='tiran') return res.status(403).json({ error:'Только tiran может менять основателя' });
+  
+  const { name, color, permissions, isAdmin, isFounder, priority } = req.body;
+  if(name) {
+    // Update users with old role name
+    DB.users.forEach(u=>{ if(u.role===role.name) u.role=name; });
+    role.name = name;
+  }
+  if(color) role.color = color;
+  if(permissions) role.permissions = permissions;
+  if(typeof isAdmin==='boolean') role.isAdmin = isAdmin;
+  if(typeof isFounder==='boolean') role.isFounder = isFounder;
+  if(typeof priority==='number') role.priority = priority;
+  role.updated_at = new Date().toISOString();
+  
+  saveDB(DB);
+  res.json(role);
+});
+
+app.delete('/api/roles/:id', requireAuth, requireFounder, (req,res)=>{
+  const id = parseInt(req.params.id);
+  const role = DB.roles.find(r=>r.id===id);
+  if(!role) return res.status(404).json({ error:'Роль не найдена' });
+  if(role.isFounder) return res.status(403).json({ error:'Нельзя удалить роль основателя' });
+  if(DB.users.some(u=>u.role===role.name)) return res.status(400).json({ error:'Есть пользователи с этой ролью, сначала смените им роль' });
+  
+  DB.roles = DB.roles.filter(r=>r.id!==id);
+  saveDB(DB);
+  res.json({ ok:true });
+});
+
+// Account
 app.get('/api/account/alerts', requireAuth, (req,res)=>{
-  // Mock alerts - in real would be from DB
-  // Generate alerts from recent posts in user's threads
   const userThreads = DB.threads.filter(t=>t.author_id===req.user.id);
   const alerts = [];
   userThreads.forEach(t=>{
@@ -293,7 +414,7 @@ app.get('/api/account/alerts', requireAuth, (req,res)=>{
       alerts.push({
         id: p.id,
         from: author?.username||'Пользователь',
-        avatar: author?.avatar,
+        avatar: author?.avatar||'',
         text: `ответил в вашу тему "${t.title.substring(0,30)}"`,
         created_at: p.created_at,
         read: false
@@ -305,7 +426,6 @@ app.get('/api/account/alerts', requireAuth, (req,res)=>{
 
 app.post('/api/account/update', requireAuth, (req,res)=>{
   const { location, website, about, birthMonth, birthDay, birthYear, showBirth, showYear, emailNews } = req.body;
-  // Save to user extended profile in DB
   const user = DB.users.find(u=>u.id===req.user.id);
   if(!user) return res.status(404).json({ error:'User not found' });
   
@@ -329,7 +449,6 @@ app.post('/api/account/email', requireAuth, (req,res)=>{
   const { email } = req.body;
   if(!email || !email.includes('@')) return res.status(400).json({ error:'Неверный email' });
   if(DB.users.find(u=>u.email===email && u.id!==req.user.id)) return res.status(400).json({ error:'Email уже занят' });
-  
   const user = DB.users.find(u=>u.id===req.user.id);
   user.email = email;
   saveDB(DB);
@@ -341,17 +460,17 @@ app.post('/api/account/password', requireAuth, (req,res)=>{
   const user = DB.users.find(u=>u.id===req.user.id);
   if(!bcrypt.compareSync(current, user.password_hash)) return res.status(400).json({ error:'Неверный текущий пароль' });
   if(!newPass || newPass.length<6) return res.status(400).json({ error:'Минимум 6 символов' });
-  
   user.password_hash = bcrypt.hashSync(newPass, 10);
   saveDB(DB);
   res.json({ ok:true });
 });
 
 app.post('/api/account/avatar', requireAuth, (req,res)=>{
-  const { avatar } = req.body; // base64 or URL
+  const { avatar } = req.body;
   if(!avatar) return res.status(400).json({ error:'Нет аватара' });
+  // Allow empty to remove avatar (letter avatar)
   const user = DB.users.find(u=>u.id===req.user.id);
-  user.avatar = avatar;
+  user.avatar = avatar; // Can be '' for letter, or base64, or URL
   saveDB(DB);
   res.json({ ok:true, avatar });
 });
@@ -361,18 +480,15 @@ app.post('/api/threads/:id/watch', requireAuth, (req,res)=>{
   const threadId = parseInt(req.params.id);
   const thread = DB.threads.find(t=>t.id===threadId);
   if(!thread) return res.status(404).json({ error:'Тема не найдена' });
-  
-  // Ensure watched field exists
   if(!DB.watched) DB.watched = [];
   const { emailNotify } = req.body;
-  
   const existing = DB.watched.find(w=>w.user_id===req.user.id && w.thread_id===threadId);
   if(existing){
     existing.emailNotify = !!emailNotify;
     existing.updated_at = new Date().toISOString();
   } else {
     DB.watched.push({
-      id: nextId('likes'), // reuse seq
+      id: nextId('likes'),
       user_id: req.user.id,
       thread_id: threadId,
       emailNotify: !!emailNotify,
@@ -395,25 +511,47 @@ app.get('/api/stats', (req,res)=>{
   res.json({ threads: DB.threads.length, messages: DB.threads.length + DB.posts.length, users: DB.users.length });
 });
 
-// Admin
+// Admin - Users
 app.get('/api/admin/users', requireAuth, requireAdmin, (req,res)=>{
-  res.json(DB.users.map(u=>({ id:u.id, username:u.username, email:u.email, role:u.role, avatar:u.avatar, messages:u.messages, reputation:u.reputation, banned:u.banned, created_at:u.created_at })).sort((a,b)=> new Date(b.created_at)-new Date(a.created_at)));
+  res.json(DB.users.map(u=>{
+    const role = findRole(u.role);
+    return { id:u.id, username:u.username, email:u.email, role:u.role, roleColor: role?.color||'#4b5563', avatar:u.avatar||'', messages:u.messages, reputation:u.reputation, banned:u.banned, created_at:u.created_at, profile: u.profile||{} };
+  }).sort((a,b)=> new Date(b.created_at)-new Date(a.created_at)));
 });
+
 app.post('/api/admin/users/:id/ban', requireAuth, requireAdmin, (req,res)=>{
   const u = DB.users.find(x=>x.id===parseInt(req.params.id));
-  if (u){ u.banned=1; saveDB(DB); }
+  if (!u) return res.status(404).json({ error:'Not found' });
+  if(u.username==='tiran') return res.status(403).json({ error:'Нельзя забанить основателя' });
+  u.banned=1; saveDB(DB);
   res.json({ ok:true });
 });
+
 app.post('/api/admin/users/:id/unban', requireAuth, requireAdmin, (req,res)=>{
   const u = DB.users.find(x=>x.id===parseInt(req.params.id));
   if (u){ u.banned=0; saveDB(DB); }
   res.json({ ok:true });
 });
+
 app.post('/api/admin/users/:id/role', requireAuth, requireAdmin, (req,res)=>{
   const u = DB.users.find(x=>x.id===parseInt(req.params.id));
-  if (u){ u.role=req.body.role; saveDB(DB); }
-  res.json({ ok:true });
+  if (!u) return res.status(404).json({ error:'User not found' });
+  const { role } = req.body;
+  if(!role) return res.status(400).json({ error:'Role required' });
+  if(!findRole(role)) return res.status(400).json({ error:'Роль не существует, создайте её сначала' });
+  
+  // Only founder can give founder/admin roles
+  const targetRole = findRole(role);
+  const currentUserRole = findRole(req.user.role);
+  if(targetRole.isFounder && req.user.username!=='tiran') return res.status(403).json({ error:'Только tiran может выдавать основателя' });
+  if(targetRole.priority > (currentUserRole?.priority||0) && req.user.username!=='tiran') return res.status(403).json({ error:'Нельзя выдать роль выше своей' });
+  
+  if(u.username==='tiran' && role!=='ОСНОВАТЕЛЬ') return res.status(403).json({ error:'Нельзя снять основателя с tiran' });
+  
+  u.role=role; saveDB(DB);
+  res.json({ ok:true, role });
 });
+
 app.delete('/api/admin/threads/:id', requireAuth, requireAdmin, (req,res)=>{
   const id = parseInt(req.params.id);
   DB.threads = DB.threads.filter(t=>t.id!==id);
@@ -422,22 +560,24 @@ app.delete('/api/admin/threads/:id', requireAuth, requireAdmin, (req,res)=>{
   saveDB(DB);
   res.json({ ok:true });
 });
+
 app.post('/api/admin/threads/:id/pin', requireAuth, requireAdmin, (req,res)=>{
   const t = DB.threads.find(x=>x.id===parseInt(req.params.id));
   if (t){ t.pinned = t.pinned?0:1; saveDB(DB); res.json({ pinned: !!t.pinned }); } else res.status(404).json({ error:'Not found' });
 });
+
 app.post('/api/admin/threads/:id/lock', requireAuth, requireAdmin, (req,res)=>{
   const t = DB.threads.find(x=>x.id===parseInt(req.params.id));
   if (t){ t.locked = t.locked?0:1; saveDB(DB); res.json({ locked: !!t.locked }); } else res.status(404).json({ error:'Not found' });
 });
+
 app.delete('/api/admin/posts/:id', requireAuth, requireAdmin, (req,res)=>{
   DB.posts = DB.posts.filter(p=>p.id!==parseInt(req.params.id));
   saveDB(DB);
   res.json({ ok:true });
 });
 
-// Clean endpoint for opening - delete all except tiran
-app.post('/api/admin/clean-for-opening', requireAuth, requireAdmin, (req,res)=>{
+app.post('/api/admin/clean-for-opening', requireAuth, requireFounder, (req,res)=>{
   if (req.user.username !== 'tiran') return res.status(403).json({ error:'Только tiran может чистить' });
   const tiran = DB.users.find(u=>u.username==='tiran');
   DB.users = tiran ? [tiran] : [];
@@ -445,9 +585,8 @@ app.post('/api/admin/clean-for-opening', requireAuth, requireAdmin, (req,res)=>{
   DB.posts = [];
   DB.likes = [];
   DB.watched = [];
-  DB.seq = { users: tiran ? tiran.id+1 : 1, threads:1, posts:1, likes:1 };
-  // reset tiran stats
-  if (tiran){ tiran.messages=0; tiran.reputation=0; }
+  DB.seq = { users: tiran ? tiran.id+1 : 1, threads:1, posts:1, likes:1, roles: DB.seq.roles };
+  if (tiran){ tiran.messages=0; tiran.reputation=0; tiran.avatar=''; }
   saveDB(DB);
   res.json({ ok:true, message:'Форум очищен для открытия. Остался только tiran' });
 });
@@ -466,9 +605,9 @@ app.get('*', (req,res)=>{
 });
 
 app.listen(PORT,'0.0.0.0',()=>{
-  console.log(`\n🚀 LAFF PROJECT Forum - CLEAN FOR OPENING`);
+  console.log(`\n🚀 LAFF PROJECT Forum - CLEAN FOR OPENING - ROLES EDITABLE`);
   console.log(`📁 Serving from ${__dirname}`);
-  console.log(`🔑 Admin: tiran / 1213ttt3 (ОСНОВАТЕЛЬ)`);
-  console.log(`💾 DB: ${DB_PATH} - Users: ${DB.users.length}, Threads: ${DB.threads.length}, Posts: ${DB.posts.length}`);
-  console.log(`✨ Ready for opening - no fake data\n`);
+  console.log(`🔑 Admin: tiran / 1213ttt3 (ОСНОВАТЕЛЬ) - can edit all roles`);
+  console.log(`💾 DB: ${DB_PATH} - Users: ${DB.users.length}, Roles: ${DB.roles.length}, Threads: ${DB.threads.length}`);
+  console.log(`✨ Roles editable like XenForo, no random avatars, custom avatar in profile\n`);
 });

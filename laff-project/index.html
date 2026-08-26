@@ -282,7 +282,15 @@
   </div>
 
   <script src="assets/api.js"></script>
+  <script src="assets/xenforo.js"></script>
   <script>
+    function stringToColor(str){
+      if(!str) return '#4b5563';
+      let hash=0;
+      for(let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
+      const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+      return '#' + '00000'.substring(0,6-c.length) + c;
+    }
     function togglePass(){
       const input = document.getElementById('loginPass');
       input.type = input.type==='password'?'text':'password';
@@ -317,7 +325,7 @@
                 <div class="f-messages"><b>${f.messages||0}</b><span>Сообщения</span></div>
                 <div class="f-last">
                   ${f.last ? `
-                    <img src="${f.last.avatar}" alt="">
+                    ${f.last.avatar ? `<img src="${f.last.avatar}" alt="">` : `<div style="width:36px;height:36px;background:${stringToColor(f.last.user)};border-radius:6px;display:grid;place-items:center;color:white;font-weight:700;font-size:14px;flex-shrink:0;">${f.last.user.charAt(0).toUpperCase()}</div>`}
                     <div class="f-last-content">
                       <a class="title">${f.last.title.substring(0,30)}</a>
                       <div class="meta">${f.last.user} • ${new Date(f.last.time).toLocaleDateString()}</div>

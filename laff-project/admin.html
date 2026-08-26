@@ -72,31 +72,62 @@
       </div>
 
       <div id="tab-roles" style="display:none; padding:20px;">
-        <h3 style="color:#fff; font-size:14px; margin-bottom:12px;"><i class="fa-solid fa-user-shield"></i> Система ролей LAFF PROJECT</h3>
-        <div style="display:grid; gap:12px; max-width:600px;">
-          <div style="background:#111; border:1px solid #2a2a2a; border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
-            <div><b style="color:#fff;">ИГРОК</b><div style="font-size:11px; color:#8a8f98;">Обычный пользователь, может писать темы и сообщения</div></div>
-            <span class="role-option" style="background:#4b5563; color:white; border-color:#4b5563;">ИГРОК</span>
-          </div>
-          <div style="background:#111; border:1px solid #2a2a2a; border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
-            <div><b style="color:#fff;">Модератор</b><div style="font-size:11px; color:#8a8f98;">Может удалять сообщения, банить, модерировать</div></div>
-            <span class="role-option" style="background:#16a34a; color:white; border-color:#16a34a;">Модератор</span>
-          </div>
-          <div style="background:#111; border:1px solid #2a2a2a; border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
-            <div><b style="color:#fff;">ТЕХ. АДМИН</b><div style="font-size:11px; color:#8a8f98;">Технический администратор, доступ к тех. разделам</div></div>
-            <span class="role-option mod">ТЕХ. АДМИН</span>
-          </div>
-          <div style="background:#111; border:1px solid #2a2a2a; border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
-            <div><b style="color:#fff;">ГЛ. АДМИН</b><div style="font-size:11px; color:#8a8f98;">Главный администратор, доступ к админке</div></div>
-            <span class="role-option admin">ГЛ. АДМИН</span>
-          </div>
-          <div style="background:#111; border:1px solid #dc2626; border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 0 0 1px rgba(220,38,38,0.2);">
-            <div><b style="color:#fff;">ОСНОВАТЕЛЬ</b><div style="font-size:11px; color:#8a8f98;">Основатель проекта, полные права, может выдавать все роли</div></div>
-            <span class="role-option owner">ОСНОВАТЕЛЬ</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3 style="color:#fff; font-size:14px;"><i class="fa-solid fa-user-shield"></i> Роли — Редактирование как в XenForo</h3>
+          <button class="btn btn-primary" onclick="createRole()"><i class="fa-solid fa-plus"></i> Создать роль</button>
+        </div>
+        
+        <div id="roles-list" style="display:grid; gap:12px;">
+          <div style="padding:20px; text-align:center; color:#8a8f98;">Загрузка ролей...</div>
+        </div>
+
+        <div id="role-edit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); place-items:center; z-index:100; padding:20px;">
+          <div style="background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; width:100%; max-width:600px; overflow:hidden;">
+            <div style="background:#252525; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2a2a2a;">
+              <h3 id="role-modal-title" style="color:#fff; font-size:14px;">Редактировать роль</h3>
+              <button onclick="document.getElementById('role-edit-modal').style.display='none'" style="background:none; border:none; color:#8a8f98; font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="padding:18px; display:grid; gap:14px;">
+              <div style="display:grid; grid-template-columns:120px 1fr; gap:12px; align-items:center;">
+                <label style="font-size:12px; color:#9ca3af; text-align:right;">Название:</label>
+                <input id="edit-role-name" class="input" placeholder="Название роли">
+              </div>
+              <div style="display:grid; grid-template-columns:120px 1fr; gap:12px; align-items:center;">
+                <label style="font-size:12px; color:#9ca3af; text-align:right;">Цвет:</label>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <input type="color" id="edit-role-color" style="width:40px; height:32px; background:#111; border:1px solid #2a2a2a; border-radius:6px; cursor:pointer;">
+                  <input id="edit-role-color-text" class="input" placeholder="#4b5563" style="flex:1;">
+                  <div id="edit-role-preview" style="padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700; color:white;">Превью</div>
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:120px 1fr; gap:12px; align-items:center;">
+                <label style="font-size:12px; color:#9ca3af; text-align:right;">Приоритет:</label>
+                <input type="number" id="edit-role-priority" class="input" placeholder="0-100" min="0" max="100">
+              </div>
+              <div style="display:grid; grid-template-columns:120px 1fr; gap:12px; align-items:start;">
+                <label style="font-size:12px; color:#9ca3af; text-align:right; padding-top:6px;">Права:</label>
+                <div id="edit-role-perms" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:12px;">
+                  <!-- Permissions checkboxes will be injected here -->
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:120px 1fr; gap:12px; align-items:center;">
+                <label style="font-size:12px; color:#9ca3af; text-align:right;">Админ?</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#cbd5e1; cursor:pointer;"><input type="checkbox" id="edit-role-admin"> Доступ к админ-панели</label>
+              </div>
+              <div style="display:grid; grid-template-columns:120px 1fr; gap:12px; align-items:center;">
+                <label style="font-size:12px; color:#9ca3af; text-align:right;">Основатель?</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#cbd5e1; cursor:pointer;"><input type="checkbox" id="edit-role-founder"> Полные права основателя</label>
+              </div>
+            </div>
+            <div style="padding:14px 18px; background:#1a1a1a; border-top:1px solid #2a2a2a; display:flex; justify-content:flex-end; gap:8px;">
+              <button class="btn" onclick="document.getElementById('role-edit-modal').style.display='none'">Отмена</button>
+              <button class="btn btn-primary" onclick="saveRole()">Сохранить</button>
+            </div>
           </div>
         </div>
-        <div style="margin-top:16px; padding:12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:8px; font-size:11px; color:#93c5fd;">
-          <i class="fa-solid fa-circle-info"></i> Только <b>ОСНОВАТЕЛЬ</b> (tiran) может выдавать роль ОСНОВАТЕЛЬ и ГЛ. АДМИН. Остальные админы могут выдавать до ТЕХ. АДМИН.
+
+        <div style="margin-top:20px; padding:12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:8px; font-size:11px; color:#93c5fd;">
+          <i class="fa-solid fa-circle-info"></i> Как в XenForo: вы можете менять названия ролей, цвета, приоритет и права. Приоритет определяет кто выше (100 - самый высокий). Только основатель <b>tiran</b> может редактировать роли и выдавать основателя.
         </div>
       </div>
 
@@ -295,6 +326,178 @@
       }
     }
 
+    // Roles management like XenForo
+    let editingRoleId = null;
+    const PERMISSIONS = [
+      { key:'viewForum', label:'Просмотр форума' },
+      { key:'createThread', label:'Создание тем' },
+      { key:'replyThread', label:'Ответы в темах' },
+      { key:'uploadAvatar', label:'Загрузка аватара' },
+      { key:'editOwnProfile', label:'Редактирование профиля' },
+      { key:'deletePost', label:'Удаление сообщений' },
+      { key:'deleteThread', label:'Удаление тем' },
+      { key:'lockThread', label:'Закрытие тем' },
+      { key:'pinThread', label:'Закрепление тем' },
+      { key:'banUser', label:'Бан пользователей' },
+      { key:'manageUsers', label:'Управление пользователями' },
+      { key:'manageRoles', label:'Управление ролями' },
+      { key:'viewAdmin', label:'Доступ к админке' }
+    ];
+
+    async function loadRoles(){
+      const container = document.getElementById('roles-list');
+      container.innerHTML = '<div style="padding:20px; text-align:center; color:#8a8f98;">Загрузка ролей...</div>';
+      try {
+        const roles = await fetch('/api/roles').then(r=>r.json());
+        container.innerHTML = roles.map(role=>`
+          <div style="background:#111; border:1px solid ${role.name==='ОСНОВАТЕЛЬ'?'#dc2626':'#2a2a2a'}; border-radius:8px; padding:14px; display:flex; gap:14px; align-items:center;">
+            <div style="width:48px; height:48px; border-radius:8px; background:${role.color}; display:grid; place-items:center; color:white; font-weight:800; font-size:14px; flex-shrink:0;">${role.name.charAt(0)}</div>
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <b style="color:#fff; font-size:13px;">${role.name}</b>
+                <span style="background:${role.color}; color:white; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700;">${role.color}</span>
+                <span style="font-size:10px; color:#8a8f98;">Приоритет: ${role.priority}</span>
+                ${role.isFounder?'<span style="background:#ef4444; color:white; padding:2px 6px; border-radius:999px; font-size:10px;">ОСНОВАТЕЛЬ</span>':''}
+                ${role.isAdmin && !role.isFounder?'<span style="background:#8b5cf6; color:white; padding:2px 6px; border-radius:999px; font-size:10px;">АДМИН</span>':''}
+              </div>
+              <div style="font-size:11px; color:#8a8f98; margin-top:4px;">Прав: ${Object.keys(role.permissions||{}).filter(k=>role.permissions[k]).length} • ${Object.entries(role.permissions||{}).filter(([k,v])=>v).map(([k])=>k).join(', ').substring(0,80)}...</div>
+              <div style="margin-top:8px; display:flex; gap:4px; flex-wrap:wrap;">
+                ${Object.entries(role.permissions||{}).filter(([k,v])=>v).map(([k])=>`<span style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:2px 6px; border-radius:4px; font-size:10px;">${k}</span>`).join('')}
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <button class="btn btn-primary" style="font-size:11px; padding:6px 12px;" onclick="editRole(${role.id})"><i class="fa-solid fa-pen"></i> Изменить</button>
+              ${!role.isFounder ? `<button class="btn btn-danger" style="font-size:11px; padding:6px 12px;" onclick="deleteRole(${role.id})"><i class="fa-solid fa-trash"></i> Удалить</button>` : '<span style="font-size:10px; color:#6b7280;">Защищено</span>'}
+            </div>
+          </div>
+        `).join('');
+      } catch(e){
+        container.innerHTML = `<div style="padding:20px; color:#ef4444; text-align:center;">${e.message}</div>`;
+      }
+    }
+
+    function createRole(){
+      editingRoleId = null;
+      document.getElementById('role-modal-title').textContent = 'Создать роль';
+      document.getElementById('edit-role-name').value = '';
+      document.getElementById('edit-role-color').value = '#4b5563';
+      document.getElementById('edit-role-color-text').value = '#4b5563';
+      document.getElementById('edit-role-preview').style.background = '#4b5563';
+      document.getElementById('edit-role-preview').textContent = 'Новая роль';
+      document.getElementById('edit-role-priority').value = '0';
+      document.getElementById('edit-role-admin').checked = false;
+      document.getElementById('edit-role-founder').checked = false;
+      
+      const permsContainer = document.getElementById('edit-role-perms');
+      permsContainer.innerHTML = PERMISSIONS.map(p=>`
+        <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+          <input type="checkbox" data-perm="${p.key}" ${['viewForum','createThread','replyThread','uploadAvatar','editOwnProfile'].includes(p.key)?'checked':''}> ${p.label}
+        </label>
+      `).join('');
+      
+      document.getElementById('role-edit-modal').style.display = 'grid';
+      
+      document.getElementById('edit-role-color').oninput = (e)=>{
+        document.getElementById('edit-role-color-text').value = e.target.value;
+        document.getElementById('edit-role-preview').style.background = e.target.value;
+      };
+      document.getElementById('edit-role-color-text').oninput = (e)=>{
+        document.getElementById('edit-role-color').value = e.target.value;
+        document.getElementById('edit-role-preview').style.background = e.target.value;
+      };
+      document.getElementById('edit-role-name').oninput = (e)=>{
+        document.getElementById('edit-role-preview').textContent = e.target.value || 'Превью';
+      };
+    }
+
+    async function editRole(id){
+      try {
+        const roles = await fetch('/api/roles').then(r=>r.json());
+        const role = roles.find(r=>r.id===id);
+        if(!role) return alert('Роль не найдена');
+        
+        editingRoleId = id;
+        document.getElementById('role-modal-title').textContent = 'Редактировать роль: ' + role.name;
+        document.getElementById('edit-role-name').value = role.name;
+        document.getElementById('edit-role-color').value = role.color;
+        document.getElementById('edit-role-color-text').value = role.color;
+        document.getElementById('edit-role-preview').style.background = role.color;
+        document.getElementById('edit-role-preview').textContent = role.name;
+        document.getElementById('edit-role-priority').value = role.priority;
+        document.getElementById('edit-role-admin').checked = role.isAdmin;
+        document.getElementById('edit-role-founder').checked = role.isFounder;
+        
+        const permsContainer = document.getElementById('edit-role-perms');
+        permsContainer.innerHTML = PERMISSIONS.map(p=>`
+          <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+            <input type="checkbox" data-perm="${p.key}" ${role.permissions && role.permissions[p.key]?'checked':''}> ${p.label}
+          </label>
+        `).join('');
+        
+        document.getElementById('role-edit-modal').style.display = 'grid';
+        
+        document.getElementById('edit-role-color').oninput = (e)=>{
+          document.getElementById('edit-role-color-text').value = e.target.value;
+          document.getElementById('edit-role-preview').style.background = e.target.value;
+        };
+        document.getElementById('edit-role-color-text').oninput = (e)=>{
+          document.getElementById('edit-role-color').value = e.target.value;
+          document.getElementById('edit-role-preview').style.background = e.target.value;
+        };
+        document.getElementById('edit-role-name').oninput = (e)=>{
+          document.getElementById('edit-role-preview').textContent = e.target.value || 'Превью';
+        };
+        
+      } catch(e){ alert(e.message); }
+    }
+
+    async function saveRole(){
+      const name = document.getElementById('edit-role-name').value.trim();
+      const color = document.getElementById('edit-role-color-text').value.trim() || document.getElementById('edit-role-color').value;
+      const priority = parseInt(document.getElementById('edit-role-priority').value) || 0;
+      const isAdmin = document.getElementById('edit-role-admin').checked;
+      const isFounder = document.getElementById('edit-role-founder').checked;
+      
+      if(!name) return alert('Введите название');
+      
+      const perms = {};
+      document.querySelectorAll('#edit-role-perms input[data-perm]').forEach(cb=>{
+        perms[cb.dataset.perm] = cb.checked;
+      });
+      
+      try {
+        let res;
+        if(editingRoleId){
+          res = await fetch(`/api/roles/${editingRoleId}`, {
+            method:'PUT',
+            headers:{'Content-Type':'application/json','Authorization':'Bearer '+LaffAPI.getToken()},
+            body: JSON.stringify({ name, color, permissions: perms, isAdmin, isFounder, priority })
+          });
+        } else {
+          res = await fetch('/api/roles', {
+            method:'POST',
+            headers:{'Content-Type':'application/json','Authorization':'Bearer '+LaffAPI.getToken()},
+            body: JSON.stringify({ name, color, permissions: perms, isAdmin, isFounder, priority })
+          });
+        }
+        const data = await res.json();
+        if(data.error) throw new Error(data.error);
+        document.getElementById('role-edit-modal').style.display='none';
+        loadRoles();
+        loadUsers();
+      } catch(e){ alert(e.message); }
+    }
+
+    async function deleteRole(id){
+      if(!confirm('Удалить роль? Сначала убедитесь что нет пользователей с этой ролью.')) return;
+      try {
+        const res = await fetch(`/api/roles/${id}`, { method:'DELETE', headers:{'Authorization':'Bearer '+LaffAPI.getToken()} });
+        const data = await res.json();
+        if(data.error) throw new Error(data.error);
+        loadRoles();
+      } catch(e){ alert(e.message); }
+    }
+
     document.querySelectorAll('.admin-nav a').forEach(a=>{
       a.addEventListener('click', (e)=>{
         e.preventDefault();
@@ -305,6 +508,7 @@
         document.getElementById('tab-'+tab).style.display='block';
         document.getElementById('adminTitle').innerHTML = a.innerHTML;
         if (tab==='users') loadUsers();
+        if (tab==='roles') loadRoles();
         if (tab==='threads') loadThreads();
         if (tab==='stats') loadStats();
       });
