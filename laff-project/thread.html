@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Тема - LAFF PROJECT</title>
   <link rel="stylesheet" href="assets/trace-exact.css">
-  <link rel="stylesheet" href="assets/editor.css">
+  <link rel="stylesheet" href="assets/reply-exact.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .post { display:grid; grid-template-columns:180px 1fr; border-bottom:1px solid #242424; background:#1c1c1c; }
@@ -32,22 +32,76 @@
       <nav class="xf-nav">
         <a href="index.html">Главная</a>
         <a href="index.html" class="active">Форум</a>
-        <a href="#">Что нового</a>
+        <a href="whats-new.html">Что нового</a>
+        <a href="users.html">Пользователи</a>
       </nav>
-      <div class="xf-nav-right">
+      <div class="xf-nav-right" id="auth-right">
         <a href="index.html">На главную</a>
       </div>
     </div>
   </header>
   <div class="xf-subnav">
     <div class="xf-subnav-inner">
-      <a href="index.html">Главная</a> <span style="color:#4a4a4a">›</span> <a href="index.html">Форум</a> <span style="color:#4a4a4a">›</span> <span style="color:#e5e7eb">Тема</span>
+      <a href="index.html">Главная</a> <span style="color:#4a4a4a">›</span> <a href="index.html">Форум</a> <span style="color:#4a4a4a">›</span> <span style="color:#e5e7eb" id="breadcrumb-title">Тема</span>
     </div>
   </div>
 
   <div class="xf-page">
     <main>
       <div id="thread-view" style="background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden;"></div>
+
+      <!-- REPLY EDITOR EXACT LIKE SCREENSHOT BUT IN LAFF STYLE (BLUE NOT RED) -->
+      <div id="reply-section" style="margin-top:20px;">
+        <div class="reply-container">
+          <div class="reply-toolbar">
+            <button title="Удалить форматирование"><i class="fa-solid fa-eraser"></i></button>
+            <button title="Жирный" data-cmd="bold"><i class="fa-solid fa-bold"></i></button>
+            <button title="Курсив" data-cmd="italic"><i class="fa-solid fa-italic"></i></button>
+            <button title="Подчеркнутый" data-cmd="underline"><i class="fa-solid fa-underline"></i></button>
+            <button title="Зачеркнутый" data-cmd="strikeThrough"><i class="fa-solid fa-strikethrough"></i></button>
+            <button title="Цвет текста"><i class="fa-solid fa-palette"></i></button>
+            <div class="sep"></div>
+            <button title="Список" data-cmd="insertUnorderedList"><i class="fa-solid fa-list-ul"></i></button>
+            <button title="Нумерованный список" data-cmd="insertOrderedList"><i class="fa-solid fa-list-ol"></i></button>
+            <button title="Отступ"><i class="fa-solid fa-indent"></i></button>
+            <div class="sep"></div>
+            <button title="Ссылка" data-cmd="link"><i class="fa-solid fa-link"></i></button>
+            <button title="Изображение" data-cmd="image"><i class="fa-regular fa-image"></i></button>
+            <button title="Смайлы"><i class="fa-regular fa-face-smile"></i></button>
+            <button title="Медиа"><i class="fa-solid fa-photo-film"></i></button>
+            <button title="Цитата" data-cmd="quote"><i class="fa-solid fa-quote-left"></i></button>
+            <button title="Код" data-cmd="code"><i class="fa-solid fa-code"></i></button>
+            <button title="Таблица"><i class="fa-solid fa-table"></i></button>
+            <div class="sep"></div>
+            <button title="Отменить" data-cmd="undo"><i class="fa-solid fa-rotate-left"></i></button>
+            <button title="Повторить" data-cmd="redo"><i class="fa-solid fa-rotate-right"></i></button>
+            <button title="BB-коды">[ ]</button>
+            <button title="Еще"><i class="fa-solid fa-ellipsis"></i> <i class="fa-solid fa-caret-down" style="font-size:8px"></i></button>
+            <button class="preview-btn" onclick="previewPost()"><i class="fa-regular fa-file-lines"></i> Предварительный просмотр</button>
+          </div>
+          <div id="replyEditor" class="reply-textarea" contenteditable="true" data-placeholder="Напишите ответ..."></div>
+          <div class="reply-settings">
+            <div class="reply-settings-label">Настройки:</div>
+            <div>
+              <div class="reply-checkbox">
+                <input type="checkbox" id="watchThread">
+                <label for="watchThread">Отслеживать эту тему...</label>
+              </div>
+              <div class="reply-checkbox" style="margin-left:20px;">
+                <input type="checkbox" id="emailNotify">
+                <label for="emailNotify">и получать уведомления на электронную почту</label>
+              </div>
+            </div>
+          </div>
+          <div class="reply-footer">
+            <button class="reply-btn" id="replyBtn" onclick="postReply()"><i class="fa-solid fa-reply"></i> ОТВЕТ</button>
+          </div>
+        </div>
+        <div id="previewBox" style="display:none; margin-top:12px; background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+          <h4 style="font-size:12px; color:#8a8f98; margin-bottom:8px; text-transform:uppercase;">Предпросмотр:</h4>
+          <div id="previewContent" style="color:#cbd5e1; line-height:1.6;"></div>
+        </div>
+      </div>
     </main>
     <aside class="xf-sidebar">
       <div class="xf-side-card">
@@ -66,18 +120,57 @@
   </div>
 
   <script src="assets/api.js"></script>
-  <script src="assets/editor.js"></script>
   <script>
     function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    
+    // Toolbar commands
+    document.querySelectorAll('.reply-toolbar [data-cmd]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const cmd = btn.getAttribute('data-cmd');
+        document.getElementById('replyEditor').focus();
+        switch(cmd){
+          case 'quote': document.execCommand('formatBlock', false, 'blockquote'); break;
+          case 'code': document.execCommand('formatBlock', false, 'pre'); break;
+          case 'link': 
+            const url = prompt('Введите URL:');
+            if(url) document.execCommand('createLink', false, url);
+            break;
+          case 'image':
+            const img = prompt('URL изображения:');
+            if(img) document.execCommand('insertImage', false, img);
+            break;
+          default: document.execCommand(cmd, false, null);
+        }
+      });
+    });
+
+    function previewPost(){
+      const editor = document.getElementById('replyEditor');
+      const box = document.getElementById('previewBox');
+      const content = document.getElementById('previewContent');
+      if(box.style.display==='none'){
+        content.innerHTML = editor.innerHTML || '<span style="color:#6b7280;">Пусто</span>';
+        box.style.display='block';
+        editor.scrollIntoView({behavior:'smooth'});
+      } else {
+        box.style.display='none';
+      }
+    }
+
+    let currentThreadId = null;
+
     async function loadThread(){
       const id = new URLSearchParams(location.search).get('id');
       if(!id) return;
+      currentThreadId = id;
       const container = document.getElementById('thread-view');
       container.innerHTML = '<div style="padding:40px; text-align:center; color:#8a8f98;">Загрузка...</div>';
       try {
         const t = await LaffAPI.fetchThread(id);
         document.getElementById('info-author').textContent = t.author;
         document.getElementById('info-views').textContent = t.views;
+        document.getElementById('breadcrumb-title').textContent = t.title.substring(0,40);
         container.innerHTML = `
           <div style="padding:16px 20px; border-bottom:1px solid #2a2a2a;">
             <h1 style="font-size:18px; font-weight:700; color:#fff;">${t.pinned?'📌 ':''}${escapeHtml(t.title)}</h1>
@@ -94,10 +187,9 @@
             </div>
             <div class="post-content">
               <div style="white-space:pre-wrap; color:#cbd5e1;">${escapeHtml(t.content)}</div>
-              <div style="margin-top:12px; padding:10px; background:#111; border:1px solid #2a2a2a; border-radius:6px; font-size:11px; color:#8a8f98;">IP: play.laff-project.com • LAFF PROJECT — точная копия Trace RP</div>
               <div class="post-actions">
                 <button class="like-btn" onclick="likeThread(${t.id}, this)"><i class="fa-solid fa-heart"></i> Нравится (${t.likes||0})</button>
-                <button onclick="document.getElementById('replyEditor').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-reply"></i> Ответить</button>
+                <button onclick="document.getElementById('replyEditor').focus()"><i class="fa-solid fa-reply"></i> Ответить</button>
               </div>
             </div>
           </div>
@@ -121,24 +213,38 @@
               </div>
             `).join('')}
           </div>
-          <div style="padding:16px; background:#1a1a1a; border-top:1px solid #2a2a2a;">
-            <h4 style="font-size:13px; color:#e5e7eb; margin-bottom:10px;">Ответить в тему</h4>
-            <div id="replyEditor"></div>
-            <div style="margin-top:10px; display:flex; justify-content:flex-end; gap:8px;">
-              <button onclick="editor.clear()" style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:8px 16px; border-radius:6px; cursor:pointer;">Очистить</button>
-              <button onclick="postReply(${t.id})" style="background:#3b82f6; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">Отправить</button>
-            </div>
-          </div>
         `;
-        window.editor = new LaffEditor('replyEditor', { placeholder:'Напишите ответ...' });
       } catch(e){ container.innerHTML = `<div style="padding:40px; text-align:center; color:#ef4444;">${e.message}</div>`; }
     }
-    async function postReply(threadId){
-      const content = window.editor ? window.editor.getText().trim() : '';
-      if(!content) return alert('Введите сообщение');
-      if(!LaffAPI.getUser()) return alert('Войдите');
-      try { await LaffAPI.replyThread(threadId, content); location.reload(); } catch(e){ alert(e.message); }
+
+    async function postReply(){
+      const editor = document.getElementById('replyEditor');
+      const content = editor.innerText.trim();
+      if(!content) return alert('Напишите ответ...');
+      if(!LaffAPI.getUser()) return alert('Войдите чтобы ответить');
+      const btn = document.getElementById('replyBtn');
+      btn.disabled = true;
+      btn.innerHTML = 'Отправка...';
+      try {
+        const threadId = currentThreadId;
+        const watch = document.getElementById('watchThread').checked;
+        const emailNotify = document.getElementById('emailNotify').checked;
+        
+        await LaffAPI.replyThread(threadId, content);
+        
+        // Save watch preference if checked
+        if(watch){
+          try { await fetch(`/api/threads/${threadId}/watch`, { method:'POST', headers:{'Authorization':'Bearer '+LaffAPI.getToken(), 'Content-Type':'application/json'}, body: JSON.stringify({ emailNotify }) }); } catch {}
+        }
+        
+        location.reload();
+      } catch(e){
+        alert(e.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-reply"></i> ОТВЕТ';
+      }
     }
+
     async function likeThread(id, btn){
       if(!LaffAPI.getUser()) return alert('Войдите');
       try {
@@ -158,15 +264,36 @@
       } catch(e){ alert(e.message); }
     }
     function quotePost(author, content){
-      if(window.editor){ window.editor.setHTML(`<blockquote><b>${author} писал:</b><br>${content}</blockquote><br>`); document.getElementById('replyEditor').scrollIntoView({behavior:'smooth'}); }
+      const editor = document.getElementById('replyEditor');
+      editor.innerHTML = `<blockquote style="border-left:3px solid #3b82f6; background:rgba(59,130,246,0.1); padding:8px 12px; margin:8px 0; border-radius:0 6px 6px 0;"><b>${author} писал:</b><br>${content}</blockquote><br>`;
+      editor.focus();
+      document.getElementById('replyEditor').scrollIntoView({behavior:'smooth'});
     }
     async function loadOnline(){
       try {
         const users = await LaffAPI.fetchOnline();
-        document.getElementById('online-users').innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:2px 0;">${u.name}</div>`).join('');
+        document.getElementById('online-users').innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:2px 0;">${u.name} - ${u.role}</div>`).join('') || '<div style="color:#8a8f98; font-size:12px;">Нет онлайн</div>';
       } catch {}
     }
-    document.addEventListener('DOMContentLoaded', ()=>{ loadThread(); loadOnline(); });
+    function initAuth(){
+      const user = LaffAPI.getUser();
+      const right = document.getElementById('auth-right');
+      if(user){
+        const isAdmin = ['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН'].includes(user.role);
+        right.innerHTML = `
+          ${isAdmin?`<a href="admin.html" style="background:#dc2626; color:white; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600;"><i class="fa-solid fa-shield"></i> Админка</a>`:''}
+          <div style="display:flex; align-items:center; gap:8px; background:#1c1c1c; border:1px solid #2a2a2a; padding:4px 10px 4px 4px; border-radius:999px;">
+            <img src="${user.avatar}" style="width:24px; height:24px; border-radius:50%;">
+            <span style="font-size:12px; font-weight:600; color:#fff;">${user.username}</span>
+          </div>
+          <a href="#" onclick="LaffAPI.logout()" style="color:#8a8f98;"><i class="fa-solid fa-right-from-bracket"></i></a>
+        `;
+      }
+    }
+    document.addEventListener('DOMContentLoaded', ()=>{
+      loadThread(); loadOnline(); initAuth();
+      if(LaffAPI.getToken()){ LaffAPI.fetchMe().then(()=>initAuth()).catch(()=>{}); }
+    });
   </script>
 </body>
 </html>

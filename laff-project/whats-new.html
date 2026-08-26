@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Что нового - LAFF PROJECT</title>
+  <link rel="stylesheet" href="assets/trace-exact.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .new-item { display:flex; gap:12px; padding:14px; background:#1c1c1c; border-bottom:1px solid #242424; }
+    .new-item:hover { background:#212121; }
+    .new-item img { width:40px; height:40px; border-radius:8px; flex-shrink:0; }
+    .new-content { flex:1; }
+    .new-content h3 { font-size:13.5px; font-weight:600; color:#e5e7eb; }
+    .new-content h3 a { color:#e5e7eb; }
+    .new-content h3 a:hover { color:#3b82f6; }
+    .new-meta { font-size:11px; color:#8a8f98; margin-top:4px; }
+    .new-badge { display:inline-block; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-right:6px; }
+    .badge-new { background:#16a34a; color:white; }
+    .badge-hot { background:#dc2626; color:white; }
+  </style>
+</head>
+<body>
+  <header class="xf-header">
+    <div class="xf-header-inner">
+      <a href="index.html" class="xf-logo">LAFF <span>PROJECT</span> ☂️</a>
+      <nav class="xf-nav">
+        <a href="index.html">Главная</a>
+        <a href="index.html">Форум</a>
+        <a href="whats-new.html" class="active">Что нового</a>
+        <a href="users.html">Пользователи</a>
+      </nav>
+      <div class="xf-nav-right" id="auth-right">
+        <a href="index.html">На главную</a>
+      </div>
+    </div>
+  </header>
+  <div class="xf-subnav">
+    <div class="xf-subnav-inner">
+      <a href="index.html">Главная</a> <span style="color:#4a4a4a">›</span> <span style="color:#e5e7eb">Что нового</span>
+      <span style="margin-left:auto; font-size:11px; color:#6b7280;">Последние темы и сообщения</span>
+    </div>
+  </div>
+
+  <div class="xf-page">
+    <main>
+      <div class="xf-page-header">
+        <h1><i class="fa-solid fa-bolt"></i> Что нового</h1>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-new" style="background:#252525; border:1px solid #2a2a2a;" onclick="loadNew()"><i class="fa-solid fa-rotate"></i> Обновить</button>
+          <button class="btn-new" onclick="location.href='index.html'"><i class="fa-solid fa-comments"></i> Форум</button>
+        </div>
+      </div>
+
+      <div class="xf-category">
+        <div class="xf-category-header" style="display:flex; justify-content:space-between;">
+          <span>Новые темы</span>
+          <span style="font-size:11px; color:#8a8f98; font-weight:400;">Всего: <span id="count-threads">0</span></span>
+        </div>
+        <div id="new-threads"><div style="padding:20px; text-align:center; color:#8a8f98;">Загрузка...</div></div>
+      </div>
+
+      <div class="xf-category">
+        <div class="xf-category-header" style="display:flex; justify-content:space-between;">
+          <span>Новые сообщения</span>
+          <span style="font-size:11px; color:#8a8f98; font-weight:400;">Всего: <span id="count-posts">0</span></span>
+        </div>
+        <div id="new-posts"><div style="padding:20px; text-align:center; color:#8a8f98;">Загрузка...</div></div>
+      </div>
+    </main>
+
+    <aside class="xf-sidebar">
+      <div class="xf-side-card">
+        <div class="xf-side-header">Фильтры</div>
+        <div class="xf-side-body" style="display:flex; flex-direction:column; gap:8px;">
+          <button onclick="filterNew('all')" style="background:#3b82f6; color:white; border:none; padding:8px; border-radius:6px; font-size:12px; font-weight:600;">Все</button>
+          <button onclick="filterNew('threads')" style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:8px; border-radius:6px; font-size:12px;">Только темы</button>
+          <button onclick="filterNew('posts')" style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:8px; border-radius:6px; font-size:12px;">Только сообщения</button>
+          <button onclick="filterNew('watched')" style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:8px; border-radius:6px; font-size:12px;">Отслеживаемые</button>
+        </div>
+      </div>
+      <div class="xf-side-card">
+        <div class="xf-side-header">Сейчас онлайн</div>
+        <div class="xf-side-body" id="online-users"></div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="assets/api.js"></script>
+  <script>
+    let allThreads = [];
+    let allPosts = [];
+
+    async function loadNew(){
+      try {
+        const threads = await LaffAPI.fetchThreads();
+        allThreads = threads;
+        document.getElementById('count-threads').textContent = threads.length;
+
+        const threadsEl = document.getElementById('new-threads');
+        if(!threads.length){
+          threadsEl.innerHTML = '<div style="padding:40px; text-align:center; color:#8a8f98;">Нет новых тем<br><span style="font-size:11px;">Форум чист для открытия</span></div>';
+        } else {
+          threadsEl.innerHTML = threads.map(t=>`
+            <a href="thread.html?id=${t.id}" class="new-item">
+              <img src="${t.avatar}">
+              <div class="new-content">
+                <h3><span class="new-badge badge-new">НОВОЕ</span>${t.title}</h3>
+                <div class="new-meta">Автор: <b>${t.author}</b> • Форум: ${t.forum_id} • ${new Date(t.created_at).toLocaleString()} • Просмотров: ${t.views} • Ответов: ${t.replies||0} • <span style="color:#ef4444;">❤️ ${t.likes||0}</span></div>
+                <div style="margin-top:6px; font-size:12px; color:#9ca3af; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${t.content.substring(0,120)}...</div>
+              </div>
+            </a>
+          `).join('');
+        }
+
+        // Collect posts from threads
+        let posts = [];
+        for(let t of threads){
+          try {
+            const full = await LaffAPI.fetchThread(t.id);
+            posts = posts.concat(full.posts.map(p=>({ ...p, threadTitle: t.title, threadId: t.id })));
+          } catch {}
+        }
+        allPosts = posts.sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
+        document.getElementById('count-posts').textContent = posts.length;
+
+        const postsEl = document.getElementById('new-posts');
+        if(!posts.length){
+          postsEl.innerHTML = '<div style="padding:40px; text-align:center; color:#8a8f98;">Нет новых сообщений<br><span style="font-size:11px;">Форум чист для открытия</span></div>';
+        } else {
+          postsEl.innerHTML = posts.slice(0,20).map(p=>`
+            <a href="thread.html?id=${p.thread_id}#post-${p.id}" class="new-item">
+              <img src="${p.avatar}">
+              <div class="new-content">
+                <h3>Ответ в теме "${p.threadTitle}"</h3>
+                <div class="new-meta">Автор: <b>${p.author}</b> • ${new Date(p.created_at).toLocaleString()} • ❤️ ${p.likes||0}</div>
+                <div style="margin-top:6px; font-size:12px; color:#9ca3af;">${p.content.substring(0,120)}...</div>
+              </div>
+            </a>
+          `).join('');
+        }
+
+      } catch(e){
+        document.getElementById('new-threads').innerHTML = `<div style="padding:20px; color:#ef4444;">${e.message}</div>`;
+      }
+    }
+
+    function filterNew(type){
+      // Simple filter demo
+      if(type==='threads'){
+        document.getElementById('new-threads').style.display='block';
+        document.getElementById('new-posts').style.display='none';
+      } else if(type==='posts'){
+        document.getElementById('new-threads').style.display='none';
+        document.getElementById('new-posts').style.display='block';
+      } else {
+        document.getElementById('new-threads').style.display='block';
+        document.getElementById('new-posts').style.display='block';
+      }
+    }
+
+    async function loadOnline(){
+      try {
+        const users = await LaffAPI.fetchOnline();
+        document.getElementById('online-users').innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:2px 0;">${u.name}</div>`).join('') || '<div style="color:#8a8f98; font-size:12px;">Нет онлайн</div>';
+      } catch {}
+    }
+
+    function initAuth(){
+      const user = LaffAPI.getUser();
+      const right = document.getElementById('auth-right');
+      if(user){
+        const isAdmin = ['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН'].includes(user.role);
+        right.innerHTML = `${isAdmin?`<a href="admin.html" style="background:#dc2626; color:white; padding:6px 12px; border-radius:6px; font-size:12px;"><i class="fa-solid fa-shield"></i> Админка</a>`:''}<div style="display:flex; align-items:center; gap:8px; background:#1c1c1c; border:1px solid #2a2a2a; padding:4px 10px 4px 4px; border-radius:999px;"><img src="${user.avatar}" style="width:24px; height:24px; border-radius:50%;"><span style="font-size:12px; color:#fff;">${user.username}</span></div><a href="#" onclick="LaffAPI.logout()" style="color:#8a8f98;"><i class="fa-solid fa-right-from-bracket"></i></a>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{ initAuth(); loadNew(); loadOnline(); if(LaffAPI.getToken()) LaffAPI.fetchMe().then(()=>initAuth()).catch(()=>{}); });
+  </script>
+</body>
+</html>

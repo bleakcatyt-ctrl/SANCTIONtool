@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пользователи - LAFF PROJECT</title>
+  <link rel="stylesheet" href="assets/trace-exact.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .user-card { display:flex; align-items:center; gap:14px; padding:14px; background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; margin-bottom:8px; }
+    .user-card:hover { background:#212121; }
+    .user-card img { width:48px; height:48px; border-radius:8px; }
+    .user-info h3 { font-size:14px; color:#e5e7eb; }
+    .user-info .meta { font-size:11px; color:#8a8f98; margin-top:2px; }
+    .role-badge { font-size:10px; padding:2px 8px; border-radius:999px; font-weight:700; color:white; margin-left:8px; }
+    .role-admin { background:#dc2626; }
+    .role-mod { background:#8b5cf6; }
+    .role-user { background:#4b5563; }
+  </style>
+</head>
+<body>
+  <header class="xf-header">
+    <div class="xf-header-inner">
+      <a href="index.html" class="xf-logo">LAFF <span>PROJECT</span> ☂️</a>
+      <nav class="xf-nav">
+        <a href="index.html">Главная</a>
+        <a href="index.html">Форум</a>
+        <a href="whats-new.html">Что нового</a>
+        <a href="users.html" class="active">Пользователи</a>
+      </nav>
+      <div class="xf-nav-right" id="auth-right">
+        <a href="index.html">На главную</a>
+      </div>
+    </div>
+  </header>
+  <div class="xf-subnav">
+    <div class="xf-subnav-inner">
+      <a href="index.html">Главная</a> <span style="color:#4a4a4a">›</span> <span style="color:#e5e7eb">Пользователи</span>
+      <span style="margin-left:auto; font-size:11px; color:#6b7280;">Всего: <span id="total-users">—</span> пользователей</span>
+    </div>
+  </div>
+
+  <div class="xf-page">
+    <main>
+      <div class="xf-page-header">
+        <h1><i class="fa-solid fa-users"></i> Пользователи</h1>
+        <div style="display:flex; gap:8px;">
+          <input id="userSearch" placeholder="Поиск пользователей..." style="background:#1c1c1c; border:1px solid #2a2a2a; border-radius:6px; padding:8px 12px; color:#fff; width:200px; font-size:12px;">
+        </div>
+      </div>
+
+      <div class="xf-category">
+        <div class="xf-category-header">Список пользователей</div>
+        <div id="users-list" style="padding:12px;">
+          <div style="padding:20px; text-align:center; color:#8a8f98;">Загрузка...</div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="xf-sidebar">
+      <div class="xf-side-card">
+        <div class="xf-side-header">Топ по сообщениям</div>
+        <div class="xf-side-body" id="top-users"></div>
+      </div>
+      <div class="xf-side-card">
+        <div class="xf-side-header">Команда проекта</div>
+        <div class="xf-side-body" id="staff-list"></div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="assets/api.js"></script>
+  <script>
+    async function loadUsers(){
+      try {
+        const users = await LaffAPI.adminFetchUsers().catch(async ()=>{
+          // If not admin, try public endpoint
+          const res = await fetch('/api/online');
+          if(res.ok) return await res.json();
+          // Fallback to stats
+          return [];
+        });
+        
+        // If we got online users (limited), fetch all via custom endpoint
+        let allUsers = users;
+        try {
+          const res = await fetch('/api/users');
+          if(res.ok) allUsers = await res.json();
+        } catch {
+          // Use what we have
+        }
+
+        if(!allUsers.length){
+          // Try fetch from /api/online and show
+          const online = await LaffAPI.fetchOnline();
+          allUsers = online.map(u=>({ username:u.name, avatar:u.avatar, role:u.role, messages:0, reputation:0, created_at:new Date().toISOString() }));
+        }
+
+        document.getElementById('total-users').textContent = allUsers.length;
+
+        const list = document.getElementById('users-list');
+        list.innerHTML = allUsers.map(u=>`
+          <div class="user-card">
+            <img src="${u.avatar || 'https://i.pravatar.cc/100?img=1'}">
+            <div class="user-info" style="flex:1;">
+              <h3>${u.username || u.name} <span class="role-badge ${u.role==='ОСНОВАТЕЛЬ'?'role-admin':u.role&&u.role.includes('АДМИН')?'role-mod':'role-user'}">${u.role||'ИГРОК'}</span></h3>
+              <div class="meta">Сообщений: ${u.messages||0} • Репутация: ${u.reputation||0} • Регистрация: ${u.created_at?new Date(u.created_at).toLocaleDateString():''}</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <a href="#" style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:6px 12px; border-radius:6px; font-size:11px;">Профиль</a>
+              <a href="#" style="background:#3b82f6; color:white; padding:6px 12px; border-radius:6px; font-size:11px;">Сообщение</a>
+            </div>
+          </div>
+        `).join('');
+
+        // Top users
+        const top = [...allUsers].sort((a,b)=>(b.messages||0)-(a.messages||0)).slice(0,5);
+        document.getElementById('top-users').innerHTML = top.map((u,i)=>`
+          <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #242424; font-size:12px;">
+            <span>${i+1}. ${u.username||u.name}</span><b>${u.messages||0}</b>
+          </div>
+        `).join('');
+
+        // Staff
+        const staff = allUsers.filter(u=>u.role && u.role.includes('АДМИН') || u.role==='ОСНОВАТЕЛЬ');
+        document.getElementById('staff-list').innerHTML = staff.length ? staff.map(u=>`
+          <div style="display:flex; align-items:center; gap:8px; padding:6px 0;">
+            <img src="${u.avatar}" style="width:28px; height:28px; border-radius:50%;">
+            <div><div style="font-size:12px; color:#e5e7eb; font-weight:600;">${u.username||u.name}</div><div style="font-size:10px; color:#8a8f98;">${u.role}</div></div>
+          </div>
+        `).join('') : '<div style="color:#8a8f98; font-size:12px;">Нет админов</div>';
+
+        // Search
+        document.getElementById('userSearch').addEventListener('input', (e)=>{
+          const q = e.target.value.toLowerCase();
+          const filtered = allUsers.filter(u=>(u.username||u.name||'').toLowerCase().includes(q));
+          document.getElementById('users-list').innerHTML = filtered.map(u=>`
+            <div class="user-card">
+              <img src="${u.avatar}">
+              <div class="user-info" style="flex:1;">
+                <h3>${u.username||u.name} <span class="role-badge ${u.role==='ОСНОВАТЕЛЬ'?'role-admin':'role-user'}">${u.role||'ИГРОК'}</span></h3>
+                <div class="meta">Сообщений: ${u.messages||0}</div>
+              </div>
+            </div>
+          `).join('') || '<div style="padding:20px; text-align:center; color:#8a8f98;">Ничего не найдено</div>';
+        });
+
+      } catch(e){
+        document.getElementById('users-list').innerHTML = `<div style="padding:20px; color:#ef4444; text-align:center;">${e.message}<br><span style="font-size:11px; color:#8a8f98;">Войдите как админ чтобы видеть всех пользователей</span></div>`;
+        // Try public
+        try {
+          const online = await LaffAPI.fetchOnline();
+          document.getElementById('users-list').innerHTML = online.map(u=>`
+            <div class="user-card"><img src="${u.avatar}"><div class="user-info"><h3>${u.name} <span class="role-badge role-admin">${u.role}</span></h3></div></div>
+          `).join('');
+          document.getElementById('total-users').textContent = online.length;
+        } catch {}
+      }
+    }
+
+    function initAuth(){
+      const user = LaffAPI.getUser();
+      const right = document.getElementById('auth-right');
+      if(user){
+        const isAdmin = ['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН'].includes(user.role);
+        right.innerHTML = `${isAdmin?`<a href="admin.html" style="background:#dc2626; color:white; padding:6px 12px; border-radius:6px; font-size:12px;"><i class="fa-solid fa-shield"></i> Админка</a>`:''}<div style="display:flex; align-items:center; gap:8px; background:#1c1c1c; border:1px solid #2a2a2a; padding:4px 10px 4px 4px; border-radius:999px;"><img src="${user.avatar}" style="width:24px; height:24px; border-radius:50%;"><span style="font-size:12px; color:#fff;">${user.username}</span></div><a href="#" onclick="LaffAPI.logout()" style="color:#8a8f98;"><i class="fa-solid fa-right-from-bracket"></i></a>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{ initAuth(); loadUsers(); if(LaffAPI.getToken()) LaffAPI.fetchMe().then(()=>initAuth()).catch(()=>{}); });
+  </script>
+</body>
+</html>

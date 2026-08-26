@@ -18,9 +18,14 @@ const DB_PATH = path.join(__dirname, 'laff-db.json');
 
 function loadDB(){
   if (!fs.existsSync(DB_PATH)){
-    return { users: [], threads: [], posts: [], likes: [], seq: { users:1, threads:1, posts:1, likes:1 } };
+    return { users: [], threads: [], posts: [], likes: [], watched: [], seq: { users:1, threads:1, posts:1, likes:1 } };
   }
-  try { return JSON.parse(fs.readFileSync(DB_PATH,'utf-8')); } catch { return { users: [], threads: [], posts: [], likes: [], seq: { users:1, threads:1, posts:1, likes:1 } }; }
+  try { 
+    const data = JSON.parse(fs.readFileSync(DB_PATH,'utf-8'));
+    if(!data.watched) data.watched = [];
+    if(!data.seq) data.seq = { users:1, threads:1, posts:1, likes:1 };
+    return data;
+  } catch { return { users: [], threads: [], posts: [], likes: [], watched: [], seq: { users:1, threads:1, posts:1, likes:1 } }; }
 }
 function saveDB(db){ fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2)); }
 
@@ -257,6 +262,59 @@ app.get('/api/online', (req,res)=>{
   res.json(users);
 });
 
+app.get('/api/users', (req,res)=>{
+  // Public users list without sensitive data
+  const users = DB.users.filter(u=>!u.banned).map(u=>({
+    id:u.id, username:u.username, avatar:u.avatar, role:u.role, messages:u.messages, reputation:u.reputation, created_at:u.created_at
+  })).sort((a,b)=> b.messages - a.messages);
+  res.json(users);
+});
+
+app.get('/api/whats-new', (req,res)=>{
+  const threads = [...DB.threads].sort((a,b)=> new Date(b.created_at)-new Date(a.created_at)).slice(0,20).map(enrichThread);
+  const posts = [...DB.posts].sort((a,b)=> new Date(b.created_at)-new Date(a.created_at)).slice(0,20).map(p=>{
+    const enriched = enrichPost(p);
+    const thread = DB.threads.find(t=>t.id===p.thread_id);
+    return { ...enriched, threadTitle: thread?.title||'', threadId: p.thread_id };
+  });
+  res.json({ threads, posts });
+});
+
+// Watch thread
+app.post('/api/threads/:id/watch', requireAuth, (req,res)=>{
+  const threadId = parseInt(req.params.id);
+  const thread = DB.threads.find(t=>t.id===threadId);
+  if(!thread) return res.status(404).json({ error:'Тема не найдена' });
+  
+  // Ensure watched field exists
+  if(!DB.watched) DB.watched = [];
+  const { emailNotify } = req.body;
+  
+  const existing = DB.watched.find(w=>w.user_id===req.user.id && w.thread_id===threadId);
+  if(existing){
+    existing.emailNotify = !!emailNotify;
+    existing.updated_at = new Date().toISOString();
+  } else {
+    DB.watched.push({
+      id: nextId('likes'), // reuse seq
+      user_id: req.user.id,
+      thread_id: threadId,
+      emailNotify: !!emailNotify,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
+  }
+  saveDB(DB);
+  res.json({ ok:true, watching:true, emailNotify: !!emailNotify });
+});
+
+app.get('/api/threads/:id/watch', requireAuth, (req,res)=>{
+  const threadId = parseInt(req.params.id);
+  if(!DB.watched) DB.watched = [];
+  const watch = DB.watched.find(w=>w.user_id===req.user.id && w.thread_id===threadId);
+  res.json({ watching: !!watch, emailNotify: watch?.emailNotify||false });
+});
+
 app.get('/api/stats', (req,res)=>{
   res.json({ threads: DB.threads.length, messages: DB.threads.length + DB.posts.length, users: DB.users.length });
 });
@@ -310,6 +368,7 @@ app.post('/api/admin/clean-for-opening', requireAuth, requireAdmin, (req,res)=>{
   DB.threads = [];
   DB.posts = [];
   DB.likes = [];
+  DB.watched = [];
   DB.seq = { users: tiran ? tiran.id+1 : 1, threads:1, posts:1, likes:1 };
   // reset tiran stats
   if (tiran){ tiran.messages=0; tiran.reputation=0; }

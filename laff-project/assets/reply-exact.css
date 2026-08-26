@@ -1,0 +1,175 @@
+/* Reply editor - exact like screenshot but in LAFF style (blue, not red) */
+.reply-container {
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.reply-toolbar {
+  background: #252525;
+  border-bottom: 1px solid #2a2a2a;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.reply-toolbar button {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #9ca3af;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.reply-toolbar button:hover {
+  background: #2a2a2a;
+  color: #e5e7eb;
+  border-color: #3a3a3a;
+}
+
+.reply-toolbar button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.reply-toolbar .sep {
+  width: 1px;
+  height: 18px;
+  background: #3a3a3a;
+  margin: 0 4px;
+}
+
+.reply-toolbar .preview-btn {
+  margin-left: auto;
+  width: auto;
+  padding: 0 12px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 600;
+  gap: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.reply-toolbar .preview-btn:hover {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.reply-textarea {
+  background: #111111;
+  min-height: 180px;
+  padding: 14px;
+  color: #e5e7eb;
+  font-size: 13px;
+  line-height: 1.6;
+  outline: none;
+  border: none;
+  width: 100%;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.reply-textarea:empty:before {
+  content: attr(data-placeholder);
+  color: #6b7280;
+}
+
+.reply-settings {
+  background: #1a1a1a;
+  border-top: 1px solid #2a2a2a;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+}
+
+@media(max-width: 600px) {
+  .reply-settings { grid-template-columns: 1fr; }
+}
+
+.reply-settings-label {
+  font-size: 11px;
+  color: #8a8f98;
+  text-align: right;
+  padding-top: 2px;
+}
+
+@media(max-width: 600px) {
+  .reply-settings-label { text-align: left; }
+}
+
+.reply-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.reply-checkbox input {
+  width: 14px;
+  height: 14px;
+  accent-color: #3b82f6;
+}
+
+.reply-checkbox label {
+  font-size: 11px;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.reply-checkbox label:hover {
+  color: #cbd5e1;
+}
+
+.reply-footer {
+  background: #1c1c1c;
+  border-top: 1px solid #2a2a2a;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.reply-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: .15s;
+}
+
+.reply-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+}
+
+.reply-btn:disabled {
+  background: #2a2a2a;
+  color: #6b7280;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
