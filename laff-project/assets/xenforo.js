@@ -1,4 +1,4 @@
-/* XenForo-like header - MINIMAL COMPACT like screenshot */
+/* XenForo-like header - MINIMAL COMPACT FIXED - no auto-open */
 function initXenforoHeader(){
   const user = LaffAPI.getUser();
   const right = document.getElementById('auth-right');
@@ -9,12 +9,12 @@ function initXenforoHeader(){
   if(user){
     right.innerHTML = `
       <div class="xf-top-icons" style="position:relative;">
-        <div class="xf-top-icon avatar" id="topAvatar" onclick="event.stopPropagation(); document.getElementById('userDropdownExact').classList.toggle('open')" style="background:${stringToColor(user.username)}">
+        <div class="xf-top-icon avatar" id="topAvatar" style="background:${stringToColor(user.username)}">
           ${user.avatar && user.avatar.length>10 ? `<img src="${user.avatar}" alt="">` : user.username.charAt(0).toUpperCase()}
         </div>
-        <div class="xf-top-icon" title="Сообщения" onclick="location.href='account.html'"><i class="fa-regular fa-envelope"></i></div>
-        <div class="xf-top-icon" title="Оповещения" onclick="location.href='account.html'"><i class="fa-regular fa-bell"></i></div>
-        <div class="xf-top-icon" title="Поиск" onclick="document.getElementById('searchInput')?.focus()"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="xf-top-icon" title="Сообщения"><i class="fa-regular fa-envelope"></i></div>
+        <div class="xf-top-icon" title="Оповещения"><i class="fa-regular fa-bell"></i></div>
+        <div class="xf-top-icon" title="Поиск"><i class="fa-solid fa-magnifying-glass"></i></div>
         
         <div class="xf-user-dropdown" id="userDropdownExact">
           <div class="xf-user-dropdown-tabs">
@@ -25,7 +25,7 @@ function initXenforoHeader(){
             <div class="avatar" style="background:${stringToColor(user.username)}">${user.avatar && user.avatar.length>10 ? `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : user.username.charAt(0).toUpperCase()}</div>
             <div class="info">
               <h4>${user.username}</h4>
-              <span>${user.role==='ОСНОВАТЕЛЬ'?'Основатель':user.role==='ГЛ. АДМИН'?'Гл. администратор':user.role==='ТЕХ. АДМИН'?'Тех. администратор':user.role||'Новый пользователь'}</span>
+              <span>${user.role||'Новый пользователь'}</span>
             </div>
             <div class="stats">
               <div>Сообщения: <b>${user.messages||0}</b></div>
@@ -45,18 +45,40 @@ function initXenforoHeader(){
             <a href="#" class="danger" onclick="LaffAPI.logout(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Выйти</a>
           </div>
           <div class="xf-user-menu-footer">
-            <input type="text" placeholder="Обновить статус..." onkeypress="if(event.key==='Enter'){ updateStatus(this.value); }">
+            <input type="text" placeholder="Обновить статус..." onkeydown="if(event.key==='Enter'){ updateStatus(this.value); }">
           </div>
         </div>
       </div>
     `;
-    document.addEventListener('click', (e)=>{
-      const menu = document.getElementById('userDropdownExact');
+
+    // Attach events after render
+    setTimeout(()=>{
       const avatar = document.getElementById('topAvatar');
-      if(menu && avatar && !avatar.contains(e.target) && !menu.contains(e.target)){
-        menu.classList.remove('open');
+      const dropdown = document.getElementById('userDropdownExact');
+      if(avatar && dropdown){
+        avatar.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          dropdown.classList.toggle('open');
+        });
+        // Ensure closed by default
+        dropdown.classList.remove('open');
+      }
+    }, 0);
+
+    // Close on outside click
+    document.addEventListener('click', (e)=>{
+      const dropdown = document.getElementById('userDropdownExact');
+      const avatar = document.getElementById('topAvatar');
+      if(dropdown && avatar && !avatar.contains(e.target) && !dropdown.contains(e.target)){
+        dropdown.classList.remove('open');
       }
     });
+
+    // Close on scroll or navigation
+    window.addEventListener('scroll', ()=>{
+      document.getElementById('userDropdownExact')?.classList.remove('open');
+    }, { passive:true });
+
     const adminCard = document.getElementById('admin-card');
     if(isAdmin && adminCard){
       adminCard.style.display = 'block';
@@ -65,6 +87,7 @@ function initXenforoHeader(){
     }
     const footerAdmin = document.getElementById('footer-admin-link');
     if(footerAdmin) footerAdmin.style.display = isAdmin ? 'inline' : 'none';
+    
   } else {
     right.innerHTML = `
       <a href="#" onclick="document.getElementById('loginModal')?.classList.add('open'); return false;"><i class="fa-solid fa-right-to-bracket"></i> Вход</a>
@@ -77,6 +100,7 @@ function initXenforoHeader(){
     if(footerAdmin) footerAdmin.style.display = 'none';
   }
 }
+
 function stringToColor(str){
   if(!str) return '#ff6b35';
   let hash=0;
@@ -84,6 +108,7 @@ function stringToColor(str){
   const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
   return '#' + '00000'.substring(0,6-c.length) + c;
 }
+
 function updateStatus(text){
   if(!text.trim()) return;
   const user = LaffAPI.getUser();
@@ -93,13 +118,16 @@ function updateStatus(text){
   if(input) input.value = '';
   document.getElementById('userDropdownExact')?.classList.remove('open');
   const note = document.createElement('div');
-  note.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#16a34a; color:white; padding:10px 16px; border-radius:8px; font-size:12px; z-index:10000;';
+  note.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#16a34a; color:white; padding:8px 14px; border-radius:6px; font-size:11px; z-index:10000;';
   note.textContent = 'Статус: ' + text;
   document.body.appendChild(note);
-  setTimeout(()=>note.remove(), 3000);
+  setTimeout(()=>note.remove(), 2500);
 }
+
 document.addEventListener('DOMContentLoaded', ()=>{
   initXenforoHeader();
+  // Ensure dropdown closed on load
+  setTimeout(()=>{ document.getElementById('userDropdownExact')?.classList.remove('open'); }, 100);
   if(LaffAPI.getToken()){
     LaffAPI.fetchMe().then(()=>initXenforoHeader()).catch(()=>{});
   }
