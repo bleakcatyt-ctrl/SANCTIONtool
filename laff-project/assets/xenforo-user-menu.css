@@ -1,4 +1,4 @@
-/* XenForo exact user menu - MINIMAL FIXED */
+/* XenForo exact user menu - MINIMAL FIXED - NO AUTO-OPEN */
 .xf-top-icons {
   display: flex;
   align-items: center;
@@ -19,6 +19,7 @@
   transition: .12s;
   background: #252525;
   border: 1px solid #2a2a2a;
+  user-select: none;
 }
 .xf-top-icon:hover { color:#fff; background:#2a2a2a; border-color:#3a3a3a; }
 .xf-top-icon.avatar {
@@ -33,42 +34,46 @@
 }
 .xf-top-icon.avatar img { width:100%; height:100%; border-radius:6px; object-fit:cover; }
 
-/* MINIMAL DROPDOWN - FIXED POSITIONING, SMALL */
+/* MINIMAL DROPDOWN - FIXED, HIDDEN BY DEFAULT */
 .xf-user-dropdown {
   position: absolute;
-  top: 42px;
+  top: 40px;
   right: 0;
-  width: 220px;
+  width: 200px;
   background: #1e1e1e;
   border: 1px solid #333;
   border-radius: 8px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.8);
   overflow: hidden;
-  display: none;
+  display: none !important;
   z-index: 9999;
+  pointer-events: none;
 }
-.xf-user-dropdown.open { display: block; animation: xfDrop .12s ease; }
+.xf-user-dropdown.open { 
+  display: block !important; 
+  pointer-events: auto;
+  animation: xfDrop .12s ease; 
+}
 @keyframes xfDrop { from{opacity:0; transform:translateY(-4px) scale(0.98)} to{opacity:1; transform:translateY(0) scale(1)} }
 
 .xf-user-dropdown-tabs {
   display: flex;
   background: #252525;
   border-bottom: 2px solid #dc2626;
-  height: 32px;
+  height: 30px;
 }
 .xf-user-dropdown-tabs button {
   width: 36px;
   background: transparent;
   border: none;
   color: #8a8f98;
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
 }
 .xf-user-dropdown-tabs button.active {
   background: #dc2626;
   color: white;
 }
-.xf-user-dropdown-tabs button:hover { color:#e5e7eb; }
 
 .xf-user-profile-card {
   padding: 8px 10px;
@@ -79,13 +84,13 @@
   align-items: center;
 }
 .xf-user-profile-card .avatar {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #ff6b35;
   display: grid;
   place-items: center;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: white;
   flex-shrink: 0;
@@ -103,7 +108,6 @@
   font-size: 9px;
   color: #8a8f98;
   display: block;
-  margin-top: 1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -115,17 +119,13 @@
   line-height: 1.3;
   flex-shrink: 0;
 }
-.xf-user-profile-card .stats b {
-  color: #e5e7eb;
-  font-weight: 600;
-  margin-left: 3px;
-}
+.xf-user-profile-card .stats b { color:#e5e7eb; font-weight:600; margin-left:3px; }
 
 .xf-user-menu-grid {
   display: flex;
   flex-direction: column;
   background: #1e1e1e;
-  max-height: 260px;
+  max-height: 240px;
   overflow-y: auto;
 }
 .xf-user-menu-grid a {
@@ -162,23 +162,27 @@
 }
 .xf-user-menu-footer input:focus { border-color:#3a3a3a; color:#cbd5e1; }
 
-/* Compact account */
-.account-page { max-width: 900px; padding: 12px; }
-.account-title { font-size: 16px; margin-bottom: 8px; }
-.account-breadcrumb { padding:6px 10px; font-size:11px; margin-bottom:10px; }
-.account-layout { grid-template-columns: 160px 1fr; gap:10px; }
-.account-sidebar-header { padding:6px 8px; font-size:9px; }
-.account-sidebar a { padding:5px 8px; font-size:11px; }
-.form-row { grid-template-columns: 120px 1fr; gap:8px; padding:8px 10px; }
-.form-row label { font-size:10px; }
-.form-input { height:28px; font-size:11px; padding:5px 8px; }
-.avatar-circle { width:40px; height:40px; font-size:14px; }
+/* Compact account - minimal windows */
+.account-page { max-width: 800px !important; padding: 10px !important; }
+.account-title { font-size: 14px !important; margin-bottom: 6px !important; }
+.account-breadcrumb { padding:5px 8px !important; font-size:10px !important; margin-bottom:8px !important; }
+.account-layout { grid-template-columns: 140px 1fr !important; gap:8px !important; }
+.account-sidebar-header { padding:5px 8px !important; font-size:9px !important; }
+.account-sidebar a { padding:4px 8px !important; font-size:10px !important; }
+.form-row { grid-template-columns: 100px 1fr !important; gap:6px !important; padding:6px 8px !important; }
+.form-row label { font-size:10px !important; }
+.form-input { height:26px !important; font-size:10px !important; padding:4px 8px !important; }
+.avatar-circle { width:36px !important; height:36px !important; font-size:12px !important; }
 
-/* Profile compact */
-.profile-header { margin-bottom:10px; }
-.profile-banner { height:60px; }
-.profile-main { padding:0 12px 8px; gap:10px; margin-top:-20px; }
-.profile-avatar { width:56px; height:56px; font-size:20px; border-radius:8px; }
-.profile-info h1 { font-size:14px; }
-.profile-info .meta { font-size:10px; gap:6px; }
-.profile-tabs a { padding:6px 10px; font-size:11px; }
+/* Profile compact - small window */
+.profile-header { margin-bottom:8px !important; border-radius:6px !important; }
+.profile-banner { height:50px !important; }
+.profile-main { padding:0 10px 6px !important; gap:8px !important; margin-top:-16px !important; }
+.profile-avatar { width:48px !important; height:48px !important; font-size:18px !important; border-radius:6px !important; border-width:2px !important; }
+.profile-info h1 { font-size:13px !important; gap:6px !important; }
+.profile-info .role-badge { font-size:9px !important; padding:2px 6px !important; }
+.profile-info .meta { font-size:9px !important; gap:6px !important; }
+.profile-tabs { padding:0 10px !important; height:32px !important; }
+.profile-tabs a { padding:6px 10px !important; font-size:10px !important; }
+.profile-card-header { padding:6px 10px !important; font-size:10px !important; }
+.profile-card-body { padding:8px 10px !important; font-size:11px !important; }

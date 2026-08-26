@@ -1,4 +1,4 @@
-/* XenForo-like header - MINIMAL COMPACT FIXED - no auto-open */
+/* XenForo-like header - MINIMAL COMPACT FIXED - NO AUTO-OPEN */
 function initXenforoHeader(){
   const user = LaffAPI.getUser();
   const right = document.getElementById('auth-right');
@@ -51,30 +51,32 @@ function initXenforoHeader(){
       </div>
     `;
 
-    // Attach events after render
+    // Attach events after render - ensure closed
     setTimeout(()=>{
       const avatar = document.getElementById('topAvatar');
       const dropdown = document.getElementById('userDropdownExact');
       if(avatar && dropdown){
+        dropdown.classList.remove('open');
         avatar.addEventListener('click', (e)=>{
           e.stopPropagation();
+          e.preventDefault();
           dropdown.classList.toggle('open');
         });
-        // Ensure closed by default
-        dropdown.classList.remove('open');
       }
-    }, 0);
+    }, 50);
 
     // Close on outside click
-    document.addEventListener('click', (e)=>{
+    const closeHandler = (e)=>{
       const dropdown = document.getElementById('userDropdownExact');
       const avatar = document.getElementById('topAvatar');
       if(dropdown && avatar && !avatar.contains(e.target) && !dropdown.contains(e.target)){
         dropdown.classList.remove('open');
       }
-    });
+    };
+    document.removeEventListener('click', closeHandler);
+    document.addEventListener('click', closeHandler);
 
-    // Close on scroll or navigation
+    // Close on scroll
     window.addEventListener('scroll', ()=>{
       document.getElementById('userDropdownExact')?.classList.remove('open');
     }, { passive:true });
@@ -126,8 +128,7 @@ function updateStatus(text){
 
 document.addEventListener('DOMContentLoaded', ()=>{
   initXenforoHeader();
-  // Ensure dropdown closed on load
-  setTimeout(()=>{ document.getElementById('userDropdownExact')?.classList.remove('open'); }, 100);
+  setTimeout(()=>{ document.getElementById('userDropdownExact')?.classList.remove('open'); }, 150);
   if(LaffAPI.getToken()){
     LaffAPI.fetchMe().then(()=>initXenforoHeader()).catch(()=>{});
   }
