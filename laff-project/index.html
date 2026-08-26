@@ -152,7 +152,7 @@
     <div class="xf-subnav-inner">
       <a href="#">Новые сообщения</a>
       <a href="#">Поиск по форуму</a>
-      <span style="margin-left:auto; font-size:11px; color:#6b7280;">Чистый форум для открытия • <span id="online-mini">1 онлайн</span> • tiran / 1213ttt3</span>
+      <span style="margin-left:auto; font-size:11px; color:#6b7280;">Чистый форум для открытия • <span id="online-mini">1 онлайн</span></span>
     </div>
   </div>
 
@@ -179,11 +179,12 @@
         <div class="xf-side-header">Новые сообщения</div>
         <div class="xf-side-body" id="new-messages"><div style="color:#8a8f98; font-size:12px; text-align:center; padding:20px;">Нет сообщений<br><span style="font-size:11px;">Форум готов к открытию</span></div></div>
       </div>
-      <div class="xf-side-card" style="background: linear-gradient(135deg, #1a1a1a, #252525); border:1px solid #2a2a2a;">
+      <div class="xf-side-card" id="admin-card" style="display:none; background: linear-gradient(135deg, #1a1a1a, #252525); border:1px solid #2a2a2a;">
         <div class="xf-side-body">
-          <h4 style="font-size:13px; font-weight:700; color:#e5e7eb;"><i class="fa-solid fa-shield"></i> Админ для открытия</h4>
-          <p style="font-size:11px; color:#8a8f98; margin:6px 0 10px;">Логин: <b style="color:#fff">tiran</b><br>Пароль: <b style="color:#fff">1213ttt3</b><br>Роль: ОСНОВАТЕЛЬ</p>
-          <a href="admin.html" style="background:#3b82f6; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; display:inline-block;">Админ-панель</a>
+          <h4 style="font-size:13px; font-weight:700; color:#e5e7eb;"><i class="fa-solid fa-shield"></i> Админ-панель</h4>
+          <p style="font-size:11px; color:#8a8f98; margin:6px 0 10px;">Доступно только для ролей:<br><span style="color:#fff">ОСНОВАТЕЛЬ, ГЛ. АДМИН, ТЕХ. АДМИН</span></p>
+          <a href="admin.html" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; display:inline-block;"><i class="fa-solid fa-shield"></i> Открыть админку</a>
+          <div style="margin-top:8px; font-size:10px; color:#6b7280;">Вы вошли как <b id="admin-card-user" style="color:#fff"></b></div>
         </div>
       </div>
       <div class="xf-side-card">
@@ -194,10 +195,10 @@
   </div>
 
   <footer class="xf-footer">
-    <div>LAFF PROJECT © 2025 — Чистый форум для открытия • 1 админ: tiran</div>
+    <div>LAFF PROJECT © 2025 — Чистый форум для открытия</div>
     <div style="display:flex; gap:12px;">
       <a href="#">Правила</a>
-      <a href="admin.html">Админка</a>
+      <a href="#" id="footer-admin-link" style="display:none;">Админка</a>
       <a href="#">Discord</a>
     </div>
   </footer>
@@ -213,14 +214,14 @@
         <div class="xf-form-row">
           <label>Имя пользователя или email:</label>
           <div>
-            <input id="loginUser" class="xf-input" placeholder="" value="tiran">
+            <input id="loginUser" class="xf-input" placeholder="">
           </div>
         </div>
         <div class="xf-form-row" style="align-items:start;">
           <label style="padding-top:8px;">Пароль:</label>
           <div style="width:100%;">
             <div class="xf-password-wrap">
-              <input id="loginPass" type="password" value="1213ttt3">
+              <input id="loginPass" type="password" placeholder="">
               <button type="button" onclick="togglePass()"><i class="fa-regular fa-eye"></i> Показать</button>
             </div>
             <a href="#" class="xf-link-small">Забыли пароль?</a>
@@ -344,7 +345,7 @@
         if(users.length===0){
           onlineEl.innerHTML = '<div style="color:#8a8f98; font-size:12px;">Нет пользователей онлайн</div>';
         } else {
-          onlineEl.innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:3px 0; font-weight:${u.role==='ОСНОВАТЕЛЬ'?'700':'400'}">${u.name} <span style="font-size:10px; background:#dc2626; color:white; padding:1px 5px; border-radius:999px; margin-left:6px;">${u.role}</span></div>`).join('') + `<div style="margin-top:10px; font-size:11px; color:#8a8f98; border-top:1px solid #242424; padding-top:8px;">Всего: ${users.length}<br>Форум чист для открытия • tiran</div>`;
+          onlineEl.innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:3px 0; font-weight:${u.role==='ОСНОВАТЕЛЬ'?'700':'400'}">${u.name} <span style="font-size:10px; background:#dc2626; color:white; padding:1px 5px; border-radius:999px; margin-left:6px;">${u.role}</span></div>`).join('') + `<div style="margin-top:10px; font-size:11px; color:#8a8f98; border-top:1px solid #242424; padding-top:8px;">Всего: ${users.length}<br>Форум чист для открытия</div>`;
         }
         document.getElementById('online-mini').textContent = users.length + ' онлайн';
         const stats = await LaffAPI.fetchStats();
@@ -353,7 +354,7 @@
             <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:16px; color:#fff;">${stats.threads}</b><span style="color:#8a8f98; font-size:11px;">Тем</span></div>
             <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:16px; color:#fff;">${stats.messages}</b><span style="color:#8a8f98; font-size:11px;">Сообщений</span></div>
             <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:16px; color:#fff;">${stats.users}</b><span style="color:#8a8f98; font-size:11px;">Пользователей</span></div>
-            <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:12px; color:#fff;">tiran</b><span style="color:#8a8f98; font-size:11px;">Админ</span></div>
+            <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:12px; color:#fff;">${stats.users>0?'1 админ':'0'}</b><span style="color:#8a8f98; font-size:11px;">Онлайн</span></div>
           </div>
         `;
       } catch(e){
@@ -364,16 +365,33 @@
     function initAuth(){
       const user = LaffAPI.getUser();
       const right = document.getElementById('auth-right');
+      const adminCard = document.getElementById('admin-card');
+      const isAdmin = user && ['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН'].includes(user.role);
+      
       if(user){
         right.innerHTML = `
-          <a href="admin.html" style="background:#dc2626; color:white; padding:6px 12px; border-radius:6px; font-weight:600; font-size:12px;"><i class="fa-solid fa-shield"></i> Админка</a>
+          ${isAdmin ? `<a href="admin.html" style="background:#dc2626; color:white; padding:6px 12px; border-radius:6px; font-weight:600; font-size:12px;"><i class="fa-solid fa-shield"></i> Админка</a>` : ''}
           <div style="display:flex; align-items:center; gap:8px; background:#1c1c1c; border:1px solid #2a2a2a; padding:4px 10px 4px 4px; border-radius:999px;">
             <img src="${user.avatar}" style="width:24px; height:24px; border-radius:50%;">
             <span style="font-size:12px; font-weight:600; color:#fff;">${user.username}</span>
-            <span style="font-size:9px; background:#dc2626; color:white; padding:2px 6px; border-radius:999px;">${user.role}</span>
+            <span style="font-size:9px; background:${isAdmin?'#dc2626':'#4b5563'}; color:white; padding:2px 6px; border-radius:999px;">${user.role}</span>
           </div>
           <a href="#" onclick="LaffAPI.logout()" style="color:#8a8f98;"><i class="fa-solid fa-right-from-bracket"></i></a>
         `;
+        // Show admin card only for admins
+        if(isAdmin && adminCard){
+          adminCard.style.display = 'block';
+          document.getElementById('admin-card-user').textContent = user.username;
+        } else if(adminCard){
+          adminCard.style.display = 'none';
+        }
+        // Footer admin link only for admins
+        const footerAdmin = document.getElementById('footer-admin-link');
+        if(footerAdmin) footerAdmin.style.display = isAdmin ? 'inline' : 'none';
+      } else {
+        if(adminCard) adminCard.style.display = 'none';
+        const footerAdmin = document.getElementById('footer-admin-link');
+        if(footerAdmin) footerAdmin.style.display = 'none';
       }
     }
 
