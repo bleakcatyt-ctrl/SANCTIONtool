@@ -151,16 +151,34 @@
 
   <div class="xf-subnav">
     <div class="xf-subnav-inner">
-      <a href="#">Новые сообщения</a>
-      <a href="#">Поиск по форуму</a>
+      <a href="whats-new.html"><i class="fa-solid fa-bolt"></i> Новые сообщения</a>
+      <a href="#" onclick="document.getElementById('searchModal').classList.add('open'); return false;"><i class="fa-solid fa-magnifying-glass"></i> Поиск по форуму</a>
       <span style="margin-left:auto; font-size:11px; color:#6b7280;">Чистый форум для открытия • <span id="online-mini">1 онлайн</span></span>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div id="searchModal" class="xf-login-overlay" style="z-index:1001;">
+    <div class="xf-login-modal" style="max-width:500px;">
+      <div class="xf-login-header">
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Поиск по форуму</h2>
+        <button onclick="document.getElementById('searchModal').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="padding:16px; background:#252525;">
+        <input id="searchInput" class="xf-input" placeholder="Введите запрос..." style="background:#111; color:#fff; border-color:#3a3a3a;" onkeypress="if(event.key==='Enter'){ doSearch(); }">
+        <div style="margin-top:10px; display:flex; gap:8px;">
+          <button class="xf-btn-primary" onclick="doSearch()"><i class="fa-solid fa-magnifying-glass"></i> Поиск</button>
+          <button class="btn-secondary" onclick="document.getElementById('searchModal').classList.remove('open')">Отмена</button>
+        </div>
+        <div id="searchResults" style="margin-top:12px; max-height:300px; overflow-y:auto;"></div>
+      </div>
     </div>
   </div>
 
   <div class="xf-page">
     <div class="xf-page-header">
       <h1>Форум LAFF PROJECT ☂️ <span class="clean-badge">ЧИСТЫЙ ДЛЯ ОТКРЫТИЯ</span> <span class="backend-badge" id="backend-status">BACKEND ONLINE</span></h1>
-      <button class="btn-new"><i class="fa-solid fa-bolt"></i> Новые сообщения</button>
+      <button class="btn-new" onclick="location.href='whats-new.html'"><i class="fa-solid fa-bolt"></i> Новые сообщения</button>
     </div>
 
     <main id="forum-container">
@@ -305,6 +323,28 @@
       const e = document.getElementById('regEmail').value;
       const p = document.getElementById('regPass').value;
       try { await LaffAPI.register(u,e,p); location.reload(); } catch(err){ alert(err.message); }
+    }
+
+    async function doSearch(){
+      const q = document.getElementById('searchInput').value.trim();
+      if(!q) return;
+      const resultsEl = document.getElementById('searchResults');
+      resultsEl.innerHTML = '<div style="padding:10px; color:#8a8f98; font-size:11px;">Поиск...</div>';
+      try {
+        const threads = await LaffAPI.fetchThreads(null, q);
+        if(!threads.length){
+          resultsEl.innerHTML = `<div style="padding:12px; color:#8a8f98; font-size:11px; text-align:center;">Ничего не найдено по "${q}"<br>Форум чист для открытия</div>`;
+        } else {
+          resultsEl.innerHTML = threads.map(t=>`
+            <a href="thread.html?id=${t.id}" style="display:block; padding:8px 10px; background:#1c1c1c; border:1px solid #2a2a2a; border-radius:6px; margin-bottom:6px;">
+              <div style="font-size:12px; font-weight:600; color:#e5e7eb;">${t.title}</div>
+              <div style="font-size:10px; color:#8a8f98; margin-top:2px;">${t.author} • ${t.forum_id} • ${new Date(t.created_at).toLocaleDateString()}</div>
+            </a>
+          `).join('');
+        }
+      } catch(e){
+        resultsEl.innerHTML = `<div style="padding:10px; color:#ef4444; font-size:11px;">${e.message}</div>`;
+      }
     }
 
     async function renderForums(){
