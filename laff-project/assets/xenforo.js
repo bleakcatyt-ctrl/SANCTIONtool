@@ -1,4 +1,21 @@
-/* XenForo-like header - ALL BUTTONS WORKING - FINAL */
+/* XenForo header - FINAL FIX: profile does NOT open when opening topic, only on avatar click */
+(function(){
+  // Global close function - hides dropdown immediately
+  window.closeProfileDropdown = function(){
+    const dd = document.getElementById('userDropdownExact');
+    if(dd){
+      dd.classList.remove('open');
+      dd.hidden = true;
+      dd.style.display = 'none';
+    }
+  };
+  
+  // Close on load immediately
+  closeProfileDropdown();
+  document.addEventListener('DOMContentLoaded', closeProfileDropdown);
+  window.addEventListener('load', closeProfileDropdown);
+})();
+
 function initXenforoHeader(){
   const user = LaffAPI.getUser();
   const right = document.getElementById('auth-right');
@@ -7,16 +24,17 @@ function initXenforoHeader(){
   const isAdmin = user && ['ОСНОВАТЕЛЬ','ГЛ. АДМИН','ТЕХ. АДМИН','Модератор'].includes(user.role);
   
   if(user){
+    // Render header with dropdown HIDDEN by default
     right.innerHTML = `
       <div class="xf-top-icons" style="position:relative;">
-        <div class="xf-top-icon avatar" id="topAvatar" style="background:${stringToColor(user.username)}" title="${user.username}">
+        <div class="xf-top-icon avatar" id="topAvatar" style="background:${stringToColor(user.username)}" title="Клик - профиль">
           ${user.avatar && user.avatar.length>10 ? `<img src="${user.avatar}" alt="">` : user.username.charAt(0).toUpperCase()}
         </div>
         <div class="xf-top-icon" title="Сообщения" onclick="location.href='account.html'"><i class="fa-regular fa-envelope"></i></div>
         <div class="xf-top-icon" title="Оповещения" onclick="location.href='account.html'"><i class="fa-regular fa-bell"></i></div>
         <div class="xf-top-icon" title="Поиск" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i></div>
         
-        <div class="xf-user-dropdown" id="userDropdownExact" hidden>
+        <div class="xf-user-dropdown" id="userDropdownExact" hidden style="display:none;">
           <div class="xf-user-dropdown-tabs">
             <button class="active"><i class="fa-regular fa-user"></i></button>
             <button><i class="fa-regular fa-bookmark"></i></button>
@@ -49,35 +67,47 @@ function initXenforoHeader(){
       </div>
     `;
 
+    // Ensure hidden after render
+    const dd = document.getElementById('userDropdownExact');
+    if(dd){ dd.hidden = true; dd.style.display = 'none'; dd.classList.remove('open'); }
+
+    // Attach click ONLY to avatar, not auto-open
     setTimeout(()=>{
       const avatar = document.getElementById('topAvatar');
       const dropdown = document.getElementById('userDropdownExact');
       if(avatar && dropdown){
         dropdown.hidden = true;
-        avatar.addEventListener('click', (e)=>{
+        dropdown.style.display = 'none';
+        avatar.onclick = (e)=>{
           e.stopPropagation();
           e.preventDefault();
-          const isOpen = !dropdown.hidden;
-          if(isOpen){
-            dropdown.hidden = true;
-            dropdown.classList.remove('open');
-          } else {
+          if(dropdown.hidden){
             dropdown.hidden = false;
+            dropdown.style.display = 'block';
             dropdown.classList.add('open');
+          } else {
+            dropdown.hidden = true;
+            dropdown.style.display = 'none';
+            dropdown.classList.remove('open');
           }
-        });
+        };
       }
-    }, 100);
+    }, 150);
 
+    // Close on outside click
     document.addEventListener('click', (e)=>{
       const dropdown = document.getElementById('userDropdownExact');
       const avatar = document.getElementById('topAvatar');
-      if(dropdown && avatar && !avatar.contains(e.target) && !dropdown.contains(e.target)){
+      if(dropdown && !dropdown.hidden && avatar && !avatar.contains(e.target) && !dropdown.contains(e.target)){
         dropdown.hidden = true;
+        dropdown.style.display = 'none';
         dropdown.classList.remove('open');
       }
     });
-    window.addEventListener('scroll', ()=>{ const dd=document.getElementById('userDropdownExact'); if(dd){ dd.hidden=true; dd.classList.remove('open'); } }, {passive:true});
+
+    // Close on scroll and Esc
+    window.addEventListener('scroll', ()=>{ const dd=document.getElementById('userDropdownExact'); if(dd){ dd.hidden=true; dd.style.display='none'; dd.classList.remove('open'); } }, {passive:true});
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const dd=document.getElementById('userDropdownExact'); if(dd){ dd.hidden=true; dd.style.display='none'; dd.classList.remove('open'); } } });
   } else {
     right.innerHTML = `
       <a href="#" onclick="openLogin(); return false;"><i class="fa-solid fa-right-to-bracket"></i> Вход</a>
@@ -87,20 +117,14 @@ function initXenforoHeader(){
   }
 }
 
-function openLogin(){
-  const m = document.getElementById('loginModal');
-  if(m) m.classList.add('open');
-}
-function openRegister(){
-  const m = document.getElementById('registerModal');
-  if(m) m.classList.add('open');
-}
+function openLogin(){ document.getElementById('loginModal')?.classList.add('open'); }
+function openRegister(){ document.getElementById('registerModal')?.classList.add('open'); }
 function openSearch(){
   let modal = document.getElementById('searchModal');
   if(modal){
     modal.classList.add('open');
     modal.hidden = false;
-    document.getElementById('searchInput')?.focus();
+    modal.style.display = 'grid';
     return;
   }
   modal = document.createElement('div');
@@ -108,15 +132,15 @@ function openSearch(){
   modal.className = 'xf-login-overlay open';
   modal.style.cssText = 'display:grid; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:1001; place-items:center; padding:20px;';
   modal.innerHTML = `
-    <div class="xf-login-modal" style="max-width:500px; background:#1e1e1e; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden;">
+    <div style="background:#1e1e1e; border:1px solid #2a2a2a; border-radius:8px; width:100%; max-width:500px; overflow:hidden;">
       <div style="background:#252525; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2a2a2a;">
-        <h2 style="font-size:14px; color:#fff;"><i class="fa-solid fa-magnifying-glass"></i> Поиск по форуму</h2>
-        <button onclick="document.getElementById('searchModal').classList.remove('open'); document.getElementById('searchModal').hidden=true;" style="background:none; border:none; color:#8a8f98; font-size:16px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        <h2 style="font-size:14px; color:#fff;"><i class="fa-solid fa-magnifying-glass"></i> Поиск</h2>
+        <button onclick="this.closest('#searchModal').classList.remove('open'); this.closest('#searchModal').hidden=true;" style="background:none; border:none; color:#8a8f98; font-size:16px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div style="padding:14px; background:#1c1c1c;">
-        <input id="searchInputGlobal" class="xf-input" placeholder="Введите запрос..." style="width:100%; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px 12px; color:#fff;" onkeypress="if(event.key==='Enter'){ doGlobalSearch(); }">
+        <input id="searchInputGlobal" placeholder="Поиск..." style="width:100%; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px 12px; color:#fff;" onkeypress="if(event.key==='Enter'){ doGlobalSearch(); }">
         <div style="margin-top:10px; display:flex; gap:8px;">
-          <button style="background:#3b82f6; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;" onclick="doGlobalSearch()"><i class="fa-solid fa-magnifying-glass"></i> Поиск</button>
+          <button style="background:#3b82f6; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;" onclick="doGlobalSearch()">Поиск</button>
           <button style="background:#252525; border:1px solid #2a2a2a; color:#9ca3af; padding:8px 12px; border-radius:6px; cursor:pointer;" onclick="document.getElementById('searchModal').classList.remove('open'); document.getElementById('searchModal').hidden=true;">Отмена</button>
         </div>
         <div id="searchResultsGlobal" style="margin-top:12px; max-height:300px; overflow-y:auto;"></div>
@@ -125,7 +149,6 @@ function openSearch(){
   `;
   modal.addEventListener('click', (e)=>{ if(e.target===modal){ modal.classList.remove('open'); modal.hidden=true; } });
   document.body.appendChild(modal);
-  document.getElementById('searchInputGlobal').focus();
 }
 
 async function doGlobalSearch(){
@@ -143,12 +166,10 @@ async function doGlobalSearch(){
         resultsEl.innerHTML = threads.map(t=>`
           <a href="thread.html?id=${t.id}" style="display:block; padding:8px 10px; background:#252525; border:1px solid #2a2a2a; border-radius:6px; margin-bottom:6px;">
             <div style="font-size:12px; font-weight:600; color:#e5e7eb;">${t.title}</div>
-            <div style="font-size:10px; color:#8a8f98; margin-top:2px;">${t.author} • ${t.forum_id}</div>
+            <div style="font-size:10px; color:#8a8f98;">${t.author} • ${t.forum_id}</div>
           </a>
         `).join('');
       }
-    } else {
-      location.href = 'whats-new.html?search=' + encodeURIComponent(q);
     }
   } catch(e){
     if(resultsEl) resultsEl.innerHTML = `<div style="padding:8px; color:#ef4444; font-size:11px;">${e.message}</div>`;
@@ -169,7 +190,7 @@ function updateStatus(text){
   if(!user) return;
   localStorage.setItem('laff_status_'+user.id, text);
   const dd = document.getElementById('userDropdownExact');
-  if(dd){ dd.hidden=true; dd.classList.remove('open'); }
+  if(dd){ dd.hidden=true; dd.style.display='none'; dd.classList.remove('open'); }
   const note = document.createElement('div');
   note.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#16a34a; color:white; padding:8px 14px; border-radius:6px; font-size:11px; z-index:10000;';
   note.textContent = 'Статус: ' + text;
@@ -178,8 +199,15 @@ function updateStatus(text){
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  // Force close dropdown on every page load - NO AUTO-OPEN when opening topic
+  const dd = document.getElementById('userDropdownExact');
+  if(dd){ dd.hidden=true; dd.style.display='none'; dd.classList.remove('open'); }
   initXenforoHeader();
+  setTimeout(()=>{
+    const dd2 = document.getElementById('userDropdownExact');
+    if(dd2){ dd2.hidden=true; dd2.style.display='none'; dd2.classList.remove('open'); }
+  }, 300);
   if(LaffAPI.getToken()){
-    LaffAPI.fetchMe().then(()=>initXenforoHeader()).catch(()=>{});
+    LaffAPI.fetchMe().then(()=>{ initXenforoHeader(); }).catch(()=>{});
   }
 });
