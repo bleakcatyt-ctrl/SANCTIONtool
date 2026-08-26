@@ -1,55 +1,56 @@
 [
   {
+    "id": "rules",
+    "icon": "📋",
+    "title": "Правила",
+    "desc": "Правила проекта",
+    "count": "1 форум",
+    "forums": [
+      {
+        "id": "server-rules",
+        "icon": "📋",
+        "title": "Правила сервера",
+        "desc": "Общие правила проекта LAFF PROJECT. Обязательно к изучению всем игрокам.",
+        "threads": 0,
+        "messages": 0,
+        "badge": "ПРАВИЛА",
+        "last": null
+      }
+    ]
+  },
+  {
     "id": "main",
-    "icon": "☂️",
+    "icon": "📚",
     "title": "Главный раздел",
-    "desc": "Основная информация о проекте LAFF PROJECT",
+    "desc": "Основная информация о проекте",
     "count": "3 форума",
     "forums": [
       {
-        "id": "news",
-        "icon": "📢",
-        "title": "Новости проекта",
-        "desc": "Важные обновления, патчи, мероприятия и новости от команды LAFF PROJECT. Следите за актуальной информацией.",
-        "threads": 42,
-        "messages": 312,
-        "badge": "ВАЖНО",
-        "unread": true,
-        "last": {
-          "title": "Обновление 2.4 - Новый сезон",
-          "user": "Maestro",
-          "avatar": "https://i.pravatar.cc/100?img=1",
-          "time": "Сегодня в 14:32"
-        }
+        "id": "gangs",
+        "icon": "💬",
+        "title": "Уличные группировки",
+        "desc": "Банды, семьи, организации",
+        "threads": 0,
+        "messages": 0,
+        "last": null
+      },
+      {
+        "id": "gov",
+        "icon": "🏛️",
+        "title": "Государственные фракции",
+        "desc": "Government, LSPD, LSSD, FIB, EMS, SANG",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       },
       {
         "id": "team",
         "icon": "👑",
         "title": "Команда LAFF PROJECT",
-        "desc": "Состав администрации, кураторы, хелперы. Заявления и информация о команде.",
-        "threads": 18,
-        "messages": 156,
-        "unread": true,
-        "last": {
-          "title": "Набор в команду проекта",
-          "user": "Laff_Admin",
-          "avatar": "https://i.pravatar.cc/100?img=2",
-          "time": "Сегодня в 12:10"
-        }
-      },
-      {
-        "id": "appeals",
-        "icon": "📨",
-        "title": "Обращения к Главной Администрации",
-        "desc": "Жалобы, предложения, вопросы к руководству проекта. Конфиденциально.",
-        "threads": 124,
-        "messages": 892,
-        "last": {
-          "title": "Предложение по улучшению экономики",
-          "user": "enjoylaff",
-          "avatar": "https://i.pravatar.cc/100?img=3",
-          "time": "Вчера в 23:45"
-        }
+        "desc": "Состав администрации, лидеры",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       }
     ]
   },
@@ -57,280 +58,98 @@
     "id": "familywar",
     "icon": "⚔️",
     "title": "Family War",
-    "desc": "Система семей и войн за территории",
-    "count": "2 форума",
+    "desc": "Система семей",
+    "count": "1 форум",
     "forums": [
       {
         "id": "families",
         "icon": "👨‍👩‍👧‍👦",
         "title": "Семьи на LAFF PROJECT",
-        "desc": "Список семей, заявления на создание, информация о Family War, правила войн за территории.",
-        "threads": 67,
-        "messages": 543,
-        "badge": "NEW",
-        "unread": true,
-        "last": {
-          "title": "Family | Laff Family - набор",
-          "user": "qvizzovich",
-          "avatar": "https://i.pravatar.cc/100?img=4",
-          "time": "Сегодня в 09:15"
-        }
-      },
-      {
-        "id": "fam-top",
-        "icon": "🏆",
-        "title": "Топ семей и рейтинг",
-        "desc": "Рейтинг самых активных и влиятельных семей проекта. Статистика и награды.",
-        "threads": 12,
-        "messages": 89,
-        "last": {
-          "title": "Итоги недели Family War",
-          "user": "Paranoia",
-          "avatar": "https://i.pravatar.cc/100?img=5",
-          "time": "Вчера в 18:20"
-        }
+        "desc": "Список семей, заявления, правила",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       }
     ]
   },
   {
-    "id": "info",
-    "icon": "📚",
-    "title": "Главный раздел",
-    "desc": "Информация и помощь игрокам",
+    "id": "complaints",
+    "icon": "⚖️",
+    "title": "Жалобы и заявления",
+    "desc": "Жалобы, разбаны, обращения",
     "count": "4 форума",
     "forums": [
       {
-        "id": "info-main",
-        "icon": "ℹ️",
-        "title": "Info LAFF PROJECT",
-        "desc": "Правила получения особого транспорта, промокоды, гайды для новичков.",
-        "threads": 2,
-        "messages": 2,
-        "last": {
-          "title": "Правила получения особого транспорта",
-          "user": "Maestro",
-          "avatar": "https://i.pravatar.cc/100?img=1",
-          "time": "19.06.2025"
-        }
+        "id": "unban",
+        "icon": "🔓",
+        "title": "Заявление на разбан игрового персонажа",
+        "desc": "Подача заявлений на разбан",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       },
       {
-        "id": "faq",
-        "icon": "❓",
-        "title": "Часто задаваемые вопросы",
-        "desc": "Как зайти на сервер, решение ошибок RAGE MP, техническая помощь.",
-        "threads": 8,
-        "messages": 124,
-        "badge": "FAQ",
-        "last": {
-          "title": "Решение ошибки Multiplayer Started",
-          "user": "Laff_Tech",
-          "avatar": "https://i.pravatar.cc/100?img=6",
-          "time": "Сегодня в 11:02"
-        }
+        "id": "complaints-admins",
+        "icon": "👮",
+        "title": "Жалобы на администрацию",
+        "desc": "Жалобы на администрацию проекта",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       },
       {
         "id": "complaints-players",
         "icon": "🚨",
         "title": "Жалобы на игроков",
-        "desc": "Жалобы на нарушение правил сервера со стороны игроков. Форма подачи.",
-        "threads": 342,
-        "messages": 2103,
-        "unread": true,
-        "last": {
-          "title": "Жалоба на игрока #19583",
-          "user": "A1WASS1",
-          "avatar": "https://i.pravatar.cc/100?img=7",
-          "time": "Сегодня в 13:44"
-        }
+        "desc": "Жалобы на нарушение правил игроками",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       },
       {
-        "id": "complaints-admins",
-        "icon": "⚖️",
-        "title": "Жалобы на администрацию",
-        "desc": "Если вы считаете что администратор нарушил правила. Рассматривает ГА.",
-        "threads": 89,
-        "messages": 456,
-        "last": {
-          "title": "Жалоба на администратора",
-          "user": "w1ex",
-          "avatar": "https://i.pravatar.cc/100?img=8",
-          "time": "Вчера в 22:10"
-        }
+        "id": "market",
+        "icon": "💸",
+        "title": "Торговая площадка",
+        "desc": "Покупка/продажа имущества",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       }
     ]
   },
   {
-    "id": "laws",
-    "icon": "📜",
-    "title": "Основные кодексы",
-    "desc": "Законодательная база штата",
-    "count": "5 форумов",
-    "forums": [
-      {
-        "id": "server-rules",
-        "icon": "📋",
-        "title": "Правила сервера",
-        "desc": "Общие правила проекта LAFF PROJECT. Обязательно к изучению всем игрокам.",
-        "threads": 15,
-        "messages": 15,
-        "badge": "ПРАВИЛА",
-        "unread": true,
-        "last": {
-          "title": "Правила игровых зон",
-          "user": "Maestro",
-          "avatar": "https://i.pravatar.cc/100?img=1",
-          "time": "11.03.2025"
-        }
-      },
-      {
-        "id": "airdrop",
-        "icon": "🪂",
-        "title": "Правила войны за AirDrop",
-        "desc": "Правила участия в войне за AirDrop, запреты и наказания.",
-        "threads": 1,
-        "messages": 12,
-        "last": {
-          "title": "Правила войны за AirDrop",
-          "user": "Paranoia",
-          "avatar": "https://i.pravatar.cc/100?img=5",
-          "time": "11.03.2025"
-        }
-      },
-      {
-        "id": "leader-rules",
-        "icon": "👔",
-        "title": "Правила для лидеров фракций",
-        "desc": "Обязанности, запреты, система выговоров для лидеров гос и крайм.",
-        "threads": 4,
-        "messages": 22,
-        "last": {
-          "title": "Правила для лидеров фракций",
-          "user": "Paranoia",
-          "avatar": "https://i.pravatar.cc/100?img=5",
-          "time": "06.11.2025"
-        }
-      },
-      {
-        "id": "laws-state",
-        "icon": "⚖️",
-        "title": "Законодательная база",
-        "desc": "Уголовный, административный кодексы, законы об оружии, о транспорте.",
-        "threads": 18,
-        "messages": 67,
-        "last": {
-          "title": "Закон \"О регулировании оборота оружия...\"",
-          "user": "Paranoia",
-          "avatar": "https://i.pravatar.cc/100?img=5",
-          "time": "28.10.2025"
-        }
-      },
-      {
-        "id": "lssd-charter",
-        "icon": "🛡️",
-        "title": "Уставы гос. организаций",
-        "desc": "Уставы LSPD, LSSD, FIB, GOV, EMS, NG. Внутренние правила.",
-        "threads": 24,
-        "messages": 98,
-        "last": {
-          "title": "Устав Los Santos Sheriff Department",
-          "user": "Laff_Admin",
-          "avatar": "https://i.pravatar.cc/100?img=2",
-          "time": "26.11.2025"
-        }
-      }
-    ]
-  },
-  {
-    "id": "gov",
+    "id": "gov-struct",
     "icon": "🏛️",
     "title": "Государственные структуры",
-    "desc": "Фракции правительства штата San Andreas",
-    "count": "6 форумов",
+    "desc": "Гос. организации штата",
+    "count": "3 форума",
     "forums": [
-      {
-        "id": "gov-f",
-        "icon": "🏛️",
-        "title": "Government",
-        "desc": "Правительство, мэрия, суды, адвокаты. Заявления, жалобы, RP биографии.",
-        "threads": 156,
-        "messages": 1243,
-        "unread": true,
-        "last": {
-          "title": "Заявление на пост Губернатора",
-          "user": "ps1xoz",
-          "avatar": "https://i.pravatar.cc/100?img=9",
-          "time": "Сегодня в 10:30"
-        }
-      },
       {
         "id": "lspd",
         "icon": "🚓",
-        "title": "Los Santos Police Department",
-        "desc": "Полицейский департамент Лос-Сантоса. Академия, заявления, отчеты.",
-        "threads": 203,
-        "messages": 1876,
-        "last": {
-          "title": "Отчет о патруле #124",
-          "user": "versiss",
-          "avatar": "https://i.pravatar.cc/100?img=10",
-          "time": "Сегодня в 08:20"
-        }
+        "title": "LSPD",
+        "desc": "Los Santos Police Department",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       },
       {
         "id": "lssd",
         "icon": "⭐",
-        "title": "Los Santos Sheriff Department",
-        "desc": "Шерифский департамент. Заявления на вступление, устав, приказы.",
-        "threads": 98,
-        "messages": 765,
-        "last": {
-          "title": "Заявление в LSSD | John Laff",
-          "user": "John_Laff",
-          "avatar": "https://i.pravatar.cc/100?img=11",
-          "time": "Вчера в 21:00"
-        }
+        "title": "LSSD",
+        "desc": "Los Santos Sheriff Department",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       },
       {
         "id": "fib",
         "icon": "🕵️",
-        "title": "Federal Investigation Bureau",
-        "desc": "Федеральное бюро расследований. Секретные операции, набор.",
-        "threads": 87,
-        "messages": 654,
-        "last": {
-          "title": "Кейс-файл #892",
-          "user": "dezon",
-          "avatar": "https://i.pravatar.cc/100?img=12",
-          "time": "Вчера в 19:30"
-        }
-      },
-      {
-        "id": "ems",
-        "icon": "🚑",
-        "title": "Emergency Medical Service",
-        "desc": "Медицинская служба, больница ЛС. Заявления, отчеты, медкарты.",
-        "threads": 112,
-        "messages": 876,
-        "last": {
-          "title": "Заявление на стажера EMS",
-          "user": "Anrofee",
-          "avatar": "https://i.pravatar.cc/100?img=13",
-          "time": "Сегодня в 07:45"
-        }
-      },
-      {
-        "id": "ng",
-        "icon": "🎖️",
-        "title": "San Andreas National Guard",
-        "desc": "Национальная гвардия. Военная база, призыв, устав.",
-        "threads": 76,
-        "messages": 543,
-        "last": {
-          "title": "Рапорт на повышение",
-          "user": "LitEnergy",
-          "avatar": "https://i.pravatar.cc/100?img=14",
-          "time": "Вчера в 20:15"
-        }
+        "title": "FIB",
+        "desc": "Federal Investigation Bureau",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       }
     ]
   },
@@ -338,88 +157,26 @@
     "id": "crime",
     "icon": "💀",
     "title": "Криминальные организации",
-    "desc": "Мафии, банды, нелегальный мир",
+    "desc": "Мафии и банды",
     "count": "2 форума",
     "forums": [
       {
         "id": "mafia",
         "icon": "🤵",
         "title": "Мафии",
-        "desc": "La Cosa Nostra, Yakuza, Russian Mafia, Armenian Mafia. Заявления на лидерки, биографии.",
-        "threads": 134,
-        "messages": 987,
-        "unread": true,
-        "last": {
-          "title": "Заявление на пост лидера The Fam",
-          "user": "enjoylaff",
-          "avatar": "https://i.pravatar.cc/100?img=3",
-          "time": "Сегодня в 14:10"
-        }
+        "desc": "La Cosa Nostra, Yakuza, Russian Mafia",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       },
       {
-        "id": "gangs",
+        "id": "gangs-crime",
         "icon": "🔫",
         "title": "Банды",
-        "desc": "Grove Street, Ballas, Vagos, Bloods, Marabunta. Территории, капты, заявления.",
-        "threads": 198,
-        "messages": 1432,
-        "last": {
-          "title": "Grove Street | Заявление",
-          "user": "wazy",
-          "avatar": "https://i.pravatar.cc/100?img=15",
-          "time": "Сегодня в 13:00"
-        }
-      }
-    ]
-  },
-  {
-    "id": "other",
-    "icon": "💬",
-    "title": "Прочее",
-    "desc": "Общение и технические разделы",
-    "count": "3 форума",
-    "forums": [
-      {
-        "id": "market",
-        "icon": "💸",
-        "title": "Торговая площадка",
-        "desc": "Продажа имущества, бизнеса, автомобилей, обмен.",
-        "threads": 456,
-        "messages": 3421,
-        "last": {
-          "title": "Продам дом в Vinewood",
-          "user": "w1ex",
-          "avatar": "https://i.pravatar.cc/100?img=8",
-          "time": "Сегодня в 14:50"
-        }
-      },
-      {
-        "id": "reports",
-        "icon": "🐛",
-        "title": "Баги и тех. раздел",
-        "desc": "Нашли баг? Сообщите здесь. Обращения в технический раздел.",
-        "threads": 67,
-        "messages": 234,
-        "last": {
-          "title": "Баг с инвентарем",
-          "user": "Astepyha",
-          "avatar": "https://i.pravatar.cc/100?img=16",
-          "time": "Сегодня в 12:45"
-        }
-      },
-      {
-        "id": "ideas",
-        "icon": "💡",
-        "title": "Идеи и предложения",
-        "desc": "Предлагайте идеи по улучшению сервера LAFF PROJECT.",
-        "threads": 123,
-        "messages": 876,
-        "last": {
-          "title": "Идея: новые работы",
-          "user": "qvizzovich",
-          "avatar": "https://i.pravatar.cc/100?img=4",
-          "time": "Вчера в 23:10"
-        }
+        "desc": "Grove Street, Ballas, Vagos, Bloods",
+        "threads": 0,
+        "messages": 0,
+        "last": null
       }
     ]
   }

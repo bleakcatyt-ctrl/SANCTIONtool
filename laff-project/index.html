@@ -3,24 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LAFF PROJECT ☂️ - Форум</title>
+  <title>LAFF PROJECT ☂️ - Форум | Чистый для открытия</title>
   <link rel="stylesheet" href="assets/trace-exact.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* Backend badge */
-    .backend-badge {
-      background: #16a34a;
-      color: white;
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-weight: 700;
-      margin-left: 8px;
-    }
+    .backend-badge { background:#16a34a; color:white; font-size:10px; padding:2px 8px; border-radius:999px; font-weight:700; margin-left:8px; }
+    .clean-badge { background:#f59e0b; color:white; font-size:10px; padding:2px 8px; border-radius:999px; font-weight:700; margin-left:8px; }
   </style>
 </head>
 <body>
-  <!-- Header exactly like Trace screenshot -->
   <header class="xf-header">
     <div class="xf-header-inner">
       <a href="index.html" class="xf-logo">LAFF <span>PROJECT</span> ☂️</a>
@@ -30,7 +21,7 @@
         <a href="#">Что нового <i class="fa-solid fa-caret-down" style="font-size:10px"></i></a>
         <a href="#">Пользователи <i class="fa-solid fa-caret-down" style="font-size:10px"></i></a>
       </nav>
-      <div class="xf-nav-right">
+      <div class="xf-nav-right" id="auth-right">
         <a href="#" onclick="document.getElementById('loginModal').style.display='grid'"><i class="fa-solid fa-right-to-bracket"></i> Вход</a>
         <a href="#" onclick="document.getElementById('registerModal').style.display='grid'">Регистрация</a>
         <a href="#" class="search"><i class="fa-solid fa-magnifying-glass"></i> Поиск</a>
@@ -42,317 +33,49 @@
     <div class="xf-subnav-inner">
       <a href="#">Новые сообщения</a>
       <a href="#">Поиск по форуму</a>
-      <span style="margin-left:auto; font-size:11px; color:#6b7280;">Backend: Node.js + SQLite • <span id="online-mini">6 онлайн</span></span>
+      <span style="margin-left:auto; font-size:11px; color:#6b7280;">Чистый форум для открытия • <span id="online-mini">1 онлайн</span></span>
     </div>
   </div>
 
   <div class="xf-page">
     <div class="xf-page-header">
-      <h1>Форум LAFF PROJECT ☂️ <span class="backend-badge">BACKEND ONLINE</span></h1>
+      <h1>Форум LAFF PROJECT ☂️ <span class="clean-badge">ЧИСТЫЙ ДЛЯ ОТКРЫТИЯ</span> <span class="backend-badge" id="backend-status">BACKEND ONLINE</span></h1>
       <button class="btn-new"><i class="fa-solid fa-bolt"></i> Новые сообщения</button>
     </div>
 
-    <main>
-      <!-- Правила -->
-      <div class="xf-category">
-        <div class="xf-category-header">Правила</div>
-        <a href="forum.html?f=server-rules" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Правила сервера</h3>
-          </div>
-          <div class="f-threads"><b>25</b><span>Темы</span></div>
-          <div class="f-messages"><b>26</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=1" alt="">
-            <div class="f-last-content">
-              <div><span class="badge badge-red">ПРАВИЛА</span><a class="title">Правила "Судной ночи" на LAFF...</a></div>
-              <div class="meta">03.08.2026 - <b>Alexander</b></div>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Главный раздел -->
-      <div class="xf-category">
-        <div class="xf-category-header">Главный раздел</div>
-        
-        <a href="forum.html?f=gangs" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Уличные группировки</h3>
-            <div class="sub">Подразделы <i class="fa-solid fa-caret-down"></i></div>
-          </div>
-          <div class="f-threads"><b>6</b><span>Темы</span></div>
-          <div class="f-messages"><b>6</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=8" alt="">
-            <div class="f-last-content">
-              <div><span class="badge badge-yellow">ИНФОРМАЦИЯ</span><a class="title">Хамеры | Laff Family</a></div>
-              <div class="meta">Вчера в 00:12 - <b>monqa</b></div>
-            </div>
-          </div>
-        </a>
-
-        <a href="forum.html?f=gov" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Государственные фракции</h3>
-            <div class="sub">Подразделы <i class="fa-solid fa-caret-down"></i></div>
-          </div>
-          <div class="f-threads"><b>173</b><span>Темы</span></div>
-          <div class="f-messages"><b>851</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=10" alt="">
-            <div class="f-last-content">
-              <a class="title">Офис губернатора</a>
-              <div class="meta">Сегодня в 01:29 - <b>_teo</b></div>
-            </div>
-          </div>
-        </a>
-
-        <a href="forum.html?f=team" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Команда LAFF PROJECT</h3>
-          </div>
-          <div class="f-threads"><b>2</b><span>Темы</span></div>
-          <div class="f-messages"><b>2</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=2" alt="">
-            <div class="f-last-content">
-              <a class="title">Лидеры | LAFF PROJECT</a>
-              <div class="meta">13.08.2026 - <b>Ocean</b></div>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Family War -->
-      <div class="xf-category">
-        <div class="xf-category-header">Family War</div>
-        <a href="forum.html?f=families" class="xf-forum">
-          <div class="f-icon doc"><i class="fa-regular fa-file-lines"></i></div>
-          <div class="f-main">
-            <h3>Семьи на LAFF PROJECT</h3>
-          </div>
-          <div class="f-threads"><b>4</b><span>Темы</span></div>
-          <div class="f-messages"><b>4</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=4" alt="">
-            <div class="f-last-content">
-              <a class="title">Общие правила семейных организаций</a>
-              <div class="meta">Четверг в 21:56 - <b>monqa</b></div>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Жалобы и заявления -->
-      <div class="xf-category">
-        <div class="xf-category-header">Жалобы и заявления</div>
-        
-        <a href="forum.html?f=unban" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Заявление на разбан игрового персонажа</h3>
-            <div class="sub">Подразделы <i class="fa-solid fa-caret-down"></i></div>
-          </div>
-          <div class="f-threads"><b>2,4 тыс.</b><span>Темы</span></div>
-          <div class="f-messages"><b>5,2 тыс.</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <div style="width:36px;height:36px;background:#8b5cf6;border-radius:6px;display:grid;place-items:center;color:white;font-weight:700;font-size:14px">W</div>
-            <div class="f-last-content">
-              <a class="title">амнистия</a>
-              <div class="meta">Вчера в 23:55 - <b>wwk</b></div>
-            </div>
-          </div>
-        </a>
-
-        <a href="forum.html?f=complaints-admins" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Жалобы на администрацию</h3>
-          </div>
-          <div class="f-threads"><b>1,3 тыс.</b><span>Темы</span></div>
-          <div class="f-messages"><b>3,3 тыс.</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=7" alt="">
-            <div class="f-last-content">
-              <div><span class="badge badge-gray">Отказано</span><a class="title">Жалоба на администратора</a></div>
-              <div class="meta">Сегодня в 07:55 - <b>monqa</b></div>
-            </div>
-          </div>
-        </a>
-
-        <a href="forum.html?f=complaints-players" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Жалобы на игроков</h3>
-          </div>
-          <div class="f-threads"><b>1,7 тыс.</b><span>Темы</span></div>
-          <div class="f-messages"><b>4,2 тыс.</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=9" alt="">
-            <div class="f-last-content">
-              <div><span class="badge badge-gray">Отказано</span><a class="title">36323 начал оскорблять и...</a></div>
-              <div class="meta">Вчера в 16:20 - <b>monqa</b></div>
-            </div>
-          </div>
-        </a>
-
-        <a href="forum.html?f=market" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main">
-            <h3>Торговая площадка / Рынок</h3>
-          </div>
-          <div class="f-threads"><b>456</b><span>Темы</span></div>
-          <div class="f-messages"><b>3,4 тыс.</b><span>Сообщения</span></div>
-          <div class="f-last">
-            <img src="https://i.pravatar.cc/100?img=12" alt="">
-            <div class="f-last-content">
-              <a class="title">Продам дом в Vinewood</a>
-              <div class="meta">Сегодня в 14:50 - <b>w1ex</b></div>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Доп категории как на Trace -->
-      <div class="xf-category">
-        <div class="xf-category-header">Государственные структуры</div>
-        <a href="forum.html?f=lspd" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main"><h3>LSPD | Los Santos Police Department</h3><div class="sub">Подразделы <i class="fa-solid fa-caret-down"></i></div></div>
-          <div class="f-threads"><b>203</b><span>Темы</span></div>
-          <div class="f-messages"><b>1,8 тыс.</b><span>Сообщения</span></div>
-          <div class="f-last"><img src="https://i.pravatar.cc/100?img=11"><div class="f-last-content"><a class="title">Заявление в LSPD</a><div class="meta">Сегодня в 08:20 - <b>versiss</b></div></div></div>
-        </a>
-        <a href="forum.html?f=lssd" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main"><h3>LSSD | Los Santos Sheriff Department</h3></div>
-          <div class="f-threads"><b>98</b><span>Темы</span></div>
-          <div class="f-messages"><b>765</b><span>Сообщения</span></div>
-          <div class="f-last"><img src="https://i.pravatar.cc/100?img=13"><div class="f-last-content"><a class="title">Устав LSSD</a><div class="meta">Вчера в 21:00 - <b>John_Laff</b></div></div></div>
-        </a>
-        <a href="forum.html?f=fib" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main"><h3>FIB | Federal Investigation Bureau</h3></div>
-          <div class="f-threads"><b>87</b><span>Темы</span></div>
-          <div class="f-messages"><b>654</b><span>Сообщения</span></div>
-          <div class="f-last"><img src="https://i.pravatar.cc/100?img=14"><div class="f-last-content"><a class="title">Кейс-файл #892</a><div class="meta">Вчера в 19:30 - <b>dezon</b></div></div></div>
-        </a>
-      </div>
-
-      <div class="xf-category">
-        <div class="xf-category-header">Криминальные организации</div>
-        <a href="forum.html?f=mafia" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main"><h3>Мафии | La Cosa Nostra, Yakuza, Russian</h3><div class="sub">Подразделы <i class="fa-solid fa-caret-down"></i></div></div>
-          <div class="f-threads"><b>134</b><span>Темы</span></div>
-          <div class="f-messages"><b>987</b><span>Сообщения</span></div>
-          <div class="f-last"><img src="https://i.pravatar.cc/100?img=3"><div class="f-last-content"><a class="title">Заявление на пост лидера The Fam</a><div class="meta">Сегодня в 14:10 - <b>enjoylaff</b></div></div></div>
-        </a>
-        <a href="forum.html?f=gangs" class="xf-forum">
-          <div class="f-icon"><i class="fa-regular fa-comments"></i></div>
-          <div class="f-main"><h3>Банды | Grove, Ballas, Vagos</h3></div>
-          <div class="f-threads"><b>198</b><span>Темы</span></div>
-          <div class="f-messages"><b>1,4 тыс.</b><span>Сообщения</span></div>
-          <div class="f-last"><img src="https://i.pravatar.cc/100?img=15"><div class="f-last-content"><a class="title">Grove Street | Заявление</a><div class="meta">Сегодня в 13:00 - <b>wazy</b></div></div></div>
-        </a>
-      </div>
-
+    <main id="forum-container">
+      <div style="padding:40px; text-align:center; color:#8a8f98;">Загрузка форумов...</div>
     </main>
 
     <aside class="xf-sidebar">
       <div class="xf-side-card">
         <div class="xf-side-header">Пользователи онлайн</div>
-        <div class="xf-side-body" id="online-users">
-          <div class="online-user" style="font-weight:600; color:#fff;">Misha_Migalkin</div>
-          <div style="margin-top:8px; font-size:11px; color:#8a8f98;">Всего: 6 (пользователей: 1, гостей: 5)</div>
-        </div>
+        <div class="xf-side-body" id="online-users"><div style="color:#8a8f98; font-size:12px;">Загрузка...</div></div>
       </div>
-
       <div class="xf-side-card">
         <div class="xf-side-header">Trending content</div>
-        <div class="xf-side-body">
-          <div class="trending-item">
-            <div class="trending-icon"><i class="fa-solid fa-fire"></i></div>
-            <div class="trending-content">
-              <a href="thread.html?id=1">Тема 'Заявление на пост лидера LSPD'</a>
-              <div class="trending-meta"># MAESTRO · 26.10.2025<br>Ответы: 231</div>
-            </div>
-          </div>
-          <div class="trending-item">
-            <div class="trending-icon" style="background:#1f2937;"><i class="fa-solid fa-user"></i></div>
-            <div class="trending-content">
-              <a href="thread.html?id=2">Тема 'Офис губернатора'</a>
-              <div class="trending-meta">_teo · Четверг в 18:40<br>Ответы: 14</div>
-            </div>
-          </div>
-          <div class="trending-item">
-            <div class="trending-icon"><i class="fa-solid fa-fire"></i></div>
-            <div class="trending-content">
-              <a href="thread.html?id=3">Тема 'Заявление на пост лидера Ballas'</a>
-              <div class="trending-meta"># MAESTRO · 27.10.2025<br>Ответы: 130</div>
-            </div>
-          </div>
-          <div class="trending-item">
-            <div class="trending-icon" style="background:#1f2937;"><i class="fa-solid fa-user"></i></div>
-            <div class="trending-content">
-              <a href="#">Тема 'Офис Главы Аппарата Правительства'</a>
-              <div class="trending-meta">tamagochi · Воскресенье в 20:11<br>Ответы: 7</div>
-            </div>
-          </div>
-          <div class="trending-item">
-            <div class="trending-icon"><i class="fa-solid fa-fire"></i></div>
-            <div class="trending-content">
-              <a href="#">Тема 'Заявление на пост лидера SANG'</a>
-              <div class="trending-meta"># MAESTRO · 26.10.2025<br>Ответы: 70</div>
-            </div>
-          </div>
-        </div>
+        <div class="xf-side-body" id="trending-content"><div style="color:#8a8f98; font-size:12px; text-align:center; padding:20px;">Форум чист<br><span style="font-size:11px;">Нет популярных тем</span></div></div>
       </div>
-
       <div class="xf-side-card">
         <div class="xf-side-header">Новые сообщения</div>
+        <div class="xf-side-body" id="new-messages"><div style="color:#8a8f98; font-size:12px; text-align:center; padding:20px;">Нет сообщений<br><span style="font-size:11px;">Форум готов к открытию</span></div></div>
+      </div>
+      <div class="xf-side-card" style="background: linear-gradient(135deg, #1a1a1a, #252525); border:1px solid #2a2a2a;">
         <div class="xf-side-body">
-          <div class="new-message-item">
-            <img src="https://i.pravatar.cc/100?img=5">
-            <div class="content">
-              <div><span class="badge badge-gray" style="font-size:9px">Отказано</span> <a>Жалоба на администратора</a></div>
-              <div class="meta">Последнее: monqa · Сегодня в 07:35<br>Отказаные Жалобы</div>
-            </div>
-          </div>
-          <div class="new-message-item">
-            <img src="https://i.pravatar.cc/100?img=6">
-            <div class="content">
-              <a>Офис губернатора</a>
-              <div class="meta">_teo · Сегодня в 01:29<br>Государственные фракции</div>
-            </div>
-          </div>
-          <div class="new-message-item">
-            <img src="https://i.pravatar.cc/100?img=7">
-            <div class="content">
-              <a>Хамеры | Laff Family</a>
-              <div class="meta">monqa · Вчера в 00:12<br>Уличные группировки</div>
-            </div>
-          </div>
+          <h4 style="font-size:13px; font-weight:700; color:#e5e7eb;"><i class="fa-solid fa-shield"></i> Админ для открытия</h4>
+          <p style="font-size:11px; color:#8a8f98; margin:6px 0 10px;">Логин: <b style="color:#fff">tiran</b><br>Пароль: <b style="color:#fff">1213ttt3</b><br>Роль: ОСНОВАТЕЛЬ</p>
+          <a href="admin.html" style="background:#3b82f6; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; display:inline-block;">Админ-панель</a>
         </div>
       </div>
-
-      <div class="xf-side-card" style="background: linear-gradient(135deg, #5865F2, #4752C4); border:none;">
-        <div class="xf-side-body" style="color:white;">
-          <h4 style="font-size:13px; font-weight:700;"><i class="fa-brands fa-discord"></i> Discord LAFF PROJECT</h4>
-          <p style="font-size:11px; opacity:0.9; margin:6px 0 10px;">5,200+ участников • Новости, поддержка</p>
-          <button style="background:white; color:#5865F2; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">Вступить</button>
-        </div>
+      <div class="xf-side-card">
+        <div class="xf-side-header">Статистика</div>
+        <div class="xf-side-body" id="stats-body"><div style="font-size:12px; color:#8a8f98;">Загрузка...</div></div>
       </div>
     </aside>
   </div>
 
   <footer class="xf-footer">
-    <div>LAFF PROJECT © 2025 — Точная копия Trace RP • XenForo стиль • Backend Node.js</div>
+    <div>LAFF PROJECT © 2025 — Чистый форум для открытия • 1 админ: tiran</div>
     <div style="display:flex; gap:12px;">
       <a href="#">Правила</a>
       <a href="admin.html">Админка</a>
@@ -360,13 +83,12 @@
     </div>
   </footer>
 
-  <!-- Modals -->
   <div id="loginModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); place-items:center; z-index:100; padding:20px;">
     <div style="background:#1c1c1c; border:1px solid #2a2a2a; border-radius:8px; width:100%; max-width:400px; padding:20px;">
       <h3 style="color:#fff; margin-bottom:16px;">Вход</h3>
-      <input id="loginUser" placeholder="Maestro" style="width:100%; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:10px; color:#fff; margin-bottom:10px;">
-      <input id="loginPass" type="password" placeholder="laff2025" style="width:100%; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:10px; color:#fff; margin-bottom:12px;">
-      <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; margin-bottom:12px; font-size:11px; color:#8a8f98;">Админы: Maestro / laff2025, Paranoia / laff2025</div>
+      <input id="loginUser" placeholder="tiran" style="width:100%; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:10px; color:#fff; margin-bottom:10px;">
+      <input id="loginPass" type="password" placeholder="1213ttt3" style="width:100%; background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:10px; color:#fff; margin-bottom:12px;">
+      <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; margin-bottom:12px; font-size:11px; color:#8a8f98;">Единственный админ: tiran / 1213ttt3</div>
       <button onclick="doLogin()" style="width:100%; background:#3b82f6; color:white; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer;">Войти</button>
       <button onclick="document.getElementById('loginModal').style.display='none'" style="width:100%; margin-top:8px; background:#252525; color:#9ca3af; border:none; padding:8px; border-radius:6px; cursor:pointer;">Закрыть</button>
     </div>
@@ -385,7 +107,6 @@
 
   <script src="assets/api.js"></script>
   <script>
-    // Simple auth for exact clone
     async function doLogin(){
       const u = document.getElementById('loginUser').value;
       const p = document.getElementById('loginPass').value;
@@ -397,18 +118,128 @@
       const p = document.getElementById('regPass').value;
       try { await LaffAPI.register(u,e,p); location.reload(); } catch(err){ alert(err.message); }
     }
-    // Load online from API
+
+    async function renderForums(){
+      const container = document.getElementById('forum-container');
+      try {
+        const cats = await LaffAPI.fetchForums();
+        container.innerHTML = cats.map(cat => `
+          <div class="xf-category">
+            <div class="xf-category-header">${cat.title}</div>
+            ${cat.forums.map(f => `
+              <a href="forum.html?f=${f.id}" class="xf-forum">
+                <div class="f-icon ${f.id==='families'?'doc':''}"><i class="fa-regular ${f.id==='families'?'fa-file-lines':'fa-comments'}"></i></div>
+                <div class="f-main">
+                  <h3>${f.title}</h3>
+                  ${f.desc ? `<div class="sub">${f.desc.substring(0,60)}</div>` : ''}
+                </div>
+                <div class="f-threads"><b>${f.threads||0}</b><span>Темы</span></div>
+                <div class="f-messages"><b>${f.messages||0}</b><span>Сообщения</span></div>
+                <div class="f-last">
+                  ${f.last ? `
+                    <img src="${f.last.avatar}" alt="">
+                    <div class="f-last-content">
+                      <a class="title">${f.last.title.substring(0,30)}</a>
+                      <div class="meta">${f.last.user} • ${new Date(f.last.time).toLocaleDateString()}</div>
+                    </div>
+                  ` : `
+                    <div style="width:36px;height:36px;background:#252525;border-radius:6px;display:grid;place-items:center;color:#6b7280;"><i class="fa-regular fa-comment"></i></div>
+                    <div class="f-last-content">
+                      <a class="title" style="color:#6b7280;">Нет сообщений</a>
+                      <div class="meta">Форум чист</div>
+                    </div>
+                  `}
+                </div>
+              </a>
+            `).join('')}
+          </div>
+        `).join('');
+      } catch(e){
+        container.innerHTML = `<div style="padding:20px; color:#ef4444;">Ошибка: ${e.message}</div>`;
+      }
+    }
+
     async function loadOnline(){
       try {
         const users = await LaffAPI.fetchOnline();
-        document.getElementById('online-users').innerHTML = users.map(u=>`<div class="online-user" style="color:${u.color}">${u.name}</div>`).join('') + `<div style="margin-top:8px; font-size:11px; color:#8a8f98;">Всего: ${users.length} (пользователей: ${users.length}, гостей: 5)</div>`;
+        const onlineEl = document.getElementById('online-users');
+        if(users.length===0){
+          onlineEl.innerHTML = '<div style="color:#8a8f98; font-size:12px;">Нет пользователей онлайн</div>';
+        } else {
+          onlineEl.innerHTML = users.map(u=>`<div style="font-size:12px; color:${u.color}; padding:3px 0; font-weight:${u.role==='ОСНОВАТЕЛЬ'?'700':'400'}">${u.name} <span style="font-size:10px; background:${u.color===' #ef4444'?'#dc2626':'#3b82f6'}; color:white; padding:1px 5px; border-radius:999px; margin-left:6px;">${u.role}</span></div>`).join('') + `<div style="margin-top:10px; font-size:11px; color:#8a8f98; border-top:1px solid #242424; padding-top:8px;">Всего: ${users.length} (пользователей: ${users.length}, гостей: 0)<br>Форум чист для открытия</div>`;
+        }
         document.getElementById('online-mini').textContent = users.length + ' онлайн';
-      } catch {}
+        
+        // Stats
+        const stats = await LaffAPI.fetchStats();
+        document.getElementById('stats-body').innerHTML = `
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;">
+            <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:16px; color:#fff;">${stats.threads}</b><span style="color:#8a8f98; font-size:11px;">Тем</span></div>
+            <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:16px; color:#fff;">${stats.messages}</b><span style="color:#8a8f98; font-size:11px;">Сообщений</span></div>
+            <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:16px; color:#fff;">${stats.users}</b><span style="color:#8a8f98; font-size:11px;">Пользователей</span></div>
+            <div style="background:#111; border:1px solid #2a2a2a; border-radius:6px; padding:8px; text-align:center;"><b style="display:block; font-size:12px; color:#fff;">tiran</b><span style="color:#8a8f98; font-size:11px;">Админ</span></div>
+          </div>
+        `;
+
+        // Trending - get threads sorted by views
+        try {
+          const threads = await LaffAPI.fetchThreads();
+          if(threads.length>0){
+            const trending = threads.sort((a,b)=>b.views-a.views).slice(0,5);
+            document.getElementById('trending-content').innerHTML = trending.map(t=>`
+              <div class="trending-item">
+                <div class="trending-icon"><i class="fa-solid fa-fire"></i></div>
+                <div class="trending-content">
+                  <a href="thread.html?id=${t.id}">${t.title}</a>
+                  <div class="trending-meta">${t.author} • ${new Date(t.created_at).toLocaleDateString()}<br>Ответы: ${t.replies||0}</div>
+                </div>
+              </div>
+            `).join('');
+            document.getElementById('new-messages').innerHTML = threads.slice(0,5).map(t=>`
+              <div class="new-message-item">
+                <img src="${t.avatar}">
+                <div class="content">
+                  <a href="thread.html?id=${t.id}">${t.title.substring(0,30)}</a>
+                  <div class="meta">${t.author} • ${new Date(t.created_at).toLocaleDateString()}</div>
+                </div>
+              </div>
+            `).join('');
+          }
+        } catch {}
+
+      } catch(e){
+        document.getElementById('online-users').innerHTML = `<div style="color:#ef4444; font-size:12px;">${e.message}</div>`;
+      }
     }
-    document.addEventListener('DOMContentLoaded', loadOnline);
-    // Close modals on outside click
-    document.getElementById('loginModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) e.currentTarget.style.display='none'; });
-    document.getElementById('registerModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) e.currentTarget.style.display='none'; });
+
+    function initAuth(){
+      const user = LaffAPI.getUser();
+      const right = document.getElementById('auth-right');
+      if(user){
+        right.innerHTML = `
+          <a href="admin.html" style="background:#dc2626; color:white; padding:6px 12px; border-radius:6px; font-weight:600; font-size:12px;"><i class="fa-solid fa-shield"></i> Админка</a>
+          <div style="display:flex; align-items:center; gap:8px; background:#1c1c1c; border:1px solid #2a2a2a; padding:4px 10px 4px 4px; border-radius:999px;">
+            <img src="${user.avatar}" style="width:24px; height:24px; border-radius:50%;">
+            <span style="font-size:12px; font-weight:600; color:#fff;">${user.username}</span>
+            <span style="font-size:9px; background:#dc2626; color:white; padding:2px 6px; border-radius:999px;">${user.role}</span>
+          </div>
+          <a href="#" onclick="LaffAPI.logout()" style="color:#8a8f98;"><i class="fa-solid fa-right-from-bracket"></i></a>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      initAuth();
+      await renderForums();
+      await loadOnline();
+      // modals close
+      document.getElementById('loginModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) e.currentTarget.style.display='none'; });
+      document.getElementById('registerModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) e.currentTarget.style.display='none'; });
+      // check auth
+      if(LaffAPI.getToken()){
+        try { await LaffAPI.fetchMe(); initAuth(); } catch {}
+      }
+    });
   </script>
 </body>
 </html>

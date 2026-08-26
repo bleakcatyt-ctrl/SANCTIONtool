@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const JWT_SECRET = 'laff-project-super-secret-key-2025-trace-rp-clone';
+const JWT_SECRET = 'laff-project-super-secret-key-2025-trace-rp-clone-opening';
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -32,38 +32,32 @@ function nextId(table){
   return id;
 }
 
+// CLEAN SEED - ONLY ADMIN TIRAN FOR OPENING
 function seed(){
   if (DB.users.length===0){
-    const hash = bcrypt.hashSync('laff2025', 10);
+    const hash = bcrypt.hashSync('1213ttt3', 10);
     DB.users.push(
-      { id: nextId('users'), username:'Maestro', email:'maestro@laff-project.com', password_hash:hash, role:'ОСНОВАТЕЛЬ', avatar:'https://i.pravatar.cc/100?img=1', messages:1243, reputation:999, static_id:null, created_at:new Date().toISOString(), banned:0 },
-      { id: nextId('users'), username:'Paranoia', email:'paranoia@laff-project.com', password_hash:hash, role:'ТЕХ. АДМИН', avatar:'https://i.pravatar.cc/100?img=5', messages:892, reputation:456, static_id:null, created_at:new Date().toISOString(), banned:0 },
-      { id: nextId('users'), username:'Laff_Admin', email:'admin@laff-project.com', password_hash:hash, role:'ГЛ. АДМИН', avatar:'https://i.pravatar.cc/100?img=2', messages:567, reputation:342, static_id:null, created_at:new Date().toISOString(), banned:0 },
-      { id: nextId('users'), username:'enjoylaff', email:'enjoylaff@laff-project.com', password_hash:bcrypt.hashSync('12345678',10), role:'ИГРОК', avatar:'https://i.pravatar.cc/100?img=3', messages:342, reputation:24, static_id:'19583', created_at:new Date().toISOString(), banned:0 }
+      { 
+        id: nextId('users'), 
+        username:'tiran', 
+        email:'tiran@laff-project.com', 
+        password_hash:hash, 
+        role:'ОСНОВАТЕЛЬ', 
+        avatar:'https://i.pravatar.cc/100?img=1', 
+        messages:0, 
+        reputation:0, 
+        static_id:null, 
+        created_at:new Date().toISOString(), 
+        banned:0 
+      }
     );
     saveDB(DB);
-    console.log('Seeded users: Maestro/laff2025 etc');
+    console.log('✅ CLEAN SEED: Only admin tiran / 1213ttt3 created - forum ready for opening');
   }
-  if (DB.threads.length===0){
-    const maestro = DB.users.find(u=>u.username==='Maestro');
-    const paranoia = DB.users.find(u=>u.username==='Paranoia');
-    const enjoy = DB.users.find(u=>u.username==='enjoylaff');
-    const now = new Date().toISOString();
-    DB.threads.push(
-      { id: nextId('threads'), forum_id:'news', title:'Обновление 2.4 - Новый сезон LAFF PROJECT', content:'Приветствуем, дорогие игроки LAFF PROJECT! Мы рады представить вам глобальное обновление 2.4 - новый сезон с кучей контента:\n\n• Новая система семей и войн за территории\n• Переработанная экономика\n• 15 новых автомобилей\n• Новые работы и квесты\n• Улучшена оптимизация RAGE MP\n• Исправлены баги с инвентарем\n\nIP сервера: play.laff-project.com\n\nЖдем вас на открытии!', author_id:maestro.id, pinned:1, locked:0, views:2291, likes:42, created_at:now, updated_at:now },
-      { id: nextId('threads'), forum_id:'news', title:'Открытие сервера LAFF PROJECT | 01.06.2025', content:'Долгожданное открытие LAFF PROJECT состоялось! IP: play.laff-project.com\n\nБонусы для новичков:\n- $50,000 на старт\n- Премиум на 3 дня\n- Кейс с одеждой\n\nЖдем всех!', author_id:maestro.id, pinned:1, locked:0, views:5432, likes:128, created_at:now, updated_at:now },
-      { id: nextId('threads'), forum_id:'server-rules', title:'Правила игровых зон', content:'1. Green zone - густонаселенная гражданскими территория, в которой запрещены любые криминальные действия. Запрещены любые перестрелки / стрельба. | Demorgan 20-45 минут.\n\n2. Red zone - криминальная зона, где разрешены любые криминальные действия без причины.\n\n3. Желтая зона - нейтральная зона.', author_id:maestro.id, pinned:1, locked:0, views:2202, likes:12, created_at:now, updated_at:now },
-      { id: nextId('threads'), forum_id:'mafia', title:'Заявление на пост лидера The Fam', content:'1. Имя Фамилия IC: John Laff\n2. Опыт лидера: FIB, Administrator Aqua Project, Majestic Chicago Lead Vagos, Lead Fam 50 человек, Lead LSSD, Dep Lead Bloods x4, Lead FIB\n3. Состав: 50+ человек\n4. Discord: enjoylaff\n5. ID: 19583\n6. Онлайн: 6-8 часов\n\nГотов развивать фракцию, делать RP и капты.', author_id:enjoy.id, pinned:0, locked:0, views:445, likes:23, created_at:now, updated_at:now },
-      { id: nextId('threads'), forum_id:'faq', title:'Часто задаваемые вопросы', content:'Способ 1: Запустите RAGE MP В поиске найдите LAFF PROJECT Нажмите — и заходите!\n\nСпособ 2: Запустите RAGE MP В правом верхнем углу нажмите "Прямое подключение" Введите IP: play.laff-project.com Заходите!\n\nРешение ошибок:\n- Multiplayer Started: Перезапустите ПК, запустите от админа, переустановите RAGE MP\n- ERR_GAMECONFIG_1: Переустановите RAGE MP, проверьте целостность GTA V\n- Не скачивается сервер: Удалите моды, отключите антивирус, проверьте сохранение в одиночке', author_id:maestro.id, pinned:1, locked:0, views:2291, likes:15, created_at:now, updated_at:now }
-    );
-    // seed posts
-    const t1 = DB.threads[0].id;
-    DB.posts.push(
-      { id: nextId('posts'), thread_id:t1, content:'Поддерживаю! Форум выглядит 1 в 1 как Trace, только даже лучше. Тёмная тема топ, всё читается. Когда открытие нового сезона?', author_id:enjoy.id, likes:5, created_at:now },
-      { id: nextId('posts'), thread_id:t1, content:'Открытие уже скоро. Следите за новостями в Discord: discord.gg/laff-project', author_id:paranoia.id, likes:3, created_at:now }
-    );
-    saveDB(DB);
-    console.log('Seeded threads & posts');
+  // NO THREADS SEED - clean forum for opening
+  if (DB.threads.length>0 || DB.posts.length>0 || DB.likes.length>0){
+    // If old data exists, clean it (only if user explicitly wants clean, we keep but log)
+    console.log(`DB has ${DB.threads.length} threads, ${DB.posts.length} posts - forum not clean, but keeping. Delete laff-db.json to clean.`);
   }
 }
 seed();
@@ -138,17 +132,18 @@ app.post('/api/login', (req,res)=>{
 app.get('/api/me', requireAuth, (req,res)=>{ res.json(req.user); });
 
 app.get('/api/forums', (req,res)=>{
+  // CLEAN: only real counts from DB, no fake + numbers
   const enriched = CATEGORIES.map(cat=>{
     const forums = cat.forums.map(f=>{
       const threadsInForum = DB.threads.filter(t=>t.forum_id===f.id);
       const postsInForum = DB.posts.filter(p=> threadsInForum.some(t=>t.id===p.thread_id));
       const lastThread = [...threadsInForum].sort((a,b)=> new Date(b.created_at)-new Date(a.created_at))[0];
-      let last = f.last;
+      let last = null;
       if (lastThread){
         const author = findUser(lastThread.author_id);
         last = { title:lastThread.title, user:author?.username||'—', avatar:author?.avatar, time:lastThread.created_at };
       }
-      return { ...f, threads: threadsInForum.length + (f.threads||0), messages: threadsInForum.length + postsInForum.length + (f.messages||0), last };
+      return { ...f, threads: threadsInForum.length, messages: postsInForum.length, last };
     });
     return { ...cat, forums };
   });
@@ -253,7 +248,7 @@ app.post('/api/posts/:id/like', requireAuth, (req,res)=>{
 });
 
 app.get('/api/online', (req,res)=>{
-  const users = [...DB.users].sort((a,b)=>{
+  const users = [...DB.users].filter(u=>!u.banned).sort((a,b)=>{
     const rank = { 'ОСНОВАТЕЛЬ':0,'ГЛ. АДМИН':1,'ТЕХ. АДМИН':2,'ИГРОК':3 };
     const ra = rank[a.role]??3, rb = rank[b.role]??3;
     if (ra!==rb) return ra-rb;
@@ -307,6 +302,21 @@ app.delete('/api/admin/posts/:id', requireAuth, requireAdmin, (req,res)=>{
   res.json({ ok:true });
 });
 
+// Clean endpoint for opening - delete all except tiran
+app.post('/api/admin/clean-for-opening', requireAuth, requireAdmin, (req,res)=>{
+  if (req.user.username !== 'tiran') return res.status(403).json({ error:'Только tiran может чистить' });
+  const tiran = DB.users.find(u=>u.username==='tiran');
+  DB.users = tiran ? [tiran] : [];
+  DB.threads = [];
+  DB.posts = [];
+  DB.likes = [];
+  DB.seq = { users: tiran ? tiran.id+1 : 1, threads:1, posts:1, likes:1 };
+  // reset tiran stats
+  if (tiran){ tiran.messages=0; tiran.reputation=0; }
+  saveDB(DB);
+  res.json({ ok:true, message:'Форум очищен для открытия. Остался только tiran' });
+});
+
 // Static
 app.use(express.static(__dirname));
 app.use('/assets', express.static(path.join(__dirname,'assets')));
@@ -321,9 +331,9 @@ app.get('*', (req,res)=>{
 });
 
 app.listen(PORT,'0.0.0.0',()=>{
-  console.log(`\n🚀 LAFF PROJECT Forum v2 running on http://0.0.0.0:${PORT}`);
+  console.log(`\n🚀 LAFF PROJECT Forum - CLEAN FOR OPENING`);
   console.log(`📁 Serving from ${__dirname}`);
-  console.log(`🔑 Admin logins: Maestro / laff2025, Paranoia / laff2025, Laff_Admin / laff2025`);
-  console.log(`💾 DB: ${DB_PATH} (JSON, no native deps)`);
-  console.log(`✨ Features: WYSIWYG editor, Likes, Admin panel, JWT auth, Search\n`);
+  console.log(`🔑 Admin: tiran / 1213ttt3 (ОСНОВАТЕЛЬ)`);
+  console.log(`💾 DB: ${DB_PATH} - Users: ${DB.users.length}, Threads: ${DB.threads.length}, Posts: ${DB.posts.length}`);
+  console.log(`✨ Ready for opening - no fake data\n`);
 });
