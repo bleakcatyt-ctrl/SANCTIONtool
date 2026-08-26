@@ -1,4 +1,4 @@
-/* XenForo-like header - MINIMAL COMPACT - FINAL FIX NO AUTO-OPEN */
+/* XenForo header - NORMAL SIZE, NOT TINY, NO AUTO-OPEN */
 function initXenforoHeader(){
   const user = LaffAPI.getUser();
   const right = document.getElementById('auth-right');
@@ -9,14 +9,14 @@ function initXenforoHeader(){
   if(user){
     right.innerHTML = `
       <div class="xf-top-icons" style="position:relative;">
-        <div class="xf-top-icon avatar" id="topAvatar" style="background:${stringToColor(user.username)}" title="Профиль">
+        <div class="xf-top-icon avatar" id="topAvatar" style="background:${stringToColor(user.username)}" title="${user.username}">
           ${user.avatar && user.avatar.length>10 ? `<img src="${user.avatar}" alt="">` : user.username.charAt(0).toUpperCase()}
         </div>
         <div class="xf-top-icon" title="Сообщения"><i class="fa-regular fa-envelope"></i></div>
         <div class="xf-top-icon" title="Оповещения"><i class="fa-regular fa-bell"></i></div>
         <div class="xf-top-icon" title="Поиск"><i class="fa-solid fa-magnifying-glass"></i></div>
         
-        <div class="xf-user-dropdown" id="userDropdownExact" hidden style="display:none !important;">
+        <div class="xf-user-dropdown" id="userDropdownExact" hidden>
           <div class="xf-user-dropdown-tabs">
             <button class="active"><i class="fa-regular fa-user"></i></button>
             <button><i class="fa-regular fa-bookmark"></i></button>
@@ -34,7 +34,7 @@ function initXenforoHeader(){
           </div>
           <div class="xf-user-menu-grid">
             <a href="profile.html?u=${user.username}"><i class="fa-regular fa-file-lines"></i> Ваш контент</a>
-            <a href="account.html#reactions"><i class="fa-regular fa-heart"></i> Полученные реакции</a>
+            <a href="account.html"><i class="fa-regular fa-heart"></i> Полученные реакции</a>
             <a href="account.html"><i class="fa-regular fa-address-card"></i> Информация</a>
             <a href="account.html#signature"><i class="fa-solid fa-signature"></i> Подпись</a>
             <a href="account.html#password"><i class="fa-solid fa-lock"></i> Пароль и безопасность</a>
@@ -56,13 +56,9 @@ function initXenforoHeader(){
       if(dd){
         dd.classList.remove('open');
         dd.hidden = true;
-        dd.style.setProperty('display','none','important');
       }
     };
     forceClose();
-    setTimeout(forceClose, 50);
-    setTimeout(forceClose, 200);
-    setTimeout(forceClose, 600);
 
     setTimeout(()=>{
       const avatar = document.getElementById('topAvatar');
@@ -75,15 +71,9 @@ function initXenforoHeader(){
           if(isOpen){
             dropdown.classList.remove('open');
             dropdown.hidden = true;
-            dropdown.dataset.userOpened = '';
-            dropdown.style.setProperty('display','none','important');
           } else {
             dropdown.classList.add('open');
             dropdown.hidden = false;
-            dropdown.dataset.userOpened = '1';
-            dropdown.style.setProperty('display','block','important');
-            // Clear userOpened flag after 100ms so auto-close on scroll still works but not immediate
-            setTimeout(()=>{ dropdown.dataset.userOpened = ''; }, 100);
           }
         });
       }
@@ -95,21 +85,13 @@ function initXenforoHeader(){
       if(dropdown && avatar && !avatar.contains(e.target) && !dropdown.contains(e.target)){
         dropdown.classList.remove('open');
         dropdown.hidden = true;
-        dropdown.style.setProperty('display','none','important');
       }
     });
 
-    window.addEventListener('scroll', ()=>{
+    window.addEventListener('scroll', ()=>{ 
       const dd = document.getElementById('userDropdownExact');
-      if(dd){ dd.classList.remove('open'); dd.hidden=true; dd.style.setProperty('display','none','important'); }
+      if(dd){ dd.classList.remove('open'); dd.hidden=true; }
     }, {passive:true});
-
-    document.addEventListener('keydown', (e)=>{
-      if(e.key==='Escape'){
-        const dd = document.getElementById('userDropdownExact');
-        if(dd){ dd.classList.remove('open'); dd.hidden=true; dd.style.setProperty('display','none','important'); }
-      }
-    });
 
     const adminCard = document.getElementById('admin-card');
     if(isAdmin && adminCard){
@@ -117,18 +99,12 @@ function initXenforoHeader(){
       const el = document.getElementById('admin-card-user');
       if(el) el.textContent = user.username;
     }
-    const footerAdmin = document.getElementById('footer-admin-link');
-    if(footerAdmin) footerAdmin.style.display = isAdmin ? 'inline' : 'none';
   } else {
     right.innerHTML = `
       <a href="#" onclick="document.getElementById('loginModal')?.classList.add('open'); return false;"><i class="fa-solid fa-right-to-bracket"></i> Вход</a>
       <a href="#" onclick="document.getElementById('registerModal')?.classList.add('open'); return false;">Регистрация</a>
       <a href="#" class="search"><i class="fa-solid fa-magnifying-glass"></i> Поиск</a>
     `;
-    const adminCard = document.getElementById('admin-card');
-    if(adminCard) adminCard.style.display = 'none';
-    const footerAdmin = document.getElementById('footer-admin-link');
-    if(footerAdmin) footerAdmin.style.display = 'none';
   }
 }
 
@@ -145,10 +121,8 @@ function updateStatus(text){
   const user = LaffAPI.getUser();
   if(!user) return;
   localStorage.setItem('laff_status_'+user.id, text);
-  const input = document.querySelector('.xf-user-menu-footer input');
-  if(input) input.value = '';
   const dd = document.getElementById('userDropdownExact');
-  if(dd){ dd.classList.remove('open'); dd.hidden=true; dd.style.setProperty('display','none','important'); }
+  if(dd){ dd.classList.remove('open'); dd.hidden=true; }
   const note = document.createElement('div');
   note.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#16a34a; color:white; padding:8px 14px; border-radius:6px; font-size:11px; z-index:10000;';
   note.textContent = 'Статус: ' + text;
@@ -156,24 +130,10 @@ function updateStatus(text){
   setTimeout(()=>note.remove(), 2500);
 }
 
-(function(){
-  const closeAll = ()=>{
-    const dd = document.getElementById('userDropdownExact');
-    if(dd && !dd.dataset.userOpened){
-      dd.classList.remove('open');
-      dd.hidden=true;
-      dd.style.setProperty('display','none','important');
-    }
-  };
-  document.addEventListener('DOMContentLoaded', ()=>{
-    closeAll();
-    initXenforoHeader();
-    setTimeout(closeAll, 100);
-    setTimeout(closeAll, 500);
-    setTimeout(closeAll, 1000);
-    if(LaffAPI.getToken()){
-      LaffAPI.fetchMe().then(()=>{ initXenforoHeader(); setTimeout(closeAll, 100); }).catch(()=>{});
-    }
-  });
-  window.addEventListener('load', closeAll);
-})();
+document.addEventListener('DOMContentLoaded', ()=>{
+  initXenforoHeader();
+  setTimeout(()=>{ document.getElementById('userDropdownExact')?.classList.remove('open'); const dd=document.getElementById('userDropdownExact'); if(dd) dd.hidden=true; }, 200);
+  if(LaffAPI.getToken()){
+    LaffAPI.fetchMe().then(()=>initXenforoHeader()).catch(()=>{});
+  }
+});
